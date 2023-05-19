@@ -1,0 +1,55 @@
+.message {
+    padding: 2;
+}
+
+.replyBubbleWidthRow {
+    overflow-y: auto;
+}
+
+.text-msg {
+    font-size: medium;
+    margin-bottom: 0px;
+}
+
+.time-msg {
+    font-size: xx-small;
+    overflow-wrap: normal;
+    position: relative;
+    margin-bottom: 0px;
+    text-align: right;
+}
+
+.reply-msg {
+    background-color: #91aec4;
+    max-height: 250px;
+    max-width: 100%;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: 3px 3px 3px #194569;
+    overflow-wrap: break-word;
+    display: flex;
+    position: relative;
+}
+
+.replyBubbletHightCol {
+    max-width: 50%;
+}
+
+.my-msg {
+    background-color: white;
+    max-height: 250px;
+    box-sizing: border-box;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 3px 3px 3px #194569;
+    overflow-wrap: break-word;
+    display: flex;
+    position: relative;
+}
+
+.myBubbletHightCol{
+    max-width: 50%;
+    margin-top: 5px;
+}

@@ -1,0 +1,35 @@
+#SearchContactBox {
+    background-color: white;
+    height: 60px;
+    border-bottom: 1px solid #cadeed;
+    border-top: 1px solid #cadeed;
+    z-index: 2;
+}
+
+.searchContactInput {
+    border: none;
+    width: 90%;
+    border-radius: 10px;
+    background-color: rgb(236, 236, 236);
+    margin: 0px;
+    height: 60%;
+    background-image: url("../../icons/search_icon_2.png");
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: 7px center;
+    font-size: 14px;
+}
+
+.searchContactInput.nonEmpty{
+    border: none;
+    width: 90%;
+    border-radius: 10px;
+    background-color: rgb(236, 236, 236);
+    margin: 0px;
+    height: 60%;
+    background-image: url("../../icons/quit_searching_icon.png");
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: 7px center;
+    font-size: 14px;
+}

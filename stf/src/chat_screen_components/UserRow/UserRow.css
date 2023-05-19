@@ -1,0 +1,48 @@
+.nameTitle {
+    height: 35px;
+    background: transparent;
+}
+
+.imgDiv{
+    padding: 5px;
+}
+
+#currUserImg{
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userNameRow {
+    padding: 0px;
+}
+
+#firstName {
+    padding-left: 5px;
+}
+
+.nameP {
+    font-weight: bolder;
+}
+
+.addContactButtonDiv{
+    text-align: end;
+    padding-right: 0px;
+}
+
+.addContactButton {
+    border: none;
+    background-color: transparent;
+    padding: 0px
+}
+
+.addContactButton:focus {
+    outline: none;
+}
+
+.addContactButton:hover img {
+    opacity: 70%;
+}
+
+#addContactButtonImg {
+    object-fit: cover;
+}
