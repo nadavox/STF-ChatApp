@@ -1,0 +1,19 @@
+#topCircle {
+    height: 400px;
+    width: 400px;
+    background-color: rgb(85, 242, 171);
+    border-radius: 50%;
+    right: -150px;
+    top: -250px;
+    z-index: -1;
+}
+
+#bottomCircle {
+    height: 400px;
+    width: 400px;
+    background-color: rgb(231, 76, 248);
+    border-radius: 50%;
+    bottom: -200px;
+    left: -150px;
+    z-index: -1;
+}

@@ -1,0 +1,25 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(230, 229, 229) !important;
+    overflow: hidden scroll;
+}
+
+@media (max-height: 700px) {
+    body {
+        overflow-y: scroll !important;
+    }
+}
+
+@media (max-width: 992px) {
+    body {
+        overflow: scroll !important;
+    }
+  
+    #signInBlock {
+        position: static !important;
+    }
+  
+    #signUpBlock {
+        position: static !important;
+    }
+  }

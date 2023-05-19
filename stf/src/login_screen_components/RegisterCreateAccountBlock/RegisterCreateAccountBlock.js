@@ -1,0 +1,132 @@
+import './RegisterCreateAccountBlock.css'
+import InputDiv from '../InputDiv/InputDiv';
+import CreateAccountTitle from '../LeftTitle/LeftTitle';
+import InputPhotoDiv from '../InputDiv/InputPhotoDiv'
+import { useState, useContext } from 'react';
+import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
+import { useNavigate } from 'react-router-dom';
+import {CurrentUserContext} from '../../components/CurrentUser/CurrentUser';
+
+function RegisterCreateAccountBlock() {
+    // define the state variables using the useState hook
+    const [Username, setUsername] = useState('');
+    const [Password, setPassword] = useState('');
+    const [ConfirmPassword, setConfirmPassword] = useState('');
+    const [DisplayName, setDisplayName] = useState('');
+    const [photoUrl, setPhotoUrl] = useState(null);
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [usernameText, setUsernameText] = useState('must contain at least one letter');
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
+    const usernameRegex = /[a-zA-Z]/;
+    // use the useNavigate hook to enable programmatic navigation
+    const navigate = useNavigate();
+    const { updateUser } = useContext(CurrentUserContext);
+
+    // handling the event when the inputs changed
+    const handleInputChange = (event, inputName) => {
+        // if the input was empty and now not so get out of the invalidFields
+        if (invalidFields.includes(inputName)) {
+            setInvalidFields(invalidFields.filter(name => name !== inputName));
+        }
+    }
+
+    // handle the form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const invalidFields = [];
+
+        // check if Username input is not empty and meets the requirements of the regex
+        if ((!Username)) {
+            invalidFields.push('Username');
+            setUsernameText("required field - must contain at least one letter");
+        } else if (!usernameRegex.test(Username)) {
+            invalidFields.push('Username');
+            setUsernameText("must contain at least one letter");
+        } else if (registerUsers.some(contact => contact.username === Username)) {
+            invalidFields.push('Username');
+            setUsernameText("username already exist");
+        }
+
+        // check if password input is not empty and meets the requirements of the regex
+        if (!Password || !passwordRegex.test(Password)) {
+            invalidFields.push('Password');
+        }
+
+        // check if password input is not empty and meets the requirements of the regex
+        if (!ConfirmPassword || !passwordRegex.test(ConfirmPassword) || ConfirmPassword !== Password) {
+            invalidFields.push('Password Verification');
+        }
+
+        // check if password input is not empty and meets the requirements of the regex
+        if (!DisplayName || !usernameRegex.test(DisplayName)) {
+            invalidFields.push('Display Name');
+        }
+
+        // check if password input is not empty and meets the requirements of the regex
+        if (!photoUrl) {
+            invalidFields.push('Picture');
+        }
+
+        setInvalidFields(invalidFields);
+
+        // all the input fields are up to the requierments
+        if (invalidFields.length === 0) {
+            
+            // save the new user in JS
+            const NewUser = {
+                username: Username,
+                password: Password,
+                displayName: DisplayName,
+                photoUrl: photoUrl,
+                contactsList: [],
+            };
+            // update the array of all users
+            registerUsers.push(NewUser);
+
+            // update the current user
+            updateUser(NewUser);
+
+            // navigate to the chats page
+            navigate('/');                       
+        }
+    }
+
+    return (
+        <div id="createAccount" className="col-lg-8 position-relative">
+                <CreateAccountTitle divId="Title" divText="Create Account" />
+                <form className="row" onSubmit={handleSubmit}>
+
+                    <InputDiv inputId="userNameInput" inputType="text" inputPlaceholder="Username"
+                        inputTitle="Username" divclassName={`registerInputDiv ${invalidFields.includes('Username') ? 'invalid' : ''}`}
+                        popoverTitle="Username" popoverContent={usernameText}
+                        value={Username} setter={setUsername} handler={handleInputChange} divId="usernameDiv" />
+
+                    <InputDiv inputId="passwordInput" inputType="password" inputPlaceholder="Password"
+                        inputTitle="Password" divclassName={`registerInputDiv ${invalidFields.includes('Password') ? 'invalid' : ''}`}
+                        popoverTitle="Password" popoverContent="must contain at least 5 characters, 
+                    with a combination of digits and letters" value={Password} setter={setPassword} handler={handleInputChange} divId="passwordDiv" />
+
+                    <InputDiv inputId="passwordConfirmationInput" inputType="password" inputPlaceholder="Confirm Password"
+                        inputTitle="Password Verification" divclassName={`registerInputDiv ${invalidFields.includes('Password Verification') ? 'invalid' : ''}`}
+                        popoverTitle="Password Verification" popoverContent="must be the same as the password"
+                        value={ConfirmPassword} setter={setConfirmPassword} handler={handleInputChange} divId="confirmPasswordDiv" />
+
+                    <InputDiv inputId="displayNameInput" inputType="text" inputPlaceholder="Display Name"
+                        inputTitle="Display Name" divclassName={`registerInputDiv ${invalidFields.includes('Display Name') ? 'invalid' : ''}`}
+                        popoverTitle="Display Name" popoverContent="must contain at least one letter"
+                        value={DisplayName} setter={setDisplayName} handler={handleInputChange} divId="displayNameDiv" />
+
+                    <InputPhotoDiv inputId="pictueInput" inputType="file" inputPlaceholder="add your picture"
+                        inputTitle="Picture" divclassName={`registerInputDiv ${invalidFields.includes('Picture') ? 'invalid' : ''}`}
+                        popoverTitle="Picture" popoverContent="must insert only files of kind: png, jpeg..."
+                        handler={handleInputChange} divId="pictureDiv" photoUrl={photoUrl} setPhotoUrl={setPhotoUrl} />
+
+                    <div id="register" className="col-lg-12">
+                        <button id="registerLeftButton" type="submit">REGISTER</button>
+                    </div>
+                </form>
+            </div>
+    );
+}
+
+export default RegisterCreateAccountBlock;

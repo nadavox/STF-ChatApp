@@ -1,0 +1,112 @@
+.loginInputDiv {
+  margin-top: 50px !important;
+  margin-left: 30%;
+}
+
+.registerInputDiv {
+  margin-top: 20px !important;
+  display: flex;
+  flex-direction: column;
+  margin-left: 30%;
+}
+
+.input-container {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input {
+  width: 100%;
+  margin-right: 10px;
+  text-align: left !important;
+  height: 45px;
+  background-color: #d8d6d6;
+  border: none;
+  padding: 10px !important;
+  padding-left: 40px !important;
+}
+
+.password-icon {
+  float: right;
+}
+
+.inputTitle {
+  font-weight: bolder;
+  border: none;
+  margin-bottom: 5px;
+  align-self: flex-start;
+  text-align: left;
+}
+
+.hideorShowPasswordIcon {
+  width: 25px !important;
+  margin-left:-60px;
+  cursor: pointer;
+}
+
+#userNameInput {
+  background-image: url("../../icons/user_name_icon.png");
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: 7px center;
+  background-color: #d8d6d6;
+}
+
+#passwordInput {
+  background-image: url("../../icons/password_icon.png");
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: 7px center;
+  background-color: #d8d6d6;
+}
+
+#passwordConfirmationInput {
+  background-image: url("../../icons/password_icon.png");
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: 7px center;
+  background-color: #d8d6d6;
+}
+
+#displayNameInput {
+  background-image: url("../../icons/display_name_icon.png");
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: 7px center;
+  background-color: #d8d6d6;
+}
+
+#pictueInput {
+  padding-left: 10px !important;
+}
+
+/* Style the popover header */
+.popover-header {
+  border-bottom: none;
+  text-align: center;
+  font-weight: bold;
+}
+
+.popover-body {
+  font-size: 12px; /* Set the font size */
+}
+
+.popover {
+  width: 200px;
+  animation-name: popoverdisapper;
+  animation-duration: 6s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes popoverdisapper {
+  from {
+    opacity: 100%;
+  }
+
+  to {
+    opacity: 0%;
+    display: none;
+  }
+}

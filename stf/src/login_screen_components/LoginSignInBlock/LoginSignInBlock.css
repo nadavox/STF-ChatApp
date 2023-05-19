@@ -1,0 +1,27 @@
+#signInBlock {
+  height: 550px;
+  background-color: white;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  top: 80px;
+}
+
+#loginLeftButton {
+  background-color: #cadeed;
+  border: none;
+  border-radius: 25px;
+  font-size: 15pt;
+  color: white;
+  width: 200px;
+  height: 50px;
+  margin-top: 50px !important;
+}
+
+#loginLeftButton:hover {
+  background-color: #bfd7e9;
+  cursor: pointer;
+}
+
+.loginInputDiv.invalid input {
+  border: 1px solid red;
+}

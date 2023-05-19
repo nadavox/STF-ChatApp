@@ -1,0 +1,11 @@
+#registerBlock {
+    height: 640px;
+    background-color: #cadeed;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    top: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
