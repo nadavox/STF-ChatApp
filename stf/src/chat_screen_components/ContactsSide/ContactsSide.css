@@ -1,0 +1,19 @@
+.leftSide {
+    max-width: 290px;
+    height: 100%;
+}
+
+#contactsList {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    list-style: none;
+    padding: 0;
+    position: relative;
+    margin-bottom: 0 !important;
+    background: transparent;
+    height: 100%;
+}
+
+.contactIcon {
+    border-radius: 50%;
+}

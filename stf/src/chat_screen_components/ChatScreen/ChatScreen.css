@@ -1,0 +1,6 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(230, 229, 229) !important;
+    overflow: hidden;
+    min-height: 405px;
+}

@@ -1,0 +1,101 @@
+.contactButton {
+    border: none !important;
+    background-color: white;
+    border-bottom: 1pt solid #cadeed !important;
+    border-radius: 0px !important;
+    padding-right: 0 !important;
+    padding-left: 3px !important;
+}
+
+.contactButton:hover {
+    background-color: #d0dee8;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.contactButton:hover .contactName {
+    color: white;
+}
+
+.contactButton:hover .messageTime {
+    color: white;
+}
+
+.contactRow{
+    min-height: 40px;
+    align-content: center;
+}
+
+.displayName {
+    padding-right: 0;
+    position: relative;
+    left: 0;
+}
+.contactButton:hover .lastMessage {
+    color: white;
+}
+
+.selected {
+    background-color: rgb(202, 219, 232);
+}
+
+.selected:hover {
+    background-color: rgb(202, 219, 232);
+    box-shadow: none;
+    transform: none;
+}
+
+.selected:hover .contactName {
+    color: black;
+}
+
+.selected:hover .messageTime {
+    color: rgb(202, 202, 202);
+}
+
+.selected:hover .lastMessage {
+    color: black;
+}
+
+.contactIcon {
+    float: left;
+}
+
+.contactIconcol {
+    padding-right: 0 !important;
+}
+
+.contactName {
+    color: black ;
+    font-weight: bold;
+}
+
+.messageTime {
+    float: right;
+    font-size: 10pt;
+    color: rgb(202, 202, 202);
+    margin-bottom: 0px;
+    padding-right: 2px;
+}
+
+.lastMessage {
+    color: black ;
+    float: left;
+    margin-left: 45px;
+    font-size: 11pt;
+    margin-top: 2px;
+}
+
+.notification {
+    background-color: #91aec4;
+    color: white;
+    max-width: 48px;
+    max-height: 35px;
+    min-width: 20px;
+    min-height: 20px;
+    border-radius: 50%;
+    font-size: 0.75em;
+    text-decoration: none;
+    float: right;
+    margin-right: 5px !important;
+}

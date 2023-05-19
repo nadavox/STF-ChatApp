@@ -1,0 +1,43 @@
+#firstrowRightSideScreen {
+    background: transparent;
+    height: 35px !important;
+    width: 100%;
+    position: relative;
+}
+
+#currentContactImg {
+    margin-left: 10px;
+    border-radius: 50%;
+}
+
+#colofrightside{
+    text-align: center;
+}
+.appName {
+    font-weight: bolder;
+    background: linear-gradient(to right, rgb(231, 76, 248), rgb(85, 242, 171));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    top: 4px;
+    position: relative;
+}
+
+.contactNameP {
+    font-weight: bolder;
+    margin-left: 10px;
+}
+
+.exitButtonDiv {
+    padding: 2px;
+    text-align: right;
+}
+
+.exitButton {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.exitButton:hover {
+    opacity: 50%;
+}
