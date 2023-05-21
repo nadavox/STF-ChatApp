@@ -44,34 +44,38 @@ function RegisterCreateAccountBlock() {
         };
         try {
             const res = await fetch('http://localhost:5000/api/Users', {
-            'method': 'post',
-            'headers': {
-                'accept' : 'text/plain',
-                'Content-Type': 'application/json',
-            },
-            'body': JSON.stringify(NewUser)
-        })
+                'method': 'post',
+                'headers': {
+                    'accept': 'text/plain',
+                    'Content-Type': 'application/json',
+                },
+                'body': JSON.stringify(NewUser)
+            })
 
-        if (res.ok) {
-            // update the array of all users
-            //registerUsers.push(NewUser);
+            if (res.ok) {
+                // update the array of all users
+                //registerUsers.push(NewUser);
 
-            // update the current user
-            updateUser(NewUser);
 
-            // navigate to the login page
-            navigate('/');
-        } else{
-            //need to change it so only the fields that is not good will present
-            // Handle the case when the response is not OK (e.g., show an error message)
-            invalidFields.push('Username')
-            invalidFields.push('Password')
-            invalidFields.push('Password Verification')
-            invalidFields.push('Display Name')
-            invalidFields.push('Picture')
-            setInvalidFields(invalidFields);
-        }
-        } catch(error) {
+                // update the current user
+                updateUser(NewUser);
+
+                // navigate to the login page
+                navigate('/');
+            } else {
+                console.log("d")
+                //need to change it so only the fields that is not good will present.
+                // can take it from body, errors in the respons
+                // Handle the case when the response is not OK (e.g., show an error message)
+
+                invalidFields.push('Username')
+                invalidFields.push('Password')
+                invalidFields.push('Password Verification')
+                invalidFields.push('Display Name')
+                invalidFields.push('Picture')
+                setInvalidFields(invalidFields);
+            }
+        } catch (error) {
             console.error('Error occurred while sending the request:', error);
         }
         setKey(prevKey => prevKey + 1);
