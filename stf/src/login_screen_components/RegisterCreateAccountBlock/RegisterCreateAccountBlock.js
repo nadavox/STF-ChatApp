@@ -2,12 +2,13 @@ import './RegisterCreateAccountBlock.css'
 import InputDiv from '../InputDiv/InputDiv';
 import CreateAccountTitle from '../LeftTitle/LeftTitle';
 import InputPhotoDiv from '../InputDiv/InputPhotoDiv'
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import { useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 
 function RegisterCreateAccountBlock() {
+    const [key, setKey] = useState(0); // State variable to trigger re-render
     // define the state variables using the useState hook
     const [Username, setUsername] = useState('');
     const [Password, setPassword] = useState('');
@@ -16,8 +17,8 @@ function RegisterCreateAccountBlock() {
     const [photoUrl, setPhotoUrl] = useState(null);
     const [invalidFields, setInvalidFields] = useState([]);
     const [usernameText, setUsernameText] = useState('must contain at least one letter');
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
-    const usernameRegex = /[a-zA-Z]/;
+    // const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
+    // const usernameRegex = /[a-zA-Z]/;
     // use the useNavigate hook to enable programmatic navigation
     const navigate = useNavigate();
     const { updateUser } = useContext(CurrentUserContext);
@@ -33,74 +34,117 @@ function RegisterCreateAccountBlock() {
     // handle the form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const invalidFields = [];
 
-        // check if Username input is not empty and meets the requirements of the regex
-        if ((!Username)) {
-            invalidFields.push('Username');
-            setUsernameText("required field - must contain at least one letter");
-        } else if (!usernameRegex.test(Username)) {
-            invalidFields.push('Username');
-            setUsernameText("must contain at least one letter");
-        } else if (registerUsers.some(contact => contact.username === Username)) {
-            invalidFields.push('Username');
-            setUsernameText("username already exist");
-        }
-
-        // check if password input is not empty and meets the requirements of the regex
-        if (!Password || !passwordRegex.test(Password)) {
-            invalidFields.push('Password');
-        }
-
-        // check if password input is not empty and meets the requirements of the regex
-        if (!ConfirmPassword || !passwordRegex.test(ConfirmPassword) || ConfirmPassword !== Password) {
-            invalidFields.push('Password Verification');
-        }
-
-        // check if password input is not empty and meets the requirements of the regex
-        if (!DisplayName || !usernameRegex.test(DisplayName)) {
-            invalidFields.push('Display Name');
-        }
-
-        // check if password input is not empty and meets the requirements of the regex
-        if (!photoUrl) {
-            invalidFields.push('Picture');
-        }
-
-        setInvalidFields(invalidFields);
-
-        // all the input fields are up to the requierments
-        if (invalidFields.length === 0) {
-
-            // save the new user in JS
-            const NewUser = {
-                username: Username,
-                password: Password,
-                displayName: DisplayName,
-                photoUrl: photoUrl
-            };
-            console.log(NewUser)
+        // save the new user in JS
+        const NewUser = {
+            username: Username,
+            password: Password,
+            displayName: DisplayName,
+            profilePic: photoUrl
+        };
+        try {
             const res = await fetch('http://localhost:5000/api/Users', {
-                'method': 'post',
-                'headers': {
-                    'Content-Type': 'application/json',
-                },
-                'body': JSON.stringify(NewUser)
-            })
+            'method': 'post',
+            'headers': {
+                'accept' : 'text/plain',
+                'Content-Type': 'application/json',
+            },
+            'body': JSON.stringify(NewUser)
+        })
 
-            console.log(res)
-
-
+        if (res.ok) {
             // update the array of all users
-            registerUsers.push(NewUser);
+            //registerUsers.push(NewUser);
 
             // update the current user
             updateUser(NewUser);
 
-            // navigate to the chats page
+            // navigate to the login page
             navigate('/');
+        } else{
+            //need to change it so only the fields that is not good will present
+            // Handle the case when the response is not OK (e.g., show an error message)
+            invalidFields.push('Username')
+            invalidFields.push('Password')
+            invalidFields.push('Password Verification')
+            invalidFields.push('Display Name')
+            invalidFields.push('Picture')
+            setInvalidFields(invalidFields);
         }
+        } catch(error) {
+            console.error('Error occurred while sending the request:', error);
+        }
+        setKey(prevKey => prevKey + 1);
+
+        // from previos mission ------------------------ this move to the server
+        // const invalidFields = [];
+
+        // // check if Username input is not empty and meets the requirements of the regex
+        // if ((!Username)) {
+        //     invalidFields.push('Username');
+        //     setUsernameText("required field - must contain at least one letter");
+        // } else if (!usernameRegex.test(Username)) {
+        //     invalidFields.push('Username');
+        //     setUsernameText("must contain at least one letter");
+        // } else if (registerUsers.some(contact => contact.username === Username)) {
+        //     invalidFields.push('Username');
+        //     setUsernameText("username already exist");
+        // }
+
+        // // check if password input is not empty and meets the requirements of the regex
+        // if (!Password || !passwordRegex.test(Password)) {
+        //     invalidFields.push('Password');
+        // }
+
+        // // check if password input is not empty and meets the requirements of the regex
+        // if (!ConfirmPassword || !passwordRegex.test(ConfirmPassword) || ConfirmPassword !== Password) {
+        //     invalidFields.push('Password Verification');
+        // }
+
+        // // check if password input is not empty and meets the requirements of the regex
+        // if (!DisplayName || !usernameRegex.test(DisplayName)) {
+        //     invalidFields.push('Display Name');
+        // }
+
+        // // check if password input is not empty and meets the requirements of the regex
+        // if (!photoUrl) {
+        //     invalidFields.push('Picture');
+        // }
+
+        // setInvalidFields(invalidFields);
+
+        // // all the input fields are up to the requierments
+        // if (invalidFields.length === 0) {
+        //     // save the new user in JS
+        //     const NewUser = {
+        //         username: Username,
+        //         password: Password,
+        //         displayName: DisplayName,
+        //         profilePic: photoUrl
+        //     };
+        //     const res = await fetch('http://localhost:5000/api/Users', {
+        //         'method': 'post',
+        //         'headers': {
+        //             'accept' : 'text/plain',
+        //             'Content-Type': 'application/json',
+        //         },
+        //         'body': JSON.stringify(NewUser)
+        //     })
+
+        //     console.log(res)
+
+
+        //     // update the array of all users
+        //     registerUsers.push(NewUser);
+
+        //     // update the current user
+        //     updateUser(NewUser);
+
+        //     // navigate to the login page
+        //     navigate('/');
+        // }
     }
+
 
     return (
         <div id="createAccount" className="col-lg-8 position-relative">
