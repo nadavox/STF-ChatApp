@@ -79,7 +79,7 @@ function RegisterCreateAccountBlock() {
                 displayName: DisplayName,
                 photoUrl: photoUrl
             };
-
+            console.log(NewUser)
             const res = await fetch('http://localhost:5000/api/Users', {
                 'method': 'post',
                 'headers': {
