@@ -2,6 +2,7 @@ import './Modal.css';
 import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import { useState, useContext, useRef, useEffect } from 'react';
+import addContact from '../../auth/AddContact';
 
 function Modal(props) {
     const [inputValue, setInputValue] = useState("");
@@ -14,7 +15,6 @@ function Modal(props) {
         const inputValue = e.target.value; // Get the updated input value
         setInputValue(inputValue);
         setInvalidFields(invalidFields.filter(name => name !== "addContactInput"));
-        console.log(invalidFields);
         const matchingContact = registerUsers.find(contact => contact.username === inputValue);
         if (matchingContact && inputValue !== currentUser.username) {
             setShowModal(false);
@@ -31,26 +31,32 @@ function Modal(props) {
         }
     };
 
-    const handleAddContact = (e) => {
-        const matchingContact = registerUsers.find(contact => contact.username === inputValue);
-        if (matchingContact && inputValue !== currentUser.username) {
-            props.setFinalInputValue(inputValue);
-            props.setNewContactDisplayName(matchingContact.displayName);
-            props.setNewContactPhotoUrl(matchingContact.photoUrl);
-            setInputValue('');
-            setShowModal(true);
-        }
-        else {
-            invalidFields.push('addContactInput');
-            setInvalidFields(invalidFields);
-        }
-
-        const addContactInput = document.querySelector('.addContactInput');
-        if (addContactInput && invalidFields.includes('addContactInput')) {
-            addContactInput.classList.add('invalid');
+    const handleAddContact = async (e) => {
+        const validAdd = await addContact(currentUser, inputValue)
+        if (validAdd != false) {
+            props.setaddContact(true)
         } else {
-            addContactInput.classList.remove('invalid');
+            // no user
         }
+        // const matchingContact = registerUsers.find(contact => contact.username === inputValue);
+        // if (matchingContact && inputValue !== currentUser.username) {
+        //     props.setFinalInputValue(inputValue);
+        //     props.setNewContactDisplayName(matchingContact.displayName);
+        //     props.setNewContactPhotoUrl(matchingContact.photoUrl);
+        //     setInputValue('');
+        //     setShowModal(true);
+        // }
+        // else {
+        //     invalidFields.push('addContactInput');
+        //     setInvalidFields(invalidFields);
+        // }
+
+        // const addContactInput = document.querySelector('.addContactInput');
+        // if (addContactInput && invalidFields.includes('addContactInput')) {
+        //     addContactInput.classList.add('invalid');
+        // } else {
+        //     addContactInput.classList.remove('invalid');
+        // }
     };
 
     const handleAddContactByEnter = (event) => {

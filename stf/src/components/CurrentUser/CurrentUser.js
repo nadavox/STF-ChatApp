@@ -7,6 +7,7 @@ export const CurrentUserProvider = ({ children }) => {
         username: '',
         displayName: '',
         photoUrl: '',
+        token: ''
     });
 
     const updateUser = (newUser) => {

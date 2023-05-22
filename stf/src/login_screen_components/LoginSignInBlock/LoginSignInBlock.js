@@ -5,6 +5,7 @@ import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers'
 import React, { useRef, useEffect, useContext, useState } from 'react';
 import { Await, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
+import LoginAuth from '../../auth/LoginAuth';
 
 function LoginSignInBlock({ mousePosition }) {
     const [Username, setUsername] = useState('');
@@ -14,13 +15,13 @@ function LoginSignInBlock({ mousePosition }) {
     // use the useNavigate hook to enable programmatic navigation
     const navigate = useNavigate();
     const { updateUser } = useContext(CurrentUserContext);
+    const [messagetopopover, setMessagetopopover] = useState("username and password does not match");
 
 
     useEffect(() => {
         if (mousePosition) {
             LoginInputDivref.current.blur();
         }
-
     }, [mousePosition]);
 
     function focus() {
@@ -38,80 +39,27 @@ function LoginSignInBlock({ mousePosition }) {
         }
     }
 
-    const [messagetopopover, setMessagetopopover] = useState("username and password does not match");
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const tokenStruct = {
-                username: Username,
-                password: Password
-            }
-
-            const res = await fetch('http://localhost:5000/api/Tokens', {
-                'method': 'post',
-                'headers': {
-                    'accept': 'text/plain',
-                    'Content-Type': 'application/json',
-                },
-                'body': JSON.stringify(tokenStruct)
-            })
-            const token = await res.text()
-            const url = 'http://localhost:5000/api/Users/' + Username;
-
-            const res1 = await fetch(url, {
-                'method': 'get',
-                'headers': {
-                    'accept': 'text/plain',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-
-            const responseText = await res1.text();
-            // console.log(responseText)
-
-            if (res1.ok) {
-                // need to 
-                const matchingContact = JSON.parse(responseText);
-                console.log(matchingContact)
-
-                // save the curr user in JS
-                const currLoginUser = {
-                    username: matchingContact.username,
-                    displayName: matchingContact.displayName,
-                    photoUrl: matchingContact.photoUrl,
-                };
-
-                // update the current user
-                updateUser(currLoginUser);
-
-                // navigate to the chats page
-                // 
-                navigate('/chats');
-            } else {
-                //not valid user
-                // we need to show the right message when it happens 
-                console.log("not a valid user")
-                setMessagetopopover("username and password does not match");
-                setIsInvalid(true);
-                setTimeout(() => {
-                    // Code to be executed after 100 miliseconds
-                    //set the popover to be show
-                    focus();
-                }, 100);
-            }
-        } catch {
-            // error with the server
-            console.log("error with the server")
+        const currLoginUser = await LoginAuth(Username, Password)
+        if (currLoginUser != false) {
+            console.log("before update: ", currLoginUser.token)
+            updateUser(currLoginUser);
+            // navigate to the chats page 
+            navigate('/chats');
+        } else {
+            //not valid user
+            // we need to show the right message when it happens 
+            console.log("not a valid user")
+            setMessagetopopover("username and password does not match");
+            setIsInvalid(true);
+            setTimeout(() => {
+                // Code to be executed after 100 miliseconds
+                //set the popover to be show
+                focus();
+            }, 100);
         }
 
-
-
-
-
-
-        const invalidFields = [];
         // check if username input is not empty
         if (!Username) {
             invalidFields.push('Username');
