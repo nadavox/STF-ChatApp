@@ -63,16 +63,29 @@ function RegisterCreateAccountBlock() {
                 // navigate to the login page
                 navigate('/');
             } else {
-                console.log("d")
-                //need to change it so only the fields that is not good will present.
-                // can take it from body, errors in the respons
-                // Handle the case when the response is not OK (e.g., show an error message)
-
-                invalidFields.push('Username')
-                invalidFields.push('Password')
-                invalidFields.push('Password Verification')
-                invalidFields.push('Display Name')
-                invalidFields.push('Picture')
+                 // Handle the case when the response is not OK (e.g., show an error message)
+                const errorMessage = await res.text();
+                const errorObj = JSON.parse(errorMessage);
+                if (errorObj && errorObj.errors) {
+                    const errors = errorObj.errors;
+                    for (const key in errors) {
+                      if (errors.hasOwnProperty(key)) {
+                        const errorMessages = errors[key];
+                        // need to fix it so it will work with spesific field
+                        if (key === "title") {
+                            invalidFields.push('Username')
+                            invalidFields.push('Password')
+                            invalidFields.push('Password Verification')
+                            invalidFields.push('Display Name')
+                        }
+                        if ( key === "ProfilePic") {
+                            invalidFields.push('Picture')
+                        }
+                        console.log(`${key}: ${errorMessages.join(', ')}`);
+                      }
+                    }
+                }
+                console.error(errorMessage)
                 setInvalidFields(invalidFields);
             }
         } catch (error) {
