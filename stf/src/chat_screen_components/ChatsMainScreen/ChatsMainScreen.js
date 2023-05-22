@@ -6,6 +6,7 @@ import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers'
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import { useState, useEffect, useContext } from 'react';
 import Modal from '../Modal/Modal';
+import showMessages from '../../auth/ShowMessages';
 
 function ChatsMainScreen () {
     // Define state variables
@@ -16,8 +17,35 @@ function ChatsMainScreen () {
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
     const [finalInputValueInModal, setFinalInputValueInModal] = useState("");
     const [addContact, setaddContact] = useState(false)
+    const [clickContact, setClickContact] = useState("")
 
 
+
+
+    useEffect(() => {
+        async function fetchTheScreen() {
+            if (clickContact != "") {
+                const messages = await showMessages(currentUser ,clickContact)
+                const sender = messages.users[0].username
+                const reciever =  messages.users[1].username
+                const listofmessages =  messages.messages
+                
+
+
+                // const updateMessageScreen = (
+                //                 <MessagesScreen
+                //                     username={sender}
+                //                     listofmessages={listofmessages}
+                //                     currentContactClicked={currentContactClicked}
+                //                 />
+                //             )
+
+
+
+            }
+        }
+        fetchTheScreen()
+    }, [clickContact]);
 
 
     // useEffect(() => {
@@ -54,7 +82,7 @@ function ChatsMainScreen () {
                     and than it gonna replace. the setter is: setDisplayContactRow */}
                     <ContactsSide  setDisplayContactRow={setDisplayContactRow} setPressedOnAddContact={setPressedOnAddContact}
                      pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
-                      setaddContact={setaddContact} />
+                      setaddContact={setaddContact} setClickContact={setClickContact} />
 
                     {/* from here is right side of the screen */}
                     <div id="rightsideofthescreen" className="col-7 d-flex flex-column flex-grow-1 p-0">

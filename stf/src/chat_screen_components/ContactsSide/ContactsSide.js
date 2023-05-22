@@ -11,17 +11,32 @@ import getchats from '../../auth/GetChats';
 function ContactsSide(props) {
     const { currentUser } = useContext(CurrentUserContext);
     //inisde of the list of contacts is all the contacts of the user.
-    const [ListOfContacts,setListOfContacts] = useState(null)
+    const [ListOfContacts,setListOfContacts] = useState([])
 
     async function getcontacts() {
         const l = await getchats(currentUser)
         setListOfContacts(l)
     }
+
+    const handleClickingOnContact = (contactId) => {
+        const currSelectedContact = ListOfContacts.find((contact) => contact.id === contactId);
+        props.setDisplayContactRow({
+            picture: currSelectedContact.user.profilePic,
+            displayName: currSelectedContact.user.displayName,
+            username: currSelectedContact.user.username
+        });
+        // update the current contact that we click
+        props.setClickContact(contactId)
+
+        // if(textInSearch) {
+        //     setTextInSearch(false);
+        //     setFinalSearchValue("");
+        // }
+    };
     
     // init the contacts list
     useEffect(()=>{
         getcontacts()
-        setListOfContacts(null)
     },[])
 
     
@@ -35,6 +50,7 @@ function ContactsSide(props) {
     },[props.addContact])
 
 
+
     return (
         <>
             <div className="col-1 p-0 d-flex flex-column flex-grow-1 position-relative leftSide">
@@ -42,10 +58,23 @@ function ContactsSide(props) {
                 <UserRow picture={currentUser.photoUrl} firstName={currentUser.displayName}
                  setPressed={props.setPressedOnAddContact} setaddContact={props.setaddContact} />
 
-                 {/* <SearchContact onKeyDown={handleKeyDown} onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} />
+                 {/* <SearchContact onKeyDown={handleKeyDown} onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} /> */}
 
                 <ul id="contactsList">
-                    {filteredContacts.length >= 0 && textInSearch ?
+                    {ListOfContacts.map((contact) => (
+                            <Contact
+                                key={contact.id}
+                                photoUrl={contact.user.profilePic}
+                                contactDispalyName={contact.user.displayName}
+                                lastMessageTime={contact.lastMessageTime}
+                                lastMessage={contact.lastMessage}
+                                notification={contact.notification}
+                                className={props.currentContactClicked === contact.username ? 'selected' : ''}
+                                onClick={() => handleClickingOnContact(contact.id)}
+                            />
+                        ))}
+
+                    {/* {filteredContacts.length >= 0 && textInSearch ?
                         filteredContacts.map(contact => (
                             <Contact
                                 key={contact.username}
@@ -58,11 +87,11 @@ function ContactsSide(props) {
                                 onClick={() => handleClickingOnContact(contact.username)}
                             />
                         )) :
-                        registerUsers.find((user) => user.username === currentUser.username).contactsList.map(contact => (
+                        ListOfContacts.map(contact => (
                             <Contact
-                                key={contact.username}
-                                photoUrl={contact.photoUrl}
-                                contactDispalyName={contact.contactDispalyName}
+                                key={contact.user.username}
+                                photoUrl={contact.user.profilePic}
+                                contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessageTime}
                                 lastMessage={contact.lastMessage}
                                 notification={contact.notification}
@@ -70,8 +99,8 @@ function ContactsSide(props) {
                                 onClick={() => handleClickingOnContact(contact.username)}
                             />
                         ))
-                    }
-                </ul> */}
+                    } */}
+                </ul>
 
             </div>
         </>
