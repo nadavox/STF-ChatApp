@@ -7,6 +7,7 @@ import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers'
 import SearchContact from '../SearchContact/SearchContact';
 import MessagesScreen from '../MessagesScreen/MessagesScreen';
 import getchats from '../../auth/GetChats';
+import showMessages from '../../auth/ShowMessages';
 
 function ContactsSide(props) {
     const { currentUser } = useContext(CurrentUserContext);
@@ -18,7 +19,8 @@ function ContactsSide(props) {
         setListOfContacts(l)
     }
 
-    const handleClickingOnContact = (contactId) => {
+    // in contact id i have the key of the chat
+    const handleClickingOnContact = async  (contactId) => {
         const currSelectedContact = ListOfContacts.find((contact) => contact.id === contactId);
         props.setDisplayContactRow({
             picture: currSelectedContact.user.profilePic,
@@ -27,13 +29,12 @@ function ContactsSide(props) {
         });
         // update the current contact that we click
         props.setClickContact(contactId)
-
         // if(textInSearch) {
         //     setTextInSearch(false);
         //     setFinalSearchValue("");
         // }
     };
-    
+
     // init the contacts list
     useEffect(()=>{
         getcontacts()
@@ -66,10 +67,10 @@ function ContactsSide(props) {
                                 key={contact.id}
                                 photoUrl={contact.user.profilePic}
                                 contactDispalyName={contact.user.displayName}
-                                lastMessageTime={contact.lastMessageTime}
-                                lastMessage={contact.lastMessage}
-                                notification={contact.notification}
-                                className={props.currentContactClicked === contact.username ? 'selected' : ''}
+                                lastMessageTime=""
+                                lastMessage=""
+                                notification=""
+                                className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
                             />
                         ))}

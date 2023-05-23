@@ -1,6 +1,7 @@
 async function addContact(currentUser, inputValue) {
     const newUser = {username : inputValue}
     try {
+        // create new contcs = create new chat
         const res = await fetch('http://localhost:5000/api/Chats', {
             method: 'post',
             headers: {

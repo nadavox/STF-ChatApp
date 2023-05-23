@@ -13,63 +13,28 @@ function ChatsMainScreen () {
     //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
     const { currentUser } = useContext(CurrentUserContext);
-    const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen />);
+    const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked=""/>);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
     const [finalInputValueInModal, setFinalInputValueInModal] = useState("");
     const [addContact, setaddContact] = useState(false)
     const [clickContact, setClickContact] = useState("")
 
-
-
-
     useEffect(() => {
         async function fetchTheScreen() {
             if (clickContact != "") {
-                const messages = await showMessages(currentUser ,clickContact)
-                const sender = messages.users[0].username
-                const reciever =  messages.users[1].username
-                const listofmessages =  messages.messages
-                
+                const updateMessageScreen = (
+                                <MessagesScreen
+                                    id ={clickContact}
+                                    currentContactClicked={clickContact}
+                                />
+                            )
 
-
-                // const updateMessageScreen = (
-                //                 <MessagesScreen
-                //                     username={sender}
-                //                     listofmessages={listofmessages}
-                //                     currentContactClicked={currentContactClicked}
-                //                 />
-                //             )
-
-
-
+                setRightMessageScreen(updateMessageScreen)
             }
         }
         fetchTheScreen()
-    }, [clickContact]);
-
-
-    // useEffect(() => {
-    //     // If the contact exists, set the right message screen to the contact's messages screen
-    //     if (copyCurrUserContacts.find((contact) => contact.username === displayContactRow.username)) {
-    //         // need to render with new variable. 
-    //         setCopyCurrUserContacts(copyCurrUserContacts.map((contact) => {
-    //             //update the curr contact on everyone
-    //             const updateMessageScreen = (
-    //                 <MessagesScreen
-    //                     username={contact.messagesScreen.props.username}
-    //                     listofmessages={contact.messagesScreen.props.listofmessages}
-    //                     currentContactClicked={currentContactClicked}
-    //                     setLastMessageTime={contact.messagesScreen.props.setLastMessageTime}
-    //                 />
-    //             )
-    //             contact.messagesScreen = updateMessageScreen
-    //             return contact
-    //         }))
-    //         setRightMessageScreen(copyCurrUserContacts.find((contact) => contact.username === displayContactRow.username).messagesScreen);
-    //     }
-    //      // eslint-disable-next-line
-    // }, [displayContactRow.username, pressedOnAddContact]);
-    
+        console.log("the contact we click: ", clickContact)
+    }, [clickContact]); 
 
 
     return (
@@ -82,7 +47,9 @@ function ChatsMainScreen () {
                     and than it gonna replace. the setter is: setDisplayContactRow */}
                     <ContactsSide  setDisplayContactRow={setDisplayContactRow} setPressedOnAddContact={setPressedOnAddContact}
                      pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
-                      setaddContact={setaddContact} setClickContact={setClickContact} />
+                      setaddContact={setaddContact} setClickContact={setClickContact}
+                      currentContactClicked={clickContact}
+                    />
 
                     {/* from here is right side of the screen */}
                     <div id="rightsideofthescreen" className="col-7 d-flex flex-column flex-grow-1 p-0">

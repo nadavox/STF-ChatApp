@@ -1,13 +1,15 @@
 import './Message.css';
 
-const Message = ({ fromWho, content, time }) => {
+const Message = ({ sender, content, time, currentUser,lastMessgeTime }) => {
 
-    if (fromWho === "reply-msg") {
+
+
+    if (true) {
         return (
             <li className="message">
                 <div className="row justify-content-end">
                     <div className="col-auto d-flex justify-content-end replyBubbletHightCol">
-                        <div className={fromWho}>
+                        <div className="my-msg">
                             <div className="row replyBubbleWidthRow">
                                 <p className="text-msg">{content}</p>
                                 <p className="time-msg">{time}</p>
@@ -22,7 +24,7 @@ const Message = ({ fromWho, content, time }) => {
             <li className="message">
                 <div className="row">
                     <div className="col-auto myBubbletHightCol">
-                        <div className={fromWho}>
+                        <div className="reply-msg">
                             <div className="row replyBubbleWidthRow">
                                 <p className="text-msg">{content}</p>
                                 <p className="time-msg">{time}</p>

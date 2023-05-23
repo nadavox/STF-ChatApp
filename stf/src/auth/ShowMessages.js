@@ -1,6 +1,7 @@
 
 async function showMessages(currentUser, key) {
     try {
+        //give me the listofmessages between two contact
         const url = 'http://localhost:5000/api/Chats/' + key
         const res = await fetch(url, {
             method: 'get',
@@ -11,14 +12,14 @@ async function showMessages(currentUser, key) {
         });
         if (res.ok) {
             const currentChat = await res.json()
-            console.log(currentChat)
+            // console.log(currentChat)
             return currentChat
         } else {
-            console.log('error with the server from login auth');
+            console.log('error with the server from show messgae ');
             return false;
         }
     } catch (error) {
-        console.log('error with the server from login auth');
+        console.log('error with the server');
         return false;
     }
 }
