@@ -89,7 +89,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
                 });
                 if (res.ok) {
                     const currentMessage = await res.json()
-                    // console.log(currentMessage)
+                    console.log("the current message: ", currentMessage)
                     setLastMessageTime({lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created})
                     // need to update the list of message.
                     //clean the input value.
@@ -121,7 +121,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
             });
             if (res.ok) {
                 const list = await res.json()
-                console.log(list)
+                console.log("the details list of messages: ",list)
                 setListOfMessages(list)
             } else {
                 console.log('error with the server from sending message');
@@ -147,7 +147,6 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         return formattedDate
     }
 
-
     if (typeof ListOfMessages === 'undefined') {
         // no contact chosen
         return (
@@ -163,7 +162,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         <>
             <ul id="chatScreen" className="p-2 flex-grow-1 overflow-y-scroll m-0" ref={messagesEndRef}>
                 {ListOfMessages.map((message, index) => (
-                    <Message key={index}
+                    <Message key={message.id}
                     sender={message.sender.username}
                     content={message.content}
                     time={generateTime(message.created)}
@@ -176,35 +175,6 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
 
             <div id="sendMessageBox" className="mt-auto d-flex align-items-center">
 
-                <div className="btn-group">
-                    <button id="paperClipButton" className="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="top" >
-                        <img src={paperClipIcon} alt="Paper Clip"></img>
-                    </button>
-
-                    <ul id="allOptions" className="dropdown-menu" data-bs-placement="top">
-                        <div className=" btn-group flex-column" role="group">
-                            <li>
-                                <button className="dropdown-item add-options btn btn-outline-primary test" type="button">
-                                    <img className="addToChatImg" src={addDocumentIcon} alt="1"></img>
-                                </button>
-                            </li>
-                            <li>
-                                <button className="dropdown-item add-options btn btn-outline-primary" type="button">
-                                    <img className="addToChatImg" src={addImageIcon} alt="3"></img>
-                                </button>
-                            </li>
-                            <li>
-                                <button className="dropdown-item add-options btn btn-outline-primary" type="button">
-                                    <img className="addToChatImg" src={addEmojiIcon} alt="2"></img>
-                                </button>
-                            </li>
-                        </div>
-                    </ul>
-                </div>
-                <button id="takePhotoButton" type="button" className="h-100">
-                    <img src={cameraIcon} alt=""></img>
-                </button>
                 <div className="col p-0">
                     <input id="sendMessageInput" type="text" placeholder="New message here..." className="h-100"
                         onChange={onChange} ref={inputRef} onKeyDown={sendMessage}></input>

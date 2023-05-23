@@ -13,6 +13,7 @@ async function addContact(currentUser, inputValue) {
 
         if (res.ok) {
             const newChat = await res.json();
+            console.log("the new contact: ", newChat)
             const newChatElement = {
                 id : newChat.id,
                 displayNameReciver : newChat.user.displayName,

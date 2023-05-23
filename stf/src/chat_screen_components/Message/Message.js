@@ -56,7 +56,7 @@ const Message = ({ sender, content, time, date, currentUser, lastMessgeDate }) =
 
 
     } else {
-        if (lastMessgeDate < date) {
+        if (lastMessgeDate < date || lastMessgeDate === "first message") {
             return (
                 <>
                     <li className="message">

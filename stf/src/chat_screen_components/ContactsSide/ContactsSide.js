@@ -75,7 +75,7 @@ function ContactsSide(props) {
                                 photoUrl={contact.user.profilePic}
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? getLastTimeMessage(contact.lastMessage. created) : ""}
-                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no message"}
+                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-meesage"}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
