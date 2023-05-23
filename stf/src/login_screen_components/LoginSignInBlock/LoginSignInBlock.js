@@ -3,8 +3,9 @@ import LoginInputDiv from "../InputDiv/LoginInputDiv"
 import SignInTitle from '../LeftTitle/LeftTitle';
 import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import React, { useRef, useEffect, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Await, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
+import LoginAuth from '../../auth/LoginAuth';
 
 function LoginSignInBlock({ mousePosition }) {
     const [Username, setUsername] = useState('');
@@ -14,13 +15,13 @@ function LoginSignInBlock({ mousePosition }) {
     // use the useNavigate hook to enable programmatic navigation
     const navigate = useNavigate();
     const { updateUser } = useContext(CurrentUserContext);
+    const [messagetopopover, setMessagetopopover] = useState("username and password does not match");
 
 
     useEffect(() => {
         if (mousePosition) {
             LoginInputDivref.current.blur();
         }
-
     }, [mousePosition]);
 
     function focus() {
@@ -38,64 +39,83 @@ function LoginSignInBlock({ mousePosition }) {
         }
     }
 
-    const [messagetopopover, setMessagetopopover] = useState("username and password does not match");
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const invalidFields = [];
+        const currLoginUser = await LoginAuth(Username, Password)
+        if (currLoginUser != false) {
+            console.log("before update: ", currLoginUser.token)
+            updateUser(currLoginUser);
+            // navigate to the chats page 
+            navigate('/chats');
+        } else {
+            //not valid user
+            // we need to show the right message when it happens 
+            console.log("not a valid user")
+            setMessagetopopover("username and password does not match");
+            setIsInvalid(true);
+            setTimeout(() => {
+                // Code to be executed after 100 miliseconds
+                //set the popover to be show
+                focus();
+            }, 100);
+        }
+
         // check if username input is not empty
         if (!Username) {
             invalidFields.push('Username');
         }
 
+
+        //previos mission----------------------------------------
+
         // check if password input is not empty
-        if (!Password) {
-            invalidFields.push('Password');
-        }
-        setInvalidFields(invalidFields);
-        // all the input fields are not empty
-        if (invalidFields.length === 0) {
-            // find the right user
-            const matchingContact = registerUsers.find(contact => contact.username === Username && contact.password === Password);
-            if (matchingContact) {
-                // save the curr user in JS
-                const currLoginUser = {
-                    username: matchingContact.username,
-                    password: matchingContact.password,
-                    displayName: matchingContact.displayName,
-                    photoUrl: matchingContact.photoUrl,
-                    contactsList: matchingContact.contactsList,
-                };
+        // if (!Password) {
+        //     invalidFields.push('Password');
+        // }
+        // setInvalidFields(invalidFields);
+        // // all the input fields are not empty
+        // if (invalidFields.length === 0) {
+        //     // find the right user
+        //     const matchingContact = registerUsers.find(contact => contact.username === Username && contact.password === Password);
+        //     if (matchingContact) {
+        //         // save the curr user in JS
+        //         const currLoginUser = {
+        //             username: matchingContact.username,
+        //             password: matchingContact.password,
+        //             displayName: matchingContact.displayName,
+        //             photoUrl: matchingContact.photoUrl,
+        //             contactsList: matchingContact.contactsList,
+        //         };
 
-                // // update the current user (should not be array)
-                // currUser.push(currLoginUser);
+        //         // // update the current user (should not be array)
+        //         // currUser.push(currLoginUser);
 
-                // update the current user
-                updateUser(currLoginUser);
+        //         // update the current user
+        //         updateUser(currLoginUser);
 
-                // navigate to the chats page
-                navigate('/chats');
-            } else if (registerUsers.some(contact => contact.username === Username)) {
-                // the username is exist
-                setMessagetopopover("username and password does not match");
-                setIsInvalid(true);
-                setTimeout(() => {
-                    // Code to be executed after 100 miliseconds
-                    //set the popover to be show
-                    focus();
-                }, 100);
-            } else {
-                // user name does not exist
-                setMessagetopopover("username does not exist");
-                // the password is not good but the user is exist.
-                setIsInvalid(true);
-                setTimeout(() => {
-                    // Code to be executed after 100 miliseconds
-                    //set the popover to be show
-                    focus();
-                }, 100);
-            }
-        }
+        //         // navigate to the chats page
+        //         navigate('/chats');
+        //     } else if (registerUsers.some(contact => contact.username === Username)) {
+        //         // the username is exist
+        //         setMessagetopopover("username and password does not match");
+        //         setIsInvalid(true);
+        //         setTimeout(() => {
+        //             // Code to be executed after 100 miliseconds
+        //             //set the popover to be show
+        //             focus();
+        //         }, 100);
+        //     } else {
+        //         // user name does not exist
+        //         setMessagetopopover("username does not exist");
+        //         // the password is not good but the user is exist.
+        //         setIsInvalid(true);
+        //         setTimeout(() => {
+        //             // Code to be executed after 100 miliseconds
+        //             //set the popover to be show
+        //             focus();
+        //         }, 100);
+        //     }
+        // }
     }
 
 
