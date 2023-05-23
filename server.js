@@ -9,12 +9,13 @@ const cors = require('cors');
 app.use(cors());
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017', {
+mongoose.connect('mongodb://localhost:27017/ChatsApp', {
     useNewUrlParser: true,
     useUnifiedTopology: true
-});
+})
+app.use(express.static('public/build'));
 
 const users = require('./routes/Users');
-app.use('api/Users', users);
+app.use('/api/Users', users);
 
-app.listen(12345);
+app.listen(5000);

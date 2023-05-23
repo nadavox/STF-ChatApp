@@ -5,4 +5,4 @@ const createNewUser = async (username, password, displayName, profilePic) => {
     return await user.save();
 };
 
-module.exports = createNewUser;
+module.exports = {createNewUser};
