@@ -21,19 +21,12 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
     const firstScreenRef = useRef(null);
     //ref for the last message so it will scroll automatic
     const messagesEndRef = useRef(null);
-    // Define flag when I send message
-    const [sendMessageFlag, setSendMessageFlag] = useState(false);
     // If it is new user without any contacts or they haven't clicked on any contact, we can present whatever we want
     const inputRef = useRef();
-    // Store the current year, month, day, and hour/minute in state
-    const [year, setYear] = useState({ prevYear: '', year: '1' });
-    const [month, setMonth] = useState({ prevMonth: '', month: '1' });
-    const [day, setDay] = useState({ prevDay: '', day: '1' });
-    const [hourANDmin, setHourANDmin] = useState({ hour: '', min: '' });
     // Init the input value to empty
     const [inputValue, setInputValue] = useState("");
     const [ListOfMessages,setListOfMessages] = useState([])
-    const [lastMessageTime, setLastMessageTime] = useState("");
+    const [lastMessageTime, setLastMessageTime] = useState({lastMessae: "", newMessage: ""});
 
     async function getmessages() {
         if (currentContactClicked !== '') {
@@ -67,37 +60,20 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
 
 
 
-    useEffect(() => {
-        console.log(ListOfMessages)
-    }, [ListOfMessages]);
-
+    // useEffect(() => {
+    //     console.log("the list of messages: ", ListOfMessages)
+    //     if (ListOfMessages.length > 1) {
+    //         const dateNewMessage = new Date(ListOfMessages[ListOfMessages.length - 1].created);
+    //         console.log("the date 1: ",dateNewMessage)
+    //         const dateLastMessage = new Date(ListOfMessages[ListOfMessages.length - 2].created);
+    //         console.log("the date 2: ",dateLastMessage)
+    //         dateNewMessage.setHours(0,0,0,0);
+    //         dateLastMessage.setHours(0,0,0,0);
+    //     }
+    // }, [ListOfMessages]);
 
     async function sendMessage(e) {
         if ((inputValue !== "" && e.key === "Enter") || (e.type === "click" && inputValue !== "")) {
-            // //check if i have a date message in the list
-            // if (listofmessages) {
-            //     const hasDateMessage = listofmessages.some(message => message.fromWho === 'DateMessage');
-            //     if (hasDateMessage) {
-            //         //get the time
-            //         getCurrentTime();
-            //         //it is update the prev year to be the curr year if there is new year
-            //         //it is update the prev month to be the curr month if there is new year
-            //         //it is update the prev day to be the curr day if there is new year
-
-            //     } else {
-            //         setYear({ prevYear: "random", year: year.year })
-            //         setMonth({ prevMonth: "random", month: month.month })
-            //         setDay({ prevDay: "random", day: day.day })
-            //     }
-            // }
-            // //set the hour and min
-            // getHourMinTime();
-
-
-            // //send message to the servre
-            // // create message object.
-            // const hourAndMinute = `${hourANDmin.hour}:${hourANDmin.min}`;
-            // const newMessage = { fromWho: "my-msg", content: inputValue, time: hourAndMinute };
             const newMessage = { msg: inputValue };
             try {
                 //send new message to a chat
@@ -113,7 +89,8 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
                 });
                 if (res.ok) {
                     const currentMessage = await res.json()
-                    console.log(currentMessage)
+                    // console.log(currentMessage)
+                    setLastMessageTime({lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created})
                     // need to update the list of message.
                     //clean the input value.
                     setInputValue("");
@@ -161,7 +138,15 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         const minute = date.getMinutes().toString().padStart(2, '0');
         const timeString = hour + ":" + minute;
         return timeString
+    } 
+
+    function getDateFromMessage(dateString) {
+        const dateNewMessage = new Date(dateString);
+        dateNewMessage.setHours(0,0,0,0);
+        const formattedDate = dateNewMessage.toLocaleDateString(); // Format the date as desired
+        return formattedDate
     }
+
 
     if (typeof ListOfMessages === 'undefined') {
         // no contact chosen
@@ -178,7 +163,14 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         <>
             <ul id="chatScreen" className="p-2 flex-grow-1 overflow-y-scroll m-0" ref={messagesEndRef}>
                 {ListOfMessages.map((message, index) => (
-                    <Message key={index} sender={message.sender.username} content={message.content} time={generateTime(message.created)} />
+                    <Message key={index}
+                    sender={message.sender.username}
+                    content={message.content}
+                    time={generateTime(message.created)}
+                    date={getDateFromMessage(message.created)}
+                    currentUser={currentUser.username}
+                    lastMessgeDate = {index > 0 ? getDateFromMessage(ListOfMessages[index - 1].created) : "first message"}
+                    />
                 ))}
             </ul>
 

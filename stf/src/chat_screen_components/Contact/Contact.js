@@ -16,6 +16,9 @@ function Contact(props) {
                         <div className="col text-truncate displayName">
                             <span className="contactName">{props.contactDispalyName}</span>
                         </div>
+                        <div className="col text-truncate">
+                            <span className="messageTime">{props.lastMessageTime}</span>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col">

@@ -8,47 +8,47 @@ import { useState, useEffect, useContext } from 'react';
 import Modal from '../Modal/Modal';
 import showMessages from '../../auth/ShowMessages';
 
-function ChatsMainScreen () {
+function ChatsMainScreen() {
     // Define state variables
     //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
     const { currentUser } = useContext(CurrentUserContext);
-    const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked=""/>);
+    const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" />);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
     const [finalInputValueInModal, setFinalInputValueInModal] = useState("");
     const [addContact, setaddContact] = useState(false)
     const [clickContact, setClickContact] = useState("")
-
+    
     useEffect(() => {
         async function fetchTheScreen() {
             if (clickContact != "") {
                 const updateMessageScreen = (
-                                <MessagesScreen
-                                    id ={clickContact}
-                                    currentContactClicked={clickContact}
-                                />
-                            )
+                    <MessagesScreen
+                        id={clickContact}
+                        currentContactClicked={clickContact}
+                    />
+                )
 
                 setRightMessageScreen(updateMessageScreen)
             }
         }
         fetchTheScreen()
         console.log("the contact we click: ", clickContact)
-    }, [clickContact]); 
+    }, [clickContact]);
 
 
     return (
         <>
             <div id="screen" className="container-fluid p-0">
                 <div id="mainScreen" className="row">
-    
+
                     {/* added the setter for the row in thr right side of the screen
                     so every time the user click on a contact we need to use the setter
                     and than it gonna replace. the setter is: setDisplayContactRow */}
-                    <ContactsSide  setDisplayContactRow={setDisplayContactRow} setPressedOnAddContact={setPressedOnAddContact}
-                     pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
-                      setaddContact={setaddContact} setClickContact={setClickContact}
-                      currentContactClicked={clickContact}
+                    <ContactsSide setDisplayContactRow={setDisplayContactRow} setPressedOnAddContact={setPressedOnAddContact}
+                        pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
+                        setaddContact={setaddContact} setClickContact={setClickContact}
+                        currentContactClicked={clickContact}
                     />
 
                     {/* from here is right side of the screen */}

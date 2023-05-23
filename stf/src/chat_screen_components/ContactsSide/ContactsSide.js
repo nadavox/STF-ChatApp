@@ -41,12 +41,19 @@ function ContactsSide(props) {
     },[])
 
     
+    function getLastTimeMessage(lastMessageTimeString) {
+        const createdDate = new Date(lastMessageTimeString);
+        const options = { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const formattedDate = createdDate.toLocaleString('en-US', options);
+        return formattedDate
+    }
+
+
     // use it when i add new contact to render thr component.
     useEffect(()=>{
         if (props.addContact) {
             getcontacts() // to update to contacts in the list.
             props.setaddContact(false)
-            console.log(ListOfContacts)
         }
     },[props.addContact])
 
@@ -67,8 +74,8 @@ function ContactsSide(props) {
                                 key={contact.id}
                                 photoUrl={contact.user.profilePic}
                                 contactDispalyName={contact.user.displayName}
-                                lastMessageTime=""
-                                lastMessage=""
+                                lastMessageTime={contact.lastMessage && contact.lastMessage.content ? getLastTimeMessage(contact.lastMessage. created) : ""}
+                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no message"}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
