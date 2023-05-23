@@ -9,7 +9,7 @@ const cors = require('cors');
 app.use(cors());
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/ChatsApp', {
+mongoose.connect('mongodb://0.0.0.0:27017/ChatsApp', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
