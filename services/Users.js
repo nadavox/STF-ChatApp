@@ -5,4 +5,13 @@ const createNewUser = async (username, password, displayName, profilePic) => {
     return await user.save();
 };
 
-module.exports = {createNewUser};
+// Check if username already exists
+const validateUsername = async (username) => {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+        return -1;
+    }
+    return 1;
+}
+
+module.exports = {createNewUser, validateUsername};
