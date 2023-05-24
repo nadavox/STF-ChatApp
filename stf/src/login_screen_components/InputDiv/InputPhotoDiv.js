@@ -20,7 +20,7 @@ function InputDiv(props) {
    * @param {object} event - The event object
    */
   const handlePhotoChange = (event) => {
-    props.handler(event, props.inputTitle);
+    props.handler(event, props.forInvalid);
     setInputValue(event.target.value);
 
     // Get the file object from the input element
