@@ -5,37 +5,37 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
   id: {
     type: Number,
-    required: true
+    default: Math.floor(Math.random()) // Generate random ID
   },
   created: {
-    type: Date,
-    required: true
+    type: String,
+    default: true
   },
   content: {
     type: String,
-    required: true
+    default: true
   }
 });
 
 const userSchema = new Schema({
   username: {
     type: String,
-    required: true
+    default: true
   },
   displayName: {
     type: String,
-    required: true
+    default: true
   },
   profilePic: {
     type: String,
-    required: true
+    default: true
   }
 });
 
 const conversationSchema = new Schema({
   id: {
     type: Number,
-    required: true
+    default: Math.floor(Math.random() * 1000000) // Generate random ID
   },
   user: {
     type: userSchema,
@@ -47,4 +47,4 @@ const conversationSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('chats', conversationSchema);
+module.exports = mongoose.model('Chats', conversationSchema);

@@ -15,6 +15,7 @@ const validateInfromation = async (req, res) => {
         const data = { username: username }
         // Generate the token.
         const token = jwt.sign(data, STF)
+        console.log("test check how token look: ", token)
         
         // Return the token to the browser
         res.cookie("token", token, {

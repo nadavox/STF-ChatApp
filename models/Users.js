@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
+const chatSchema = require('./Chats'); // Import the chat schema
+
 const user = new Schema (
     {
         username: {
@@ -19,9 +20,20 @@ const user = new Schema (
             type: String,
             required: true
         },
-        chats: {
-            
+        chats: [
+            {id: ,
+            user: {
+                username:
+                displayName:
+                profilePi:
+            }
+            lastMessage: {
+                id: 
+                created: 
+                content:
+            }
         }
+        ]
     }
 );
 module.exports = mongoose.model('Users', user);
