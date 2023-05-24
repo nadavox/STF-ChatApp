@@ -9,7 +9,8 @@ const validateInfromation = async (req, res) => {
     const checkValidate = await tokenService.validateInfromation(username, password);
 
     if(checkValidate < 0) {
-        return res.status(404).send('Incorrect username and/or password');
+        res.status(404).send('Incorrect username and/or password');
+        return
     } else {
 
         const data = { username: username }
