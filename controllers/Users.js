@@ -58,4 +58,9 @@ const createNewUser = async (req, res) => {
     }
 };
 
-module.exports = { createNewUser };
+const returnInformationUser = async (req,res) => {
+    const username = req.params.username;    
+    res.json(await userService.returnInformationUser(username));
+};
+
+module.exports = { createNewUser, returnInformationUser };

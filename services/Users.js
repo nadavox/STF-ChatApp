@@ -1,7 +1,7 @@
 const User = require('../models/Users');
 
 const createNewUser = async (username, password, displayName, profilePic) => {
-    const user = new User({username, password, displayName, profilePic});
+    const user = new User({ username, password, displayName, profilePic });
     return await user.save();
 };
 
@@ -14,4 +14,15 @@ const validateUsername = async (username) => {
     return 1;
 }
 
-module.exports = {createNewUser, validateUsername};
+const returnInformationUser = async (username) => {
+    const user = await User.findOne({ username })
+    const userData = {
+        username: user.username,
+        profilePic: user.profilePic,
+        displayName: user.displayName
+    };
+
+    return userData
+}
+
+module.exports = { createNewUser, validateUsername, returnInformationUser };
