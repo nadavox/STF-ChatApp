@@ -20,20 +20,11 @@ const user = new Schema (
             type: String,
             required: true
         },
-        chats: [
-            {id: ,
-            user: {
-                username:
-                displayName:
-                profilePi:
-            }
-            lastMessage: {
-                id: 
-                created: 
-                content:
-            }
-        }
-        ]
+        chats: {
+            type: Schema.Types.ObjectId,
+            ref: 'Chats'
+          }
+        
     }
 );
 module.exports = mongoose.model('Users', user);

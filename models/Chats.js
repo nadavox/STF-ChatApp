@@ -35,15 +35,15 @@ const userSchema = new Schema({
 const conversationSchema = new Schema({
   id: {
     type: Number,
-    default: Math.floor(Math.random() * 1000000) // Generate random ID
+    default: Math.floor(Math.random()) // Generate random ID
   },
   user: {
     type: userSchema,
-    required: true
+    default: true
   },
   lastMessage: {
     type: messageSchema,
-    required: true
+    default: true
   }
 });
 
