@@ -18,6 +18,9 @@ const user = new Schema (
         profilePic: {
             type: String,
             required: true
+        },
+        chats: {
+            
         }
     }
 );
