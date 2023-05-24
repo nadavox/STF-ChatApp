@@ -54,15 +54,12 @@ function RegisterCreateAccountBlock() {
 
             if (res.ok) {
                 // update the array of all users
-                //registerUsers.push(NewUser);
-
-
                 // update the current user
                 updateUser(NewUser);
-
                 // navigate to the login page
                 navigate('/');
             } else {
+                console.log("test")
                  // Handle the case when the response is not OK (e.g., show an error message)
                 const errorMessage = await res.text();
                 const errorObj = JSON.parse(errorMessage);
@@ -89,77 +86,9 @@ function RegisterCreateAccountBlock() {
                 setInvalidFields(invalidFields);
             }
         } catch (error) {
-            console.error('Error occurred while sending the request:', error);
+            // console.error('Error occurred while sending the request test: ', error);
         }
         setKey(prevKey => prevKey + 1);
-
-        // from previos mission ------------------------ this move to the server
-        // const invalidFields = [];
-
-        // // check if Username input is not empty and meets the requirements of the regex
-        // if ((!Username)) {
-        //     invalidFields.push('Username');
-        //     setUsernameText("required field - must contain at least one letter");
-        // } else if (!usernameRegex.test(Username)) {
-        //     invalidFields.push('Username');
-        //     setUsernameText("must contain at least one letter");
-        // } else if (registerUsers.some(contact => contact.username === Username)) {
-        //     invalidFields.push('Username');
-        //     setUsernameText("username already exist");
-        // }
-
-        // // check if password input is not empty and meets the requirements of the regex
-        // if (!Password || !passwordRegex.test(Password)) {
-        //     invalidFields.push('Password');
-        // }
-
-        // // check if password input is not empty and meets the requirements of the regex
-        // if (!ConfirmPassword || !passwordRegex.test(ConfirmPassword) || ConfirmPassword !== Password) {
-        //     invalidFields.push('Password Verification');
-        // }
-
-        // // check if password input is not empty and meets the requirements of the regex
-        // if (!DisplayName || !usernameRegex.test(DisplayName)) {
-        //     invalidFields.push('Display Name');
-        // }
-
-        // // check if password input is not empty and meets the requirements of the regex
-        // if (!photoUrl) {
-        //     invalidFields.push('Picture');
-        // }
-
-        // setInvalidFields(invalidFields);
-
-        // // all the input fields are up to the requierments
-        // if (invalidFields.length === 0) {
-        //     // save the new user in JS
-        //     const NewUser = {
-        //         username: Username,
-        //         password: Password,
-        //         displayName: DisplayName,
-        //         profilePic: photoUrl
-        //     };
-        //     const res = await fetch('http://localhost:5000/api/Users', {
-        //         'method': 'post',
-        //         'headers': {
-        //             'accept' : 'text/plain',
-        //             'Content-Type': 'application/json',
-        //         },
-        //         'body': JSON.stringify(NewUser)
-        //     })
-
-        //     console.log(res)
-
-
-        //     // update the array of all users
-        //     registerUsers.push(NewUser);
-
-        //     // update the current user
-        //     updateUser(NewUser);
-
-        //     // navigate to the login page
-        //     navigate('/');
-        // }
     }
 
 
