@@ -45,7 +45,7 @@ function InputDiv(props) {
           id={props.inputId}
           type={inputType}
           placeholder={props.inputPlaceholder}
-          className="btn"
+          className={props.inputclass}
           tabIndex="0"
           role="button"
           data-bs-toggle="popover"

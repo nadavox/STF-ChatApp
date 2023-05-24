@@ -91,28 +91,28 @@ function RegisterCreateAccountBlock() {
             <CreateAccountTitle divId="Title" divText="Create Account" />
             <form className="row" onSubmit={handleSubmit}>
 
-                <InputDiv inputId="userNameInput" inputType="text" inputPlaceholder="Username"
+                <InputDiv inputId="userNameInput" inputType="text" inputPlaceholder="Username" inputclass = {`btn ${invalidFields.includes('username') ? 'inv' : ''}`}
                     inputTitle="Username" divclassName={`registerInputDiv ${invalidFields.includes('username') ? 'invalid' : ''}`}
                     popoverTitle="Username" popoverContent={usernameText} forInvalid='username'
                     value={Username} setter={setUsername} handler={handleInputChange} divId="usernameDiv" />
 
-                <InputDiv inputId="passwordInput" inputType="password" inputPlaceholder="Password"
+                <InputDiv inputId="passwordInput" inputType="password" inputPlaceholder="Password" inputclass = {`btn ${invalidFields.includes('password') ? 'inv' : ''}`}
                     inputTitle="Password" divclassName={`registerInputDiv ${invalidFields.includes('password') ? 'invalid' : ''}`}
                     popoverTitle="Password" popoverContent="must contain at least 5 characters, 
                     with a combination of digits and letters" forInvalid='password' value={Password} setter={setPassword}
                     handler={handleInputChange} divId="passwordDiv" />
 
-                <InputDiv inputId="passwordConfirmationInput" inputType="password" inputPlaceholder="Confirm Password"
+                <InputDiv inputId="passwordConfirmationInput" inputType="password" inputPlaceholder="Confirm Password" inputclass = {`btn ${invalidFields.includes('Password Verification') ? 'inv' : ''}`}
                     inputTitle="Password Verification" divclassName={`registerInputDiv ${invalidFields.includes('Password Verification') ? 'invalid' : ''}`}
                     popoverTitle="Password Verification" popoverContent="must be the same as the password" forInvalid='Password Verification'
                     value={ConfirmPassword} setter={setConfirmPassword} handler={handleInputChange} divId="confirmPasswordDiv" />
 
-                <InputDiv inputId="displayNameInput" inputType="text" inputPlaceholder="Display Name"
+                <InputDiv inputId="displayNameInput" inputType="text" inputPlaceholder="Display Name" inputclass = {`btn ${invalidFields.includes('displayName') ? 'inv' : ''}`}
                     inputTitle="Display Name" divclassName={`registerInputDiv ${invalidFields.includes('displayName') ? 'invalid' : ''}`}
                     popoverTitle="Display Name" popoverContent="must contain at least one letter" forInvalid='displayName'
                     value={DisplayName} setter={setDisplayName} handler={handleInputChange} divId="displayNameDiv" />
 
-                <InputPhotoDiv inputId="pictueInput" inputType="file" inputPlaceholder="add your picture"
+                <InputPhotoDiv inputId="pictueInput" inputType="file" inputPlaceholder="add your picture" inputclass = {`btn ${invalidFields.includes('profilePic') ? 'inv' : ''}`}
                     inputTitle="Picture" divclassName={`registerInputDiv ${invalidFields.includes('profilePic') ? 'invalid' : ''}`}
                     popoverTitle="Picture" popoverContent="must insert only files of kind: png, jpeg..." forInvalid='profilePic'
                     handler={handleInputChange} divId="pictureDiv" photoUrl={photoUrl} setPhotoUrl={setPhotoUrl} />

@@ -70,7 +70,7 @@ function InputDiv(props) {
               id="pictureInput"
               type={props.inputType}
               placeholder={props.inputPlaceholder}
-              className="btn"
+              className={props.inputclass}
               tabIndex="0"
               role="button"
               data-bs-toggle="popover"
@@ -91,7 +91,7 @@ function InputDiv(props) {
               id="pictureInput"
               type={props.inputType}
               placeholder={props.inputPlaceholder}
-              className="btn"
+              className={props.inputclass}
               tabIndex="0"
               role="button"
               data-bs-toggle="popover"

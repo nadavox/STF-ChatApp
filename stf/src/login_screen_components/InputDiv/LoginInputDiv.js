@@ -57,7 +57,7 @@ const LoginInputDiv = React.forwardRef((props, ref) => {
                             id={props.inputId}
                             type={inputType}
 
-                            className="btn"
+                            className="btn inv"
                             role="button"
                             data-bs-toggle="popover"
                             data-bs-trigger="focus"
