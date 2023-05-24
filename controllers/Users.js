@@ -18,15 +18,6 @@ const createNewUser = async (req, res) => {
     else if (!usernameRegex.test(username)) {
         invalidFields.push('username');
     }
-    // check if the username already exist
-    // if (await userService.validateUsername(username) < 0) {
-    //     return res.status(409).json({
-    //         type: "https://tools.ietf.org/html/rfc7231#section-6.5.8",
-    //         title: "Conflict",
-    //         status: 409,
-    //         traceId: "0HMQS45UOJOV4:00000002"
-    //     });
-    // }
 
     invalid = await userService.validateUsername(username);
 
