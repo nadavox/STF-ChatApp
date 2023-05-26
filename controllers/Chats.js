@@ -1,5 +1,5 @@
 const chatsService = require('../services/Chats');
-const STF = "STF"
+const STF = process.env.SECRET_TOKEN_KEY; // Accessing the environment variable
 const jwt = require("jsonwebtoken")
 
 function extractTokenFromBearerString(bearerString) {
