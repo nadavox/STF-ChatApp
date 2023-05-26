@@ -5,45 +5,43 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
   id: {
     type: Number,
-    default: Math.floor(Math.random()) // Generate random ID
+    default: ""
   },
   created: {
     type: String,
-    default: true
+    default: ""
   },
   content: {
     type: String,
-    default: true
+    default: ""
   }
 });
 
 const userSchema = new Schema({
   username: {
     type: String,
-    default: true
+    default: ""
   },
   displayName: {
     type: String,
-    default: true
+    default: ""
   },
   profilePic: {
     type: String,
-    default: true
+    default: ""
   }
 });
 
 const conversationSchema = new Schema({
   id: {
     type: Number,
-    default: Math.floor(Math.random()) // Generate random ID
+    default: ""
   },
   user: {
     type: userSchema,
-    default: true
   },
   lastMessage: {
     type: messageSchema,
-    default: true
   }
 });
 

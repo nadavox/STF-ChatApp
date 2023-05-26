@@ -38,6 +38,7 @@ const createNewUser = async (req, res) => {
 
     if (invalidFields.length === 0 && invalid > 0) {
         res.json(await userService.createNewUser(username, password, displayName, profilePic));
+        return
     } else if (invalidFields.length > 0) {
         res.status(400).json({
             errors: invalidFields

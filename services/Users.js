@@ -1,8 +1,11 @@
+const Chats = require('../models/Chats');
 const User = require('../models/Users');
 
 const createNewUser = async (username, password, displayName, profilePic) => {
     const user = new User({ username, password, displayName, profilePic });
+    user.chats = [] // in the creation we have 0 chats.
     return await user.save();
+
 };
 
 // Check if username already exists

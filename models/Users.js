@@ -19,12 +19,11 @@ const user = new Schema (
         profilePic: {
             type: String,
             required: true
-        }
-        // chats: {
-        //     type: Schema.Types.ObjectId,
-        //     ref: 'Chats'
-        //   }
-        
+        },
+        chats: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Chats'
+          }]
     }
 );
 module.exports = mongoose.model('Users', user);

@@ -22,8 +22,8 @@ const returnAllChats = async (req, res) => {
             data = jwt.verify(updateToken, STF);
             console.log('The logged in user is: ' + data.username);
             // Token validation was successful. Continue to the actual function (index)
-            const allChats = chatsService.returnAllChats(data.username)
-            console("all chats from chats controller: ", allChats)
+            const allChats = await chatsService.returnAllChats(data.username)
+            return allChats
         } catch (err) {
             return res.status(401).send("Invalid Token 33");
         }
