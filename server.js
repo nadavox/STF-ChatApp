@@ -1,15 +1,23 @@
 const express = require('express');
 var app = express();
 
+// the libary that give me to use env files.
+const CustomEnv = require('custom-env');
+
+//define the env varibles:
+CustomEnv.env(process.env.NODE_ENV, './config');
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
+
+
 
 const cors = require('cors');
 app.use(cors());
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/ChatsApp', {
+mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -24,4 +32,4 @@ app.use('/api/Tokens', tokens);
 const chats = require('./routes/Chats');
 app.use('/api/Chats', chats);
 
-app.listen(5000);
+app.listen(process.env.PORT);
