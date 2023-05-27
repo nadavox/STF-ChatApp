@@ -1,4 +1,3 @@
-const Chats = require('../models/Chats');
 const User = require('../models/Users');
 
 const createNewUser = async (username, password, displayName, profilePic) => {

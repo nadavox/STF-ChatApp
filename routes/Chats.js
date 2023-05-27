@@ -5,4 +5,6 @@ var router = express.Router();
 
 router.route('/').get(chatsController.returnAllChats);
 
+router.route('/').post(chatsController.createChat);
+
 module.exports = router;

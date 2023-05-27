@@ -2,36 +2,57 @@ const chatsService = require('../services/Chats');
 const STF = process.env.SECRET_TOKEN_KEY; // Accessing the environment variable
 const jwt = require("jsonwebtoken")
 
+
 function extractTokenFromBearerString(bearerString) {
     const start = bearerString.indexOf('{');
     const end = bearerString.lastIndexOf('}') + 1;
     const jsonToken = bearerString.slice(start, end);
     const tokenObject = JSON.parse(jsonToken);
     return tokenObject.token;
-  }
+}
 
+function getUserNameFromToken(tokenFromCookie) {
+    const updateToken = extractTokenFromBearerString(tokenFromCookie)
+    // Extract the token from that header
+    try {
+        // Verify the token is valid
+        const data = jwt.verify(updateToken, STF);
+        return data
+    } catch (err) {
+        return "Invalid Token 33";
+    }
+}
 
 const returnAllChats = async (req, res) => {
-    console.log("in");
     if (req.headers.authorization) {
-        const updateToken = extractTokenFromBearerString(req.headers.authorization)
-        // Extract the token from that header
-        let data
-        try {
-            // Verify the token is valid
-            data = jwt.verify(updateToken, STF);
-            console.log('The logged in user is: ' + data.username);
-            // Token validation was successful. Continue to the actual function (index)
+        const data = getUserNameFromToken(req.headers.authorization)
+        if (data !== "Invalid Token 33") {
             const allChats = await chatsService.returnAllChats(data.username)
-            return allChats
-        } catch (err) {
+            res.send(allChats); // Send the array as a response to the client
+            return
+        } else {
             return res.status(401).send("Invalid Token 33");
         }
     }
     else {
         return res.status(403).send('Token required');
     }
-
 }
 
-module.exports = { returnAllChats };
+const createChat = async (req, res) => {
+    const requestBody = req.body; // Assuming the JSON object is in the request body
+    // get the login ussernmae
+    const data = getUserNameFromToken(req.headers.authorization)
+    if (data !== "Invalid Token 33") {
+        const answer = await chatsService.createChat(requestBody.username, data.username)
+        if (answer != -1) {
+            res.status(200).send('Success');
+        } else {
+            res.status(400).send('faild. problem with the DB');
+        }
+    } else {
+        return res.status(403).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat };  

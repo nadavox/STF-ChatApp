@@ -21,6 +21,9 @@ mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
+//print the env variebles of our program
+console.log(process.env)
+
 app.use(express.static('public/build'));
 
 const users = require('./routes/Users');
