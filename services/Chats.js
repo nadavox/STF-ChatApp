@@ -30,8 +30,7 @@ async function createChatSchema(user) {
     return newChat
 }
 
-const createChat = async (usernameContact, username) => {
-    
+const createChat = async (usernameContact, username) => { 
     //find the username in users:
     const user = await findUser(username)
     // //find the contact in users:
@@ -52,6 +51,8 @@ const createChat = async (usernameContact, username) => {
         // save it in the DB
         await newChatTwo.save();
         await userContact.save();
+        // return the new chat.
+        return newChatOne
     } else {
         //not exist 
         return -1

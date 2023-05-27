@@ -44,9 +44,9 @@ const createChat = async (req, res) => {
     // get the login ussernmae
     const data = getUserNameFromToken(req.headers.authorization)
     if (data !== "Invalid Token 33") {
-        const answer = await chatsService.createChat(requestBody.username, data.username)
-        if (answer != -1) {
-            res.status(200).send('Success');
+        const newChat = await chatsService.createChat(requestBody.username, data.username)
+        if (newChat != -1) {
+            res.status(200).json(newChat);
         } else {
             res.status(400).send('faild. problem with the DB');
         }
