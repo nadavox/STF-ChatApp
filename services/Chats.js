@@ -6,10 +6,8 @@ const uuid = require('uuid');
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
     return user.chats
-  };
+};
   
-  
-
 function createUserNameForChat(username, displayName, profilePic) {
     const userNameForChat ={ username: username, displayName: displayName, profilePic: profilePic }
     return userNameForChat;
