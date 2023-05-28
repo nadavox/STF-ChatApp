@@ -41,7 +41,7 @@ const returnAllChats = async (req, res) => {
 
 const createChat = async (req, res) => {
     const requestBody = req.body; // Assuming the JSON object is in the request body
-    // get the login ussernmae
+    // get the login username
     const data = getUserNameFromToken(req.headers.authorization)
     if (data !== "Invalid Token") {
         const newChat = await chatsService.createChat(requestBody.username, data.username)
@@ -55,4 +55,19 @@ const createChat = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat };  
+const returnAllmessagesOfId = async (req, res) => {
+    // get the login username
+    const data = getUserNameFromToken(req.headers.authorization)
+    if (data !== "Invalid Token") {
+        const allMessages = await chatsService.returnAllmessagesOfId(req.params.id)
+        // if (newChat != -1) {
+        //     res.status(200).json(newChat);
+        // } else {
+        //     res.status(400).send('failed. problem with the DB');
+        // }
+    } else {
+        return res.status(403).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnAllmessagesOfId };  

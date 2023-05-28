@@ -4,7 +4,7 @@ const Chats = require('../models/Chats');
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
     return user.chats
-};
+}
   
 function createUserNameForChat(username, displayName, profilePic) {
     const userNameForChat ={ username: username, displayName: displayName, profilePic: profilePic }
@@ -65,4 +65,8 @@ const createChat = async (usernameContact, username) => {
     }
 }
 
-module.exports = { returnAllChats, createChat }
+const returnAllmessagesOfId = async (id) => {
+
+}
+
+module.exports = { returnAllChats, createChat, returnAllmessagesOfId }
