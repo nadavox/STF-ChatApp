@@ -2,21 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const messageSchema = new Schema({
-  id: {
-    type: Number,
-    default: ""
-  },
-  created: {
-    type: String,
-    default: ""
-  },
-  content: {
-    type: String,
-    default: ""
-  }
-});
-
 const conversationSchema = new Schema({
   id: {
     type: Number,
@@ -36,8 +21,9 @@ const conversationSchema = new Schema({
       default: ""
     }
   }, 
-  lastMessage: {
-    type: messageSchema,
+  lastMessages: {
+    type: Schema.Types.ObjectId,
+    ref: "Message"
   }
 });
 
