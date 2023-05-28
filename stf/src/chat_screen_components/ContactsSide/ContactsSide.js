@@ -3,11 +3,9 @@ import Contact from '../Contact/Contact';
 import UserRow from '../UserRow/UserRow';
 import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
-import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import SearchContact from '../SearchContact/SearchContact';
 import MessagesScreen from '../MessagesScreen/MessagesScreen';
 import getchats from '../../auth/GetChats';
-import showMessages from '../../auth/ShowMessages';
 
 function ContactsSide(props) {
     const { currentUser } = useContext(CurrentUserContext);
@@ -56,8 +54,6 @@ function ContactsSide(props) {
             props.setaddContact(false)
         }
     },[props.addContact])
-
-
 
     return (
         <>

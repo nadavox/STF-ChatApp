@@ -1,7 +1,6 @@
 import './UserRow.css';
 import addContactButtonImg from '../../icons/add_contact_icon.png';
 
-
 function UserRow(props) {
 
     const handleClick = () => {

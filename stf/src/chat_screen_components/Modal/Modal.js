@@ -31,9 +31,8 @@ function Modal(props) {
         }
     };
 
-    const handleAddContact = async (e) => {
-        const validAdd = await addContact(currentUser, inputValue)
-        if (validAdd !== false) {
+    const handleAddContact = (e) => {
+        if (showModal === false) {
             props.setaddContact(true);
             props.setFinalInputValue(inputValue);
             setInputValue('');
@@ -83,8 +82,6 @@ function Modal(props) {
             modalElement.removeEventListener('shown.bs.modal', handleModalShown);
         };
     }, []);
-
-    console.log(showModal);
 
     return (
         <div ref={modalRef} className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static'>

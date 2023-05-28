@@ -1,6 +1,5 @@
 const User = require('../models/Users');
 const Chats = require('../models/Chats');
-const uuid = require('uuid');
 
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
@@ -49,6 +48,7 @@ const createChat = async (usernameContact, username) => {
         // save it in the DB
         await newChatOne.save();
         await user.save();
+
         // new chat when the contact is the sender
         const newChatTwo = await createChatSchema(user)
         // push the new chat to the user array chats
@@ -56,6 +56,7 @@ const createChat = async (usernameContact, username) => {
         // save it in the DB
         await newChatTwo.save();
         await userContact.save();
+
         // return the new chat.
         return newChatOne
     } else {

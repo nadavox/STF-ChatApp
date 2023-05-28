@@ -2,17 +2,13 @@ import './ChatsMainScreen.css'
 import ContactsSide from '../ContactsSide/ContactsSide';
 import DisplayContactRow from '../DisplayContactRow/DisplayContactRow';
 import MessagesScreen from '../MessagesScreen/MessagesScreen';
-import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
-import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../Modal/Modal';
-import showMessages from '../../auth/ShowMessages';
 
 function ChatsMainScreen() {
     // Define state variables
     //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
-    const { currentUser } = useContext(CurrentUserContext);
     const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" />);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
     const [finalInputValueInModal, setFinalInputValueInModal] = useState("");

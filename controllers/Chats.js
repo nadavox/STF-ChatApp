@@ -19,19 +19,19 @@ function getUserNameFromToken(tokenFromCookie) {
         const data = jwt.verify(updateToken, STF);
         return data
     } catch (err) {
-        return "Invalid Token 33";
+        return "Invalid Token";
     }
 }
 
 const returnAllChats = async (req, res) => {
     if (req.headers.authorization) {
         const data = getUserNameFromToken(req.headers.authorization)
-        if (data !== "Invalid Token 33") {
+        if (data !== "Invalid Token") {
             const allChats = await chatsService.returnAllChats(data.username)
             res.send(allChats); // Send the array as a response to the client
             return
         } else {
-            return res.status(401).send("Invalid Token 33");
+            return res.status(401).send("Invalid Token");
         }
     }
     else {
@@ -43,12 +43,12 @@ const createChat = async (req, res) => {
     const requestBody = req.body; // Assuming the JSON object is in the request body
     // get the login ussernmae
     const data = getUserNameFromToken(req.headers.authorization)
-    if (data !== "Invalid Token 33") {
+    if (data !== "Invalid Token") {
         const newChat = await chatsService.createChat(requestBody.username, data.username)
         if (newChat != -1) {
             res.status(200).json(newChat);
         } else {
-            res.status(400).send('faild. problem with the DB');
+            res.status(400).send('failed. problem with the DB');
         }
     } else {
         return res.status(403).send('Token required');
