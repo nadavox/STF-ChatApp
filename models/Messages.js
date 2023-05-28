@@ -50,9 +50,10 @@ const conversationSchema = new Schema({
             default: ""
         }
     }],
-    messages: {
-        type: messageSchema,
-    }
+    messages: [{
+        type: Schema.Types.ObjectId,
+        ref: "Message"
+      }]
 });
 
 module.exports = mongoose.model('Messages', conversationSchema);

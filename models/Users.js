@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const chatSchema = require('./Chats'); // Import the chat schema
 
 const user = new Schema (
     {

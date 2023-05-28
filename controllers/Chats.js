@@ -65,6 +65,7 @@ const returnAllmessagesOfId = async (req, res) => {
         // } else {
         //     res.status(400).send('failed. problem with the DB');
         // }
+        res.status(200).send("suscces");
     } else {
         return res.status(403).send('Token required');
     }
