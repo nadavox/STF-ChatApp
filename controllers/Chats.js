@@ -17,7 +17,7 @@ function getUserNameFromToken(tokenFromCookie) {
     try {
         // Verify the token is valid
         const data = jwt.verify(updateToken, STF);
-        return data
+        return data.username
     } catch (err) {
         return "Invalid Token";
     }
@@ -25,9 +25,9 @@ function getUserNameFromToken(tokenFromCookie) {
 
 const returnAllChats = async (req, res) => {
     if (req.headers.authorization) {
-        const data = getUserNameFromToken(req.headers.authorization)
-        if (data !== "Invalid Token") {
-            const allChats = await chatsService.returnAllChats(data.username)
+        const username = getUserNameFromToken(req.headers.authorization)
+        if (username !== "Invalid Token") {
+            const allChats = await chatsService.returnAllChats(username)
             res.send(allChats); // Send the array as a response to the client
             return
         } else {
@@ -42,9 +42,9 @@ const returnAllChats = async (req, res) => {
 const createChat = async (req, res) => {
     const requestBody = req.body; // Assuming the JSON object is in the request body
     // get the login username
-    const data = getUserNameFromToken(req.headers.authorization)
-    if (data !== "Invalid Token") {
-        const newChat = await chatsService.createChat(requestBody.username, data.username)
+    const username = getUserNameFromToken(req.headers.authorization)
+    if (username !== "Invalid Token") {
+        const newChat = await chatsService.createChat(requestBody.username, username)
         if (newChat != -1) {
             res.status(200).json(newChat);
         } else {
@@ -57,9 +57,9 @@ const createChat = async (req, res) => {
 
 const returnAllmessagesOfId = async (req, res) => {
     // get the login username
-    const data = getUserNameFromToken(req.headers.authorization)
-    if (data !== "Invalid Token") {
-        const allMessages = await chatsService.returnAllmessagesOfId(req.params.id)
+    const username = getUserNameFromToken(req.headers.authorization)
+    if (username !== "Invalid Token") {
+        const allMessages = await chatsService.returnAllmessagesOfId(req.params.id, username)
         // if (newChat != -1) {
         //     res.status(200).json(newChat);
         // } else {

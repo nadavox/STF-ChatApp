@@ -65,7 +65,23 @@ const createChat = async (usernameContact, username) => {
     }
 }
 
-const returnAllmessagesOfId = async (id) => {
+const returnAllmessagesOfId = async (id, user) => {
+    // create array of size three:
+    // 1. for the details of the first user
+    // 2. for the details of the second user
+    // 3. for the array of messages
+    users = [0,0,0]
+    // the user here is the sender
+    arrayOfAllChats = await returnAllChats(user)
+    // get the chatmessage of the sender
+    const chatMessage = arrayOfAllChats.find(chat => chat.id === id);
+    // insert the first user in the converastion betwen the two users
+    users[0] = chatMessage.user
+    // find the details of the reciver so i cen enter them to the array
+    const user2 = await findUser(user)
+    users[1] = {username: user2.username,displayNmae: user2.displayName, profilePic: user2.profilePic}
+    // need to insert the array of messages.
+
 
 }
 
