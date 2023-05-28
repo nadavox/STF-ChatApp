@@ -19,10 +19,16 @@ async function findUser(username) {
 
 async function createChatSchema(user) {
     const userNameForChat = createUserNameForChat(user.username, user.displayName, user.profilePic)
-    const id = parseInt(uuid.v4().replace(/-/g, ''), 16);
+
+    // Fetch the highest existing id value from the Chats collection
+    const highestIdChat = await Chats.findOne({}, {}, { sort: { id: -1 } });
+
+  // Calculate the next available id
+    const nextId = highestIdChat ? highestIdChat.id + 1 : 1;
+
     // creat the chat
     const newChat = new Chats({
-        id: id, // Generate a unique ID for the chat
+        id: nextId, // Generate a unique ID for the chat
         user: userNameForChat,
         lastMessage: null
     });

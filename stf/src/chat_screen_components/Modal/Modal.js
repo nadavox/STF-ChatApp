@@ -16,7 +16,7 @@ function Modal(props) {
         setInvalidFields(invalidFields.filter(name => name !== "addContactInput"));
 
         const validAdd = await addContact(currentUser, inputValue)
-        if (validAdd != false) {
+        if (validAdd !== false) {
             setShowModal(false);
         }
         else {
@@ -33,7 +33,7 @@ function Modal(props) {
 
     const handleAddContact = async (e) => {
         const validAdd = await addContact(currentUser, inputValue)
-        if (validAdd != false) {
+        if (validAdd !== false) {
             props.setaddContact(true);
             props.setFinalInputValue(inputValue);
             setInputValue('');

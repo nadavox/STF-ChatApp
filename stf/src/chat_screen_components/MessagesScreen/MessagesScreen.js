@@ -1,13 +1,7 @@
 import Message from '../Message/Message';
-import DateMessage from '../Message/DateMessage';
 import './MessagesScreen.css';
 import { useState, useEffect, useRef, useContext } from 'react';
 import '../SendMessageBox/SendMessageBox.css'
-import paperClipIcon from '../../icons/paper-clip_icon.png';
-import cameraIcon from '../../icons/camera_icon.png';
-import addDocumentIcon from '../../icons/add-documents.png';
-import addImageIcon from '../../icons/add-image.png';
-import addEmojiIcon from '../../icons/add-emoji.png';
 import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
@@ -56,6 +50,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
             // clear the input field.
             inputRef.current.value = "";
         }
+        // eslint-disable-next-line
     }, [currentContactClicked]);
 
 
