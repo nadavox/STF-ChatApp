@@ -11,8 +11,6 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 
-
-
 const cors = require('cors');
 app.use(cors());
 
@@ -21,6 +19,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
+
 //print the env variebles of our program
 console.log(process.env)
 

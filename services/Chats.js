@@ -1,6 +1,5 @@
 const User = require('../models/Users');
 const Chats = require('../models/Chats');
-const UsersKey = require('../models/UsersKey');
 const uuid = require('uuid');
 
 const returnAllChats = async (username) => {

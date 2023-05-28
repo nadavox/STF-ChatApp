@@ -1,5 +1,4 @@
 import './Modal.css';
-import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import { useState, useContext, useRef, useEffect } from 'react';
 import addContact from '../../auth/AddContact';
@@ -11,12 +10,13 @@ function Modal(props) {
     const [invalidFields, setInvalidFields] = useState(['addContactInput']);
     const addBtnRef = useRef(null);
 
-    const handleInputChange = (e) => {
+    const handleInputChange = async (e) => {
         const inputValue = e.target.value; // Get the updated input value
         setInputValue(inputValue);
         setInvalidFields(invalidFields.filter(name => name !== "addContactInput"));
-        const matchingContact = registerUsers.find(contact => contact.username === inputValue);
-        if (matchingContact && inputValue !== currentUser.username) {
+
+        const validAdd = await addContact(currentUser, inputValue)
+        if (validAdd != false) {
             setShowModal(false);
         }
         else {
@@ -34,29 +34,22 @@ function Modal(props) {
     const handleAddContact = async (e) => {
         const validAdd = await addContact(currentUser, inputValue)
         if (validAdd != false) {
-            props.setaddContact(true)
+            props.setaddContact(true);
+            props.setFinalInputValue(inputValue);
+            setInputValue('');
+            setShowModal(true);
         } else {
             // no user
+            invalidFields.push('addContactInput');
+            setInvalidFields(invalidFields);
         }
-        // const matchingContact = registerUsers.find(contact => contact.username === inputValue);
-        // if (matchingContact && inputValue !== currentUser.username) {
-        //     props.setFinalInputValue(inputValue);
-        //     props.setNewContactDisplayName(matchingContact.displayName);
-        //     props.setNewContactPhotoUrl(matchingContact.photoUrl);
-        //     setInputValue('');
-        //     setShowModal(true);
-        // }
-        // else {
-        //     invalidFields.push('addContactInput');
-        //     setInvalidFields(invalidFields);
-        // }
 
-        // const addContactInput = document.querySelector('.addContactInput');
-        // if (addContactInput && invalidFields.includes('addContactInput')) {
-        //     addContactInput.classList.add('invalid');
-        // } else {
-        //     addContactInput.classList.remove('invalid');
-        // }
+        const addContactInput = document.querySelector('.addContactInput');
+        if (addContactInput && invalidFields.includes('addContactInput')) {
+            addContactInput.classList.add('invalid');
+        } else {
+            addContactInput.classList.remove('invalid');
+        }
     };
 
     const handleAddContactByEnter = (event) => {
@@ -90,6 +83,8 @@ function Modal(props) {
             modalElement.removeEventListener('shown.bs.modal', handleModalShown);
         };
     }, []);
+
+    console.log(showModal);
 
     return (
         <div ref={modalRef} className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static'>

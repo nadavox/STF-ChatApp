@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const UsersKey = require('./UsersKey');
 
 const Schema = mongoose.Schema;
 
