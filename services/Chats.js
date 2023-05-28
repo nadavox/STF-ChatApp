@@ -81,7 +81,7 @@ const returnAllmessagesOfId = async (id, user) => {
     const user2 = await findUser(user)
     users[1] = {username: user2.username,displayNmae: user2.displayName, profilePic: user2.profilePic}
     // need to insert the array of messages.
-
+    
 
 }
 
