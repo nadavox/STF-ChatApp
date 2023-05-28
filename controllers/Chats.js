@@ -71,4 +71,19 @@ const returnAllmessagesOfId = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnAllmessagesOfId };  
+const addNewMessage = async (req, res) => {
+    const content = req.body;
+    const username = getUserNameFromToken(req.headers.authorization);
+    if (username !== "Invalid Token") {
+        const newMessage = await chatsService.addNewMessage(username, content, req.params.id);
+        if (newMessage != -1) {
+            res.status(200).json(newMessage);
+        } else {
+            res.status(400).send('failed. problem with the DB');
+        }
+    } else {
+        return res.status(403).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnAllmessagesOfId, addNewMessage };  

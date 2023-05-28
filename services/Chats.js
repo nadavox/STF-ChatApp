@@ -1,6 +1,7 @@
 const User = require('../models/Users');
 const Chats = require('../models/Chats');
 const Messages = require('../models/Messages');
+const Message = require('../models/Message');
 
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
@@ -89,4 +90,41 @@ const returnAllmessagesOfId = async (id) => {
     return messages;
 }
 
-module.exports = { returnAllChats, createChat, returnAllmessagesOfId }
+async function createMessageSchema(sender, messageContent) {
+    const userNameForChat = createUserNameForChat(sender.username, sender.displayName, sender.profilePic);
+
+    // Fetch the highest existing id value from the Chats collection
+    const highestIdChat = await Message.findOne({}, {}, { sort: { id: -1 } });
+
+  // Calculate the next available id
+    const nextId = highestIdChat ? highestIdChat.id + 1 : 1;
+
+    // creat the chat
+    const newMessage = new Message({
+        id: nextId, // Generate a unique ID for the message
+        created: new Date().toLocaleString(),
+        sender: userNameForChat,
+        content: messageContent
+    });
+    return newMessage;
+}
+
+const addNewMessage = async (username, messageContent, id) => {
+    //find the username in users:
+    const user = await findUser(username);
+
+    // new chat when the username is sender
+    const newMessage = await createMessageSchema(user, messageContent)
+
+    const messageList = await Messages.findOne({ id: parseInt(id) });
+
+    // push the new chat to the user array chats
+    messageList.push(newMessage);
+    // save it in the DB
+    await newMessage.save();
+    await messageList.save();
+
+    return newMessage;
+}
+
+module.exports = { returnAllChats, createChat, returnAllmessagesOfId, addNewMessage }
