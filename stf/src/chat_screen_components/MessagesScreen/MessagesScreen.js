@@ -147,7 +147,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         return formattedDate
     }
 
-    if (typeof ListOfMessages === 'undefined') {
+    if (typeof ListOfMessages === 'undefined' || ListOfMessages.length === 0) {
         // no contact chosen
         return (
             <>
