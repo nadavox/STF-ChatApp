@@ -11,4 +11,6 @@ router.route('/:id').get(chatsController.returnAllmessagesOfId);
 
 router.route('/:id/Messages').post(chatsController.addNewMessage);
 
+router.route('/:id/Messages').get(chatsController.addNewMessage);
+
 module.exports = router;

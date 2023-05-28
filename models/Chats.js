@@ -7,7 +7,7 @@ const conversationSchema = new Schema({
     type: Number,
     default: ""
   },
-  user: {
+  users: [{
     username: {
       type: String,
       default: ""
@@ -20,11 +20,11 @@ const conversationSchema = new Schema({
       type: String,
       default: ""
     }
-  }, 
-  lastMessages: {
+  }],
+  messages: [{
     type: Schema.Types.ObjectId,
     ref: "Message"
-  }
+  }]
 });
 
 module.exports = mongoose.model('Chats', conversationSchema);
