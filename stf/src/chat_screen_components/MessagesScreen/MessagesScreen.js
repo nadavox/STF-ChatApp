@@ -25,7 +25,9 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
     async function getmessages() {
         if (currentContactClicked !== '') {
             const messages = await showMessages(currentUser, currentContactClicked)
-            setListOfMessages(messages.messages)
+            if (messages != null) {
+                setListOfMessages(messages.messages)
+            }
         }
     }
 
@@ -142,7 +144,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         return formattedDate
     }
 
-    if (typeof ListOfMessages === 'undefined' || ListOfMessages.length === 0) {
+    if (typeof id === 'undefined') {
         // no contact chosen
         return (
             <>

@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.761a3c52.css",
-    "main.js": "/static/js/main.261d626a.js",
+    "main.js": "/static/js/main.881167ba.js",
     "static/media/incom_chat_screen_pic_2.png": "/static/media/incom_chat_screen_pic_2.8fe55f6f1d818ec2cbde.png",
     "index.html": "/index.html",
     "main.761a3c52.css.map": "/static/css/main.761a3c52.css.map",
-    "main.261d626a.js.map": "/static/js/main.261d626a.js.map"
+    "main.881167ba.js.map": "/static/js/main.881167ba.js.map"
   },
   "entrypoints": [
     "static/css/main.761a3c52.css",
-    "static/js/main.261d626a.js"
+    "static/js/main.881167ba.js"
   ]
 }

@@ -59,13 +59,13 @@ const returnAllmessagesOfId = async (req, res) => {
     // get the login username
     const username = getUserNameFromToken(req.headers.authorization)
     if (username !== "Invalid Token") {
-        const allMessages = await chatsService.returnAllmessagesOfId(req.params.id, username)
-        // if (newChat != -1) {
-        //     res.status(200).json(newChat);
-        // } else {
-        //     res.status(400).send('failed. problem with the DB');
-        // }
-        res.status(200).send("suscces");
+        const allMessages = await chatsService.returnAllmessagesOfId(req.params.id)
+        console.log("all messages: ", allMessages)
+        if (allMessages != -1) {
+            res.status(200).json(allMessages);
+        } else {
+            res.status(400).send('failed. problem with the DB');
+        }
     } else {
         return res.status(403).send('Token required');
     }
