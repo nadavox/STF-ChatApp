@@ -62,12 +62,22 @@ const createChat = async (usernameContact, username) => {
     }
 }
 
-const returnAllmessagesOfId = async (id) => {
+const returnTheConversation = async (id) => {
     newId = id;
-    const messages = await Chats.findOne({ id: parseInt(newId) }).populate('messages');
-    console.log("the messages: ", messages);
+    const conversation = await Chats.findOne({ id: parseInt(newId) });
+    console.log("the conversation: ", conversation);
     console.log("-----------------");
-    return messages;
+    const messages = await returnAllTheMessages(id);
+    console.log("only the messages: ", messages);
+    console.log("-----------------");
+    const updatedConversation = {
+        id: conversation.id,
+        users: conversation.users,
+        messages: messages
+    }
+    console.log("the updated conversation: ", updatedConversation);
+    console.log("-----------------");
+    return updatedConversation;
 }
 
 async function createMessageSchema(sender, messageContent) {
@@ -107,4 +117,10 @@ const addNewMessage = async (username, messageContent, id) => {
     return newMessage;
 }
 
-module.exports = { returnAllChats, createChat, returnAllmessagesOfId, addNewMessage }
+const returnAllTheMessages = async (id)  => {
+    newId = id;
+    const messages = await Chats.findOne({ id: parseInt(newId) }).populate('messages');
+    return messages.messages;
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages }

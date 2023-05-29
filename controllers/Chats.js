@@ -22,6 +22,15 @@ function getUserNameFromToken(tokenFromCookie) {
     }
 }
 
+const checkWhichUserToReturn = (chat, username) => {
+    if (chat.users[0].username === username) {
+        return chat.users[1];
+    }
+    else {
+        return chat.users[0];
+    }
+}
+
 const returnAllChats = async (req, res) => {
     if (req.headers.authorization) {
         const username = getUserNameFromToken(req.headers.authorization)
@@ -31,7 +40,7 @@ const returnAllChats = async (req, res) => {
             const filteredChats = allChats.map(chat => {
                 return {
                     id: chat.id,
-                    user: chat.users[1],
+                    user: checkWhichUserToReturn(chat, username),
                     lastMessage: null
                 };
             });
@@ -70,11 +79,11 @@ const createChat = async (req, res) => {
     }
 }
 
-const returnAllmessagesOfId = async (req, res) => {
+const returnTheConversation = async (req, res) => {
     // get the login username
     const username = getUserNameFromToken(req.headers.authorization)
     if (username !== "Invalid Token") {
-        const allMessages = await chatsService.returnAllmessagesOfId(req.params.id)
+        const allMessages = await chatsService.returnTheConversation(req.params.id)
         // console.log("all messages: ", allMessages)
         if (allMessages != -1) {
             res.status(200).json(allMessages);
@@ -88,7 +97,6 @@ const returnAllmessagesOfId = async (req, res) => {
 
 const addNewMessage = async (req, res) => {
     const content = req.body.msg;
-    console.log(content);
     const username = getUserNameFromToken(req.headers.authorization);
     if (username !== "Invalid Token") {
         const newMessage = await chatsService.addNewMessage(username, content, req.params.id);
@@ -103,4 +111,19 @@ const addNewMessage = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnAllmessagesOfId, addNewMessage };  
+const returnAllTheMessages = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    if (username !== "Invalid Token") {
+        const allTheMessages = await chatsService.returnAllTheMessages(req.params.id);
+        console.log("all the messages: ", allTheMessages)
+        if (allTheMessages != -1) {
+            res.status(200).json(allTheMessages);
+        } else {
+            res.status(400).send('failed. problem with the DB');
+        }
+    } else {
+        return res.status(403).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages };  

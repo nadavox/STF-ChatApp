@@ -7,10 +7,10 @@ router.route('/').get(chatsController.returnAllChats);
 
 router.route('/').post(chatsController.createChat);
 
-router.route('/:id').get(chatsController.returnAllmessagesOfId);
+router.route('/:id').get(chatsController.returnTheConversation);
 
 router.route('/:id/Messages').post(chatsController.addNewMessage);
 
-router.route('/:id/Messages').get(chatsController.addNewMessage);
+router.route('/:id/Messages').get(chatsController.returnAllTheMessages);
 
 module.exports = router;
