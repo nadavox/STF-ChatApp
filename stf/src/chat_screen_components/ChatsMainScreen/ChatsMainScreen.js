@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import Modal from '../Modal/Modal';
 
 function ChatsMainScreen() {
-    const [testCounterOfMessages, setTestCounterOfMessages] = useState(false);
+    const [currentChatThatGotMessage, setCurrentChatThatGotMessage] = useState(0);
 
     // Define state variables
     //displatCONTACTROW is when we click
@@ -24,7 +24,7 @@ function ChatsMainScreen() {
                     <MessagesScreen
                         id={clickContact}
                         currentContactClicked={clickContact}
-                        setTestCounterOfMessages={setTestCounterOfMessages}
+                        setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                     />
                 )
 
@@ -46,8 +46,8 @@ function ChatsMainScreen() {
                         pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
                         setaddContact={setaddContact} setClickContact={setClickContact}
                         currentContactClicked={clickContact}
-                        testCounterOfMessages={testCounterOfMessages}
-                        setTestCounterOfMessages={setTestCounterOfMessages}
+                        currentChatThatGotMessage={currentChatThatGotMessage}
+                        setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                     />
 
                     {/* from here is right side of the screen */}

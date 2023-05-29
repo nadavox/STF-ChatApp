@@ -5,6 +5,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
+import updateChats from '../../auth/UpdateContactsList';
 
 function ContactsSide(props) {
 
@@ -31,7 +32,7 @@ function ContactsSide(props) {
         });
         // update the current contact that we click
         props.setClickContact(contactId)
-        if(textInSearch) {
+        if (textInSearch) {
             setTextInSearch(false);
             setFinalSearchValue("");
         }
@@ -76,11 +77,28 @@ function ContactsSide(props) {
     }, [props.addContact])
 
     useEffect(() => {
-        if (props.testCounterOfMessages) {
-            getcontacts()
-            props.setTestCounterOfMessages(false)
-        }
-    }, [props.testCounterOfMessages])
+        const fetchData = async () => {
+          if (props.currentChatThatGotMessage !== 0) {
+            const l = await updateChats(currentUser, props.currentChatThatGotMessage);
+            setListOfContacts(l);
+            props.setCurrentChatThatGotMessage(0);
+            // moveContactToTop(props.currentChatThatGotMessage);
+          }
+        };
+
+        fetchData(); // Immediately invoke the async function
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [props.currentChatThatGotMessage]);
+
+    // useEffect(() => {
+    //     if (props.currentChatThatGotMessage !== 0) {
+    //         const l = updateChats(currentUser, props.currentChatThatGotMessage);
+    //         setListOfContacts(l);
+    //         console.log("list of updated contacts: ", l)
+    //         props.setCurrentChatThatGotMessage(0);
+    //     }
+    // }, [props.currentChatThatGotMessage]);
 
     function handleChange(event) {
         const filtered = listOfContacts.filter(
@@ -92,6 +110,18 @@ function ContactsSide(props) {
             setTextInSearch(false);
         }
     }
+
+
+    // const moveContactToTop = (id) => {
+    //     setListOfContacts((prevContacts) => {
+    //         console.log(prevContacts);
+    //         const contactToMove = prevContacts.find((contact) => contact.id === id);
+    //         console.log("contact to move: ", contactToMove)
+    //         const updatedContacts = prevContacts.filter((contact) => contact.id !== id);
+    //         return [contactToMove, ...updatedContacts];
+    //     });
+    //     console.log("updated contacts list", listOfContacts);
+    // };
 
     return (
         <>

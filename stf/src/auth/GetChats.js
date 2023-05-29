@@ -1,4 +1,3 @@
-
 async function getchats(currentUser) {
     try {
         //getting all the chats with the curent yse = number of contacts he had.
@@ -24,4 +23,3 @@ async function getchats(currentUser) {
 }
 
 export default getchats;
-
