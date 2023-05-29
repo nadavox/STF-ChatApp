@@ -50,11 +50,11 @@
 }
 
 .selected:hover .messageTime {
-    color: rgb(202, 202, 202);
+    color: rgb(152, 148, 148);
 }
 
 .selected:hover .lastMessage {
-    color: black;
+    color: rgb(152, 148, 148);
 }
 
 .contactIcon {
@@ -73,13 +73,13 @@
 .messageTime {
     float: right;
     font-size: 10pt;
-    color: rgb(202, 202, 202);
+    color: rgb(152, 148, 148);
     margin-bottom: 0px;
     padding-right: 2px;
 }
 
 .lastMessage {
-    color: black ;
+    color: rgb(152, 148, 148) ;
     float: left;
     margin-left: 45px;
     font-size: 11pt;

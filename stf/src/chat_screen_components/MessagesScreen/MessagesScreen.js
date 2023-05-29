@@ -1,33 +1,35 @@
 import Message from '../Message/Message';
-import DateMessage from '../Message/DateMessage';
 import './MessagesScreen.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import '../SendMessageBox/SendMessageBox.css'
-import paperClipIcon from '../../icons/paper-clip_icon.png';
-import cameraIcon from '../../icons/camera_icon.png';
-import addDocumentIcon from '../../icons/add-documents.png';
-import addImageIcon from '../../icons/add-image.png';
-import addEmojiIcon from '../../icons/add-emoji.png';
 import send_Icon from '../../icons/send_Icon.png';
+import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
+import showMessages from '../../auth/ShowMessages';
 
 
 // This component takes in the current user's username and a list of messages to display.
-const MessagesScreen = ({ username, listofmessages, currentContactClicked, setLastMessageTime }) => {
+const MessagesScreen = ({ id, currentContactClicked, setTestCounterOfMessages }) => {
+    // the current user that log in
+    const { currentUser } = useContext(CurrentUserContext);
     //ref for the first scrren.
     const firstScreenRef = useRef(null);
     //ref for the last message so it will scroll automatic
     const messagesEndRef = useRef(null);
-    // Define flag when I send message
-    const [sendMessageFlag, setSendMessageFlag] = useState(false);
     // If it is new user without any contacts or they haven't clicked on any contact, we can present whatever we want
     const inputRef = useRef();
-    // Store the current year, month, day, and hour/minute in state
-    const [year, setYear] = useState({ prevYear: '', year: '1' });
-    const [month, setMonth] = useState({ prevMonth: '', month: '1' });
-    const [day, setDay] = useState({ prevDay: '', day: '1' });
-    const [hourANDmin, setHourANDmin] = useState({ hour: '', min: '' });
     // Init the input value to empty
     const [inputValue, setInputValue] = useState("");
+    const [ListOfMessages, setListOfMessages] = useState([])
+    const [lastMessageTime, setLastMessageTime] = useState({ lastMessae: "", newMessage: "" });
+
+    async function getmessages() {
+        if (currentContactClicked !== '') {
+            const messages = await showMessages(currentUser, currentContactClicked)
+            if (messages != null) {
+                setListOfMessages(messages.messages)
+            }
+        }
+    }
 
     /**
     * A function that is called when the value of the input field changes.
@@ -39,123 +41,113 @@ const MessagesScreen = ({ username, listofmessages, currentContactClicked, setLa
         setInputValue(e.target.value)
     };
 
-    // Get the current time and set the year, month, day, and hour/minute state variables accordingly
-    function getCurrentTime() {
-        const now = new Date();
-        const currentmonth = (now.getMonth() + 1).toString().padStart(2, '0');
-        const currentday = now.getDate().toString().padStart(2, '0');
-        const currentyear = now.getFullYear();
-        if (currentyear !== year.year) {
-            // need to update the year
-            setYear({ prevYear: year.year, year: currentyear })
-        }
-        if (currentmonth !== month.month) {
-            // updating the month
-            setMonth({ prevMonth: month.month, month: currentmonth })
-        }
-        if (currentday !== day.day) {
-            // need to update the day
-            setDay({ prevDay: day.day, day: currentday })
-        }
-    }
-
-    // get the current hour and min
-    function getHourMinTime() {
-        const now = new Date();
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const hours = now.getHours().toString().padStart(2, '0');
-        setHourANDmin({ hour: hours, min: minutes });
-    }
-
-    // run only one, init the date
-    useEffect(() => {
-        // Initialization code comes here
-        const now = new Date();
-        const currentmonth = (now.getMonth() + 1).toString().padStart(2, '0');
-        const currentday = now.getDate().toString().padStart(2, '0');
-        const currentyear = now.getFullYear();
-        setYear({ prevYear: year.year, year: currentyear })
-        setMonth({ prevMonth: month.month, month: currentmonth })
-        setDay({ prevDay: day.day, day: currentday })
-        // eslint-disable-next-line
-    }, []);
-
 
     // useeffect for clean the input when changing the contact
+    // getmessages for the new contact
     useEffect(() => {
-        if (inputRef && inputRef.current){
+        getmessages()
+        if (inputRef && inputRef.current) {
             //clean the input value.
             setInputValue("");
             // clear the input field.
             inputRef.current.value = "";
         }
+        // eslint-disable-next-line
     }, [currentContactClicked]);
 
-    //use effect for send messgae
-    useEffect(() => {
-        // check if the sendMessageFlag is true.
-        if (sendMessageFlag) {
-            // check if the date has changed.
-            if (year.prevYear !== year.year || month.prevMonth !== month.month || day.prevDay !== day.day) {
-                // creating date:
-                const dateTimeString = `${year.year}/${month.month}/${day.day}`;
-                const messageDate = { fromWho: "DateMessage", time: dateTimeString };
-                // add the message to the list.
-                listofmessages.push(messageDate);
-                //update the prevvalue to be the new value.
-                setYear({ prevYear: year.year, year: year.year });
-                setMonth({ prevMonth: month.month, month: month.month });
-                setDay({ prevDay: day.day, day: day.day });
-            }
-            // create message object.
-            const hourAndMinute = `${hourANDmin.hour}:${hourANDmin.min}`;
-            const newMessage = { fromWho: "my-msg", content: inputValue, time: hourAndMinute };
-            // add the message to the list.
-            listofmessages.push(newMessage);
-            //clean the input value.
-            setInputValue("");
-            inputRef.current.value = "";
-            // set the sendMessageFlag to false.
-            setSendMessageFlag(false);
-            //scroll down to the last message
-            setTimeout(() => {
-                messagesEndRef.current.scrollTo({
-                    top: messagesEndRef.current.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 10)
-        }
-        // eslint-disable-next-line
-    },[sendMessageFlag])
-    
 
-    function sendMessage(e) {
+
+    // useEffect(() => {
+    //     console.log("the list of messages: ", ListOfMessages)
+    //     if (ListOfMessages.length > 1) {
+    //         const dateNewMessage = new Date(ListOfMessages[ListOfMessages.length - 1].created);
+    //         console.log("the date 1: ",dateNewMessage)
+    //         const dateLastMessage = new Date(ListOfMessages[ListOfMessages.length - 2].created);
+    //         console.log("the date 2: ",dateLastMessage)
+    //         dateNewMessage.setHours(0,0,0,0);
+    //         dateLastMessage.setHours(0,0,0,0);
+    //     }
+    // }, [ListOfMessages]);
+
+    async function sendMessage(e) {
         if ((inputValue !== "" && e.key === "Enter") || (e.type === "click" && inputValue !== "")) {
-            //check if i have a date message in the list
-            if (listofmessages) {
-                const hasDateMessage = listofmessages.some(message => message.fromWho === 'DateMessage');
-                if (hasDateMessage) {
-                    //get the time
-                    getCurrentTime();
-                    //it is update the prev year to be the curr year if there is new year
-                    //it is update the prev month to be the curr month if there is new year
-                    //it is update the prev day to be the curr day if there is new year
-
+            const newMessage = { msg: inputValue };
+            try {
+                //send new message to a chat
+                const url = 'http://localhost:5000/api/Chats/' + currentContactClicked + '/Messages'
+                const res = await fetch(url, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'accept': 'text/plain',
+                        Authorization: currentUser.token
+                    },
+                    body: JSON.stringify(newMessage)
+                });
+                if (res.ok) {
+                    const currentMessage = await res.json()
+                    console.log("the current message: ", currentMessage)
+                    setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
+                    // need to update the list of message.
+                    //clean the input value.
+                    setInputValue("");
+                    // clear the input field.
+                    inputRef.current.value = "";
+                    updateListOfMessages()
+                    setTestCounterOfMessages(true)
                 } else {
-                    setYear({ prevYear: "random", year: year.year })
-                    setMonth({ prevMonth: "random", month: month.month })
-                    setDay({ prevDay: "random", day: day.day })
+                    console.log('error with the server from sending message');
                 }
+            } catch (error) {
+                console.log(error)
+                console.log('error from try and cacth');
             }
-            //set the hour and min
-            getHourMinTime();
-            //set the flag of the send message to true
-            setSendMessageFlag(true);
         }
     }
 
-    if (!Array.isArray(listofmessages)) {
-        // not a list. desgin.
+    async function updateListOfMessages() {
+        try {
+            console.log("id :", id)
+            //send new message to a chat
+            const url = 'http://localhost:5000/api/Chats/' + id + '/Messages'
+            const res = await fetch(url, {
+                method: 'get',
+                headers: {
+                    'accept': 'text/plain',
+                    Authorization: currentUser.token
+                },
+            });
+            if (res.ok) {
+                const list = await res.json()
+                console.log("the details list of messages: ", list)
+                setListOfMessages(list)
+            } else {
+                console.log('error with the server from sending message');
+            }
+        } catch (error) {
+            console.log(error)
+            console.log('error from try and cacth');
+        }
+    }
+
+    function generateTime(dateString) {
+        const date = new Date(dateString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        return `${hours}:${minutes}`;
+    }
+
+    function getDateFromMessage(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Add 1 because getMonth() returns zero-based month
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}`;
+    }
+
+    if (typeof id === 'undefined') {
+        // no contact chosen
         return (
             <>
                 <div className='row chatScreenFirstBackGround'>
@@ -168,45 +160,20 @@ const MessagesScreen = ({ username, listofmessages, currentContactClicked, setLa
     return (
         <>
             <ul id="chatScreen" className="p-2 flex-grow-1 overflow-y-scroll m-0" ref={messagesEndRef}>
-                {listofmessages.map((message, index) => (
-                    message.fromWho === 'DateMessage' ? (
-                        <DateMessage key={index} fromWho={message.fromWho} time={message.time} />
-                    ) : (
-                        <Message key={index} fromWho={message.fromWho} content={message.content} time={message.time} />
-                    )
+                {ListOfMessages.map((message, index) => (
+                    <Message key={message.id}
+                        sender={message.sender.username}
+                        content={message.content}
+                        time={generateTime(message.created)}
+                        date={getDateFromMessage(message.created)}
+                        currentUser={currentUser.username}
+                        lastMessgeDate={index > 0 ? getDateFromMessage(ListOfMessages[index - 1].created) : "first message"}
+                    />
                 ))}
             </ul>
+
             <div id="sendMessageBox" className="mt-auto d-flex align-items-center">
 
-                <div className="btn-group">
-                    <button id="paperClipButton" className="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="top" >
-                        <img src={paperClipIcon} alt="Paper Clip"></img>
-                    </button>
-
-                    <ul id="allOptions" className="dropdown-menu" data-bs-placement="top">
-                        <div className=" btn-group flex-column" role="group">
-                            <li>
-                                <button className="dropdown-item add-options btn btn-outline-primary test" type="button">
-                                    <img className="addToChatImg" src={addDocumentIcon} alt="1"></img>
-                                </button>
-                            </li>
-                            <li>
-                                <button className="dropdown-item add-options btn btn-outline-primary" type="button">
-                                    <img className="addToChatImg" src={addImageIcon} alt="3"></img>
-                                </button>
-                            </li>
-                            <li>
-                                <button className="dropdown-item add-options btn btn-outline-primary" type="button">
-                                    <img className="addToChatImg" src={addEmojiIcon} alt="2"></img>
-                                </button>
-                            </li>
-                        </div>
-                    </ul>
-                </div>
-                <button id="takePhotoButton" type="button" className="h-100">
-                    <img src={cameraIcon} alt=""></img>
-                </button>
                 <div className="col p-0">
                     <input id="sendMessageInput" type="text" placeholder="New message here..." className="h-100"
                         onChange={onChange} ref={inputRef} onKeyDown={sendMessage}></input>

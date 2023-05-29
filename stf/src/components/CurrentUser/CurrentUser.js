@@ -5,10 +5,9 @@ export const CurrentUserContext = React.createContext();
 export const CurrentUserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState({
         username: '',
-        password: '',
         displayName: '',
         photoUrl: '',
-        contactsList: [],
+        token: ''
     });
 
     const updateUser = (newUser) => {

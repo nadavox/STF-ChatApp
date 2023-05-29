@@ -12,7 +12,7 @@ function InputDiv(props) {
   // handle on change
   const handleAllInputChange = (e) => {
     props.setter(e.target.value);
-    props.handler(e, props.inputTitle);
+    props.handler(e, props.forInvalid);
     setInputValue(e.target.value);
   };
 
@@ -25,22 +25,17 @@ function InputDiv(props) {
   const inputType = props.inputType === 'password' && isPasswordVisible ? 'text' : props.inputType;
 
   useEffect(() => {
-    setTimeout(() => {
-      // Initialize the popover
-      const popoverTriggerList = document.querySelectorAll(`#${props.inputId}[data-bs-toggle="popover"]`);
-      const popoverList = Array.from(popoverTriggerList).map(popoverTriggerEl => new Popover(popoverTriggerEl, {
-        content: props.popoverContent,
-        title: props.popoverTitle
-      }));
-  
-      // Cleanup function to destroy the popover
-      return () => {
-        popoverList.forEach(popover => {
-          popover.dispose();
-        });
-      };
-    }, 50); // delay by 50ms
-  }, [props.inputId, props.popoverContent, props.popoverTitle]);
+    // Initialize the popover
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = Array.from(popoverTriggerList).map(popoverTriggerEl => new Popover(popoverTriggerEl));
+
+    // Cleanup function to destroy the popover
+    return () => {
+      popoverList.forEach(popover => {
+        popover.dispose();
+      });
+    };
+  }, [props.inputId, props.divclassName]);
 
   return (
     <div className={props.divclassName} id={props.divId}>
@@ -50,11 +45,13 @@ function InputDiv(props) {
           id={props.inputId}
           type={inputType}
           placeholder={props.inputPlaceholder}
-          className="btn"
+          className={props.inputclass}
           tabIndex="0"
           role="button"
           data-bs-toggle="popover"
           data-bs-trigger="hover"
+          data-bs-title={props.popoverTitle}
+          data-bs-content={props.popoverContent}
           onChange={handleAllInputChange}
           value={inputValue}
         />

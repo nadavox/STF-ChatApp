@@ -1,11 +1,10 @@
 import './Modal.css';
-import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import { useState, useContext, useRef, useEffect } from 'react';
+import addContact from '../../auth/AddContact';
 
 function Modal(props) {
     const [inputValue, setInputValue] = useState("");
-    const [showModal, setShowModal] = useState(true);
     const { currentUser } = useContext(CurrentUserContext);
     const [invalidFields, setInvalidFields] = useState(['addContactInput']);
     const addBtnRef = useRef(null);
@@ -14,14 +13,6 @@ function Modal(props) {
         const inputValue = e.target.value; // Get the updated input value
         setInputValue(inputValue);
         setInvalidFields(invalidFields.filter(name => name !== "addContactInput"));
-        console.log(invalidFields);
-        const matchingContact = registerUsers.find(contact => contact.username === inputValue);
-        if (matchingContact && inputValue !== currentUser.username) {
-            setShowModal(false);
-        }
-        else {
-            setShowModal(true);
-        }
 
         const addContactInput = document.querySelector('.addContactInput');
         if (addContactInput && invalidFields.includes('addContactInput')) {
@@ -31,16 +22,14 @@ function Modal(props) {
         }
     };
 
-    const handleAddContact = (e) => {
-        const matchingContact = registerUsers.find(contact => contact.username === inputValue);
-        if (matchingContact && inputValue !== currentUser.username) {
+    const handleAddContact = async (e) => {
+        const okay = await addContact(currentUser, inputValue);
+        if (okay !== false) {
+            props.setaddContact(true);
             props.setFinalInputValue(inputValue);
-            props.setNewContactDisplayName(matchingContact.displayName);
-            props.setNewContactPhotoUrl(matchingContact.photoUrl);
-            setInputValue('');
-            setShowModal(true);
-        }
-        else {
+            exitBtnRef.current.click();
+        } else {
+            // no user
             invalidFields.push('addContactInput');
             setInvalidFields(invalidFields);
         }
@@ -68,6 +57,7 @@ function Modal(props) {
 
     const modalRef = useRef(null);
     const inputRef = useRef(null);
+    const exitBtnRef = useRef(null);
 
     useEffect(() => {
         const modalElement = modalRef.current;
@@ -91,7 +81,7 @@ function Modal(props) {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h1 className="modal-title fs-5" id="exampleModalLabel">Add new contact</h1>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleExitModal}></button>
+                        <button ref={exitBtnRef} type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleExitModal}></button>
                     </div>
                     <div className="modal-body">
                         <input
@@ -105,7 +95,7 @@ function Modal(props) {
                             autoFocus />
                     </div>
                     <div className="modal-footer">
-                        <button ref={addBtnRef} type="button" className="btn btn-primary" id="addNewContactButton" onClick={handleAddContact} data-bs-dismiss={showModal ? '' : 'modal'} disabled={!inputValue}>Add</button>
+                        <button ref={addBtnRef} type="button" className="btn btn-primary" id="addNewContactButton" onClick={handleAddContact} disabled={!inputValue}>Add</button>
                     </div>
                 </div>
             </div>

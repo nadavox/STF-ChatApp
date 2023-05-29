@@ -3,103 +3,107 @@ import Contact from '../Contact/Contact';
 import UserRow from '../UserRow/UserRow';
 import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
-import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import SearchContact from '../SearchContact/SearchContact';
 import MessagesScreen from '../MessagesScreen/MessagesScreen';
+import getchats from '../../auth/GetChats';
 
 function ContactsSide(props) {
-    const [currUserPicture, setCurrUserPicture] = useState(null);
-    const [firstName, setFirstName] = useState("");
+
     const { currentUser } = useContext(CurrentUserContext);
-    const existingContact = currentUser.contactsList.some(contact => contact.username === props.username);
-    const [finalSearchValue, setFinalSearchValue] = useState("");
-    const [filteredContacts, setFilteredContacts] = useState([]);
-    const [lastMessageTime, setLastMessageTime] = useState("");
-    const [textInSearch, setTextInSearch] = useState(false);
+    //inisde of the list of contacts is all the contacts of the user.
+    const [ListOfContacts, setListOfContacts] = useState([])
 
-    // add contact to the current user
-    const addContact = (username, photoUrl, contactDispalyName, lastMessageTime, lastMessage, notification) => {
-        // create the new contact we add to the curr contact
-        const newContact = {
-            username,
-            contactDispalyName,
-            photoUrl,
-            lastMessageTime,
-            lastMessage,
-            notification,
-            messagesScreen: <MessagesScreen username={username}
-                             listofmessages={[]} selectedContact={props.currentContactClicked} setLastMessageTime={setLastMessageTime} />
-        };
-        // push the new contact to the cur user for his contacts.
-        const targetUser = registerUsers.find((user) => user.username === currentUser.username);
-        if (targetUser) {
-            targetUser.contactsList.push(newContact);
-            props.setCopyCurrUserContacts([...props.copyCurrUserContacts, newContact]);
-        }
-    };
+    async function getcontacts() {
+        const l = await getchats(currentUser)
+        setListOfContacts(l)
+        console.log("list of contacts: ", l)
+    }
 
-    const handleClickingOnContact = (contactId) => {
-        props.setCurrentContactClicked(contactId);
-        const currSelectedContact = props.copyCurrUserContacts.find(contact => contact.username === contactId);
+    // in contact id i have the key of the chat
+    const handleClickingOnContact = async (contactId) => {
+        const currSelectedContact = ListOfContacts.find((contact) => contact.id === contactId);
         props.setDisplayContactRow({
-            picture: currSelectedContact.photoUrl,
-            displayName: currSelectedContact.contactDispalyName,
-            username: currSelectedContact.username
+            picture: currSelectedContact.user.profilePic,
+            displayName: currSelectedContact.user.displayName,
+            username: currSelectedContact.user.username
         });
-        if(textInSearch) {
-            setTextInSearch(false);
-            setFinalSearchValue("");
-        }
+        // update the current contact that we click
+        props.setClickContact(contactId)
+        // if(textInSearch) {
+        //     setTextInSearch(false);
+        //     setFinalSearchValue("");
+        // }
     };
 
-    function handleKeyDown(event) {
-        if (event.keyCode === 13) {
-            // Call the function you want to execute on Enter key press
-            const filtered = registerUsers.find((user) => user.username === currentUser.username).contactsList.filter(
-                (contact) => { return contact.contactDispalyName.includes(finalSearchValue); });
-            setFilteredContacts(filtered);
+    // init the contacts list
+    useEffect(() => {
+        getcontacts()
+    }, [])
+
+    function generateTime(dateString) {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+
+        // Compare year, month, and day of the dates
+        const isCurrentDate = (
+            date.getFullYear() === currentDate.getFullYear() &&
+            date.getMonth() === currentDate.getMonth() &&
+            date.getDate() === currentDate.getDate()
+        );
+
+        if(isCurrentDate) {
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            return `${hours}:${minutes}`;
+        }
+        else {
+            const day = date.getDate();
+            const month = date.getMonth() + 1; // Add 1 because getMonth() returns zero-based month
+            const year = date.getFullYear();
+            
+            return `${day}.${month}.${year}`;
         }
     }
 
-    function handleChange(event) {
-        const filtered = registerUsers.find((user) => user.username === currentUser.username).contactsList.filter(
-            (contact) => { return contact.contactDispalyName.includes(event); });
-        setFilteredContacts(filtered);
-        if (event !== "") {
-            setTextInSearch(true);
-        } else {
-            setTextInSearch(false);
+    // use it when i add new contact to render thr component.
+    useEffect(() => {
+        if (props.addContact) {
+            getcontacts() // to update to contacts in the list.
+            props.setaddContact(false)
         }
-    }
+    }, [props.addContact])
 
     useEffect(() => {
-        if (currentUser) {
-            setCurrUserPicture(currentUser.photoUrl);
-            setFirstName(currentUser.displayName);
+        if (props.testCounterOfMessages) {
+            getcontacts()
+            props.setTestCounterOfMessages(false)
         }
-
-        if (props.username !== '' && props.pressedOnAddContactValue) {
-            props.pressedOnAddContact(false);
-            if (!existingContact) {
-                addContact(props.username, props.photoUrl, props.displayName, lastMessageTime, "", 0);
-            }
-            else {
-                // the username already exist in contact list - go to his conversation
-                handleClickingOnContact(props.username);
-            }
-        }
-        //eslint-disable-next-line
-    }, [currentUser, props.CurrentContactClicked, props.username, props.photoUrl, props.displayName, existingContact, finalSearchValue]);
+    }, [props.testCounterOfMessages])
 
     return (
         <>
             <div className="col-1 p-0 d-flex flex-column flex-grow-1 position-relative leftSide">
-                <UserRow picture={currUserPicture} firstName={firstName} setPressed={props.pressedOnAddContact} />
+                {/* need to add onclick function to the userRow */}
+                <UserRow picture={currentUser.photoUrl} firstName={currentUser.displayName}
+                    setPressed={props.setPressedOnAddContact} setaddContact={props.setaddContact} />
 
-                <SearchContact onKeyDown={handleKeyDown} onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} />
+                {/* <SearchContact onKeyDown={handleKeyDown} onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} /> */}
 
                 <ul id="contactsList">
-                    {filteredContacts.length >= 0 && textInSearch ?
+                    {ListOfContacts.map((contact) => (
+                        <Contact
+                            key={contact.id}
+                            photoUrl={contact.user.profilePic}
+                            contactDispalyName={contact.user.displayName}
+                            lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
+                            lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-meesage"}
+                            notification=""
+                            className={props.currentContactClicked === contact.id ? 'selected' : ''}
+                            onClick={() => handleClickingOnContact(contact.id)}
+                        />
+                    ))}
+
+                    {/* {filteredContacts.length >= 0 && textInSearch ?
                         filteredContacts.map(contact => (
                             <Contact
                                 key={contact.username}
@@ -112,11 +116,11 @@ function ContactsSide(props) {
                                 onClick={() => handleClickingOnContact(contact.username)}
                             />
                         )) :
-                        registerUsers.find((user) => user.username === currentUser.username).contactsList.map(contact => (
+                        ListOfContacts.map(contact => (
                             <Contact
-                                key={contact.username}
-                                photoUrl={contact.photoUrl}
-                                contactDispalyName={contact.contactDispalyName}
+                                key={contact.user.username}
+                                photoUrl={contact.user.profilePic}
+                                contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessageTime}
                                 lastMessage={contact.lastMessage}
                                 notification={contact.notification}
@@ -124,7 +128,7 @@ function ContactsSide(props) {
                                 onClick={() => handleClickingOnContact(contact.username)}
                             />
                         ))
-                    }
+                    } */}
                 </ul>
 
             </div>

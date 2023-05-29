@@ -16,9 +16,7 @@ const LoginInputDiv = React.forwardRef((props, ref) => {
         props.handler(e, props.inputTitle);
         setInputValue(e.target.value);
         if (props.isInvalid) {
-            console.log(props.isInvalid);
             props.setIsInvalid(false);
-            console.log(props.isInvalid);
         }
     };
 
@@ -56,8 +54,8 @@ const LoginInputDiv = React.forwardRef((props, ref) => {
 
                             id={props.inputId}
                             type={inputType}
-
-                            className="btn"
+                            
+                            className="btn inv"
                             role="button"
                             data-bs-toggle="popover"
                             data-bs-trigger="focus"

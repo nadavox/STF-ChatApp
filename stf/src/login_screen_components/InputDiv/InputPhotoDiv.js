@@ -12,7 +12,6 @@ import ProfilePhoto from "../ProfilePhoto/ProfilePhoto"
  * @param {string} props.inputTitle - The title of the input element
  */
 function InputDiv(props) {
-
   // Define a state variable to store the URL of the selected photo
   const [inputValue, setInputValue] = useState("");
 
@@ -21,7 +20,7 @@ function InputDiv(props) {
    * @param {object} event - The event object
    */
   const handlePhotoChange = (event) => {
-    props.handler(event, props.inputTitle);
+    props.handler(event, props.forInvalid);
     setInputValue(event.target.value);
 
     // Get the file object from the input element
@@ -35,13 +34,15 @@ function InputDiv(props) {
         return;
       }
       // Create a URL object from the file object and set it as the photo URL in state
-      const url = URL.createObjectURL(file);
-      props.setPhotoUrl(url);
+      // const url = URL.createObjectURL(file);
+      // props.setPhotoUrl(url);
       //create reader
       const reader = new FileReader();
       reader.onload = () => {
-        
+        const base64 = reader.result
+        props.setPhotoUrl(base64);
       }
+      reader.readAsDataURL(file);
     }
   };
 
@@ -69,7 +70,7 @@ function InputDiv(props) {
               id="pictureInput"
               type={props.inputType}
               placeholder={props.inputPlaceholder}
-              className="btn"
+              className={props.inputclass}
               tabIndex="0"
               role="button"
               data-bs-toggle="popover"
@@ -82,7 +83,7 @@ function InputDiv(props) {
           <ProfilePhoto photoUrl={props.photoUrl} alt="" className="selectedPhoto" />
         </div>
       ) : (
-        /* If no photo has been selected, only show the input element */
+        /* If no photo has not been selected, only show the input element */
         <div className={`row registerPhotoInputDiv ${props.divclassName.includes('invalid') ? 'invalid' : ""}`}>
           <p className="inputTitle">{props.inputTitle}</p>
           <div className='inputPhoto-container'>
@@ -90,7 +91,7 @@ function InputDiv(props) {
               id="pictureInput"
               type={props.inputType}
               placeholder={props.inputPlaceholder}
-              className="btn"
+              className={props.inputclass}
               tabIndex="0"
               role="button"
               data-bs-toggle="popover"
