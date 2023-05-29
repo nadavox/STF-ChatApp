@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import Modal from '../Modal/Modal';
 
 function ChatsMainScreen() {
+    const [testCounterOfMessages, setTestCounterOfMessages] = useState(false);
+
     // Define state variables
     //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
@@ -14,7 +16,7 @@ function ChatsMainScreen() {
     const [finalInputValueInModal, setFinalInputValueInModal] = useState("");
     const [addContact, setaddContact] = useState(false)
     const [clickContact, setClickContact] = useState("")
-    
+
     useEffect(() => {
         async function fetchTheScreen() {
             if (clickContact != "") {
@@ -22,6 +24,7 @@ function ChatsMainScreen() {
                     <MessagesScreen
                         id={clickContact}
                         currentContactClicked={clickContact}
+                        setTestCounterOfMessages={setTestCounterOfMessages}
                     />
                 )
 
@@ -29,7 +32,6 @@ function ChatsMainScreen() {
             }
         }
         fetchTheScreen()
-        console.log("the contact we click: ", clickContact)
     }, [clickContact]);
 
     return (
@@ -44,13 +46,18 @@ function ChatsMainScreen() {
                         pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
                         setaddContact={setaddContact} setClickContact={setClickContact}
                         currentContactClicked={clickContact}
+                        testCounterOfMessages={testCounterOfMessages}
+                        setTestCounterOfMessages={setTestCounterOfMessages}
                     />
 
                     {/* from here is right side of the screen */}
                     <div id="rightsideofthescreen" className="col-7 d-flex flex-column flex-grow-1 p-0">
 
                         {/* dispaly the first row of the right sideof the screen */}
-                        <DisplayContactRow picture={displayContactRow.picture} name={displayContactRow.displayName} chatId={clickContact} />
+                        <DisplayContactRow picture={displayContactRow.picture} 
+                        name={displayContactRow.displayName} 
+                        chatId={clickContact} 
+                        />
 
                         {/* the messages screen and the text box*/}
                         {rightMessageScreen}

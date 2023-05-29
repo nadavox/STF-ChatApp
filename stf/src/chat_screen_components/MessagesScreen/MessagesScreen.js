@@ -8,7 +8,7 @@ import showMessages from '../../auth/ShowMessages';
 
 
 // This component takes in the current user's username and a list of messages to display.
-const MessagesScreen = ({ id, currentContactClicked }) => {
+const MessagesScreen = ({ id, currentContactClicked, setTestCounterOfMessages }) => {
     // the current user that log in
     const { currentUser } = useContext(CurrentUserContext);
     //ref for the first scrren.
@@ -94,6 +94,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
                     // clear the input field.
                     inputRef.current.value = "";
                     updateListOfMessages()
+                    setTestCounterOfMessages(true)
                 } else {
                     console.log('error with the server from sending message');
                 }

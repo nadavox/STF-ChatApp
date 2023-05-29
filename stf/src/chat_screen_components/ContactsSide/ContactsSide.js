@@ -8,6 +8,7 @@ import MessagesScreen from '../MessagesScreen/MessagesScreen';
 import getchats from '../../auth/GetChats';
 
 function ContactsSide(props) {
+
     const { currentUser } = useContext(CurrentUserContext);
     //inisde of the list of contacts is all the contacts of the user.
     const [ListOfContacts, setListOfContacts] = useState([])
@@ -71,6 +72,13 @@ function ContactsSide(props) {
             props.setaddContact(false)
         }
     }, [props.addContact])
+
+    useEffect(() => {
+        if (props.testCounterOfMessages) {
+            getcontacts()
+            props.setTestCounterOfMessages(false)
+        }
+    }, [props.testCounterOfMessages])
 
     return (
         <>
