@@ -137,10 +137,12 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
     }
 
     function getDateFromMessage(dateString) {
-        const dateNewMessage = new Date(dateString);
-        dateNewMessage.setHours(0, 0, 0, 0);
-        const formattedDate = dateNewMessage.toLocaleDateString(); // Format the date as desired
-        return formattedDate
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Add 1 because getMonth() returns zero-based month
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}`;
     }
 
     if (typeof id === 'undefined') {

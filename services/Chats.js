@@ -2,9 +2,44 @@ const User = require('../models/Users');
 const Chats = require('../models/Chats');
 const Message = require('../models/Message');
 
+const checkWhichUserToReturn = (chat, username) => {
+    if (chat.users[0].username === username) {
+        return chat.users[1];
+    }
+    else {
+        return chat.users[0];
+    }
+}
+
+const returnLastMessage = async (id) => {
+    const messages = await returnAllTheMessages(id);
+    // console.log("the messages: ", messages);
+    // console.log("----------------------------------------");
+    if (messages.length === 0) {
+        console.log("no messages for: ", id);
+      return null;
+    } else {
+        console.log("there are messages for: ", id);
+      return messages[messages.length - 1];
+    }
+  };
+  
+
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
-    return user.chats;
+    const chatPromises = user.chats.map(async chat => {
+        const lastMessage = await returnLastMessage(chat.id);
+        return {
+            id: chat.id,
+            user: checkWhichUserToReturn(chat, username),
+            lastMessage: lastMessage
+        };
+    });
+
+    const filteredChats = await Promise.all(chatPromises);
+    
+    console.log(filteredChats)
+    return filteredChats;
 }
 
 function createUserNameForChat(username, displayName, profilePic) {
@@ -54,8 +89,14 @@ const createChat = async (usernameContact, username) => {
         await user.save();
         await userContact.save();
 
+        const answer = {
+            id: newChat.id,
+            user: newChat.users[1],
+            lastMessage: null
+        };
+
         // return the new chat.
-        return newChat;
+        return answer;
     } else {
         //not exist 
         return -1;
@@ -65,18 +106,12 @@ const createChat = async (usernameContact, username) => {
 const returnTheConversation = async (id) => {
     newId = id;
     const conversation = await Chats.findOne({ id: parseInt(newId) });
-    console.log("the conversation: ", conversation);
-    console.log("-----------------");
     const messages = await returnAllTheMessages(id);
-    console.log("only the messages: ", messages);
-    console.log("-----------------");
     const updatedConversation = {
         id: conversation.id,
         users: conversation.users,
         messages: messages
     }
-    console.log("the updated conversation: ", updatedConversation);
-    console.log("-----------------");
     return updatedConversation;
 }
 
