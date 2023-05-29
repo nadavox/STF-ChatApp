@@ -32,7 +32,6 @@ function ChatsMainScreen() {
         console.log("the contact we click: ", clickContact)
     }, [clickContact]);
 
-
     return (
         <>
             <div id="screen" className="container-fluid p-0">
@@ -51,7 +50,7 @@ function ChatsMainScreen() {
                     <div id="rightsideofthescreen" className="col-7 d-flex flex-column flex-grow-1 p-0">
 
                         {/* dispaly the first row of the right sideof the screen */}
-                        <DisplayContactRow picture={displayContactRow.picture} name={displayContactRow.displayName} />
+                        <DisplayContactRow picture={displayContactRow.picture} name={displayContactRow.displayName} chatId={clickContact} />
 
                         {/* the messages screen and the text box*/}
                         {rightMessageScreen}

@@ -3,14 +3,16 @@ import './DisplayContactRow.css';
 import exitButton from "../../icons/exit_icon.png";
 import deleteChatButton from "../../icons/delete_chat_icon.png";
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import { Tooltip } from 'bootstrap';
+import deleteChat from '../../auth/DeleteChat';
+import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 
-
-const DisplayContactRow = ({ picture, name }) => {
+const DisplayContactRow = ({ picture, name, chatId }) => {
   const navigate = useNavigate();
   let row;
   const buttonRef = useRef(null);
+  const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
     // Initialize tooltips
@@ -41,8 +43,8 @@ const DisplayContactRow = ({ picture, name }) => {
     navigate('/');
   };
 
-  const handleDeleteChat = (e) => {
-    console.log("in")
+  const handleDeleteChat = async (e) => {
+    const date = await deleteChat(currentUser, chatId);
   };
 
   // now design the screen as you want.
