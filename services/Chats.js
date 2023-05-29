@@ -92,7 +92,7 @@ async function createMessageSchema(sender, messageContent) {
     // creat the chat
     const newMessage = new Message({
         id: nextId, // Generate a unique ID for the message
-        created: new Date().toLocaleString(),
+        created: new Date(),
         sender: userNameForChat,
         content: messageContent
     });

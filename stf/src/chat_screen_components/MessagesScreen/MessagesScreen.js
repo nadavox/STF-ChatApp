@@ -19,8 +19,8 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
     const inputRef = useRef();
     // Init the input value to empty
     const [inputValue, setInputValue] = useState("");
-    const [ListOfMessages,setListOfMessages] = useState([])
-    const [lastMessageTime, setLastMessageTime] = useState({lastMessae: "", newMessage: ""});
+    const [ListOfMessages, setListOfMessages] = useState([])
+    const [lastMessageTime, setLastMessageTime] = useState({ lastMessae: "", newMessage: "" });
 
     async function getmessages() {
         if (currentContactClicked !== '') {
@@ -87,7 +87,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
                 if (res.ok) {
                     const currentMessage = await res.json()
                     console.log("the current message: ", currentMessage)
-                    setLastMessageTime({lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created})
+                    setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
                     // need to update the list of message.
                     //clean the input value.
                     setInputValue("");
@@ -106,7 +106,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
 
     async function updateListOfMessages() {
         try {
-            console.log("id :",id)
+            console.log("id :", id)
             //send new message to a chat
             const url = 'http://localhost:5000/api/Chats/' + id + '/Messages'
             const res = await fetch(url, {
@@ -118,7 +118,7 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
             });
             if (res.ok) {
                 const list = await res.json()
-                console.log("the details list of messages: ",list)
+                console.log("the details list of messages: ", list)
                 setListOfMessages(list)
             } else {
                 console.log('error with the server from sending message');
@@ -129,17 +129,16 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
         }
     }
 
-    function generateTime(fulldate) {
-        const date = new Date(fulldate);
-        const hour = date.getHours().toString().padStart(2, '0');
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const timeString = hour + ":" + minute;
-        return timeString
-    } 
+    function generateTime(dateString) {
+        const date = new Date(dateString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        return `${hours}:${minutes}`;
+    }
 
     function getDateFromMessage(dateString) {
         const dateNewMessage = new Date(dateString);
-        dateNewMessage.setHours(0,0,0,0);
+        dateNewMessage.setHours(0, 0, 0, 0);
         const formattedDate = dateNewMessage.toLocaleDateString(); // Format the date as desired
         return formattedDate
     }
@@ -160,12 +159,12 @@ const MessagesScreen = ({ id, currentContactClicked }) => {
             <ul id="chatScreen" className="p-2 flex-grow-1 overflow-y-scroll m-0" ref={messagesEndRef}>
                 {ListOfMessages.map((message, index) => (
                     <Message key={message.id}
-                    sender={message.sender.username}
-                    content={message.content}
-                    time={generateTime(message.created)}
-                    date={getDateFromMessage(message.created)}
-                    currentUser={currentUser.username}
-                    lastMessgeDate = {index > 0 ? getDateFromMessage(ListOfMessages[index - 1].created) : "first message"}
+                        sender={message.sender.username}
+                        content={message.content}
+                        time={generateTime(message.created)}
+                        date={getDateFromMessage(message.created)}
+                        currentUser={currentUser.username}
+                        lastMessgeDate={index > 0 ? getDateFromMessage(ListOfMessages[index - 1].created) : "first message"}
                     />
                 ))}
             </ul>
