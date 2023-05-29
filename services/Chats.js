@@ -154,7 +154,6 @@ const returnAllTheMessages = async (id)  => {
 }
 
 const updateChats = async (username, id) => {
-    console.log(username);
     const userChats = await returnAllChats(username);
     const user = await User.findOne({ username }).populate('chats');
     var contactInfo;
@@ -167,9 +166,7 @@ const updateChats = async (username, id) => {
     }
     
     const contactUsername = contactInfo.username;
-    console.log(contactUsername);
     const contact = await User.findOne({ username: contactUsername });
-    console.log(contact);
     const contactChats = await returnAllChats(contactUsername);
 
     // Find the index of the chat with the given id

@@ -78,27 +78,16 @@ function ContactsSide(props) {
 
     useEffect(() => {
         const fetchData = async () => {
-          if (props.currentChatThatGotMessage !== 0) {
-            const l = await updateChats(currentUser, props.currentChatThatGotMessage);
-            setListOfContacts(l);
-            props.setCurrentChatThatGotMessage(0);
-            // moveContactToTop(props.currentChatThatGotMessage);
-          }
+            if (props.currentChatThatGotMessage !== 0) {
+                const l = await updateChats(currentUser, props.currentChatThatGotMessage);
+                setListOfContacts(l);
+                props.setCurrentChatThatGotMessage(0);
+            }
         };
 
         fetchData(); // Immediately invoke the async function
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [props.currentChatThatGotMessage]);
-
-    // useEffect(() => {
-    //     if (props.currentChatThatGotMessage !== 0) {
-    //         const l = updateChats(currentUser, props.currentChatThatGotMessage);
-    //         setListOfContacts(l);
-    //         console.log("list of updated contacts: ", l)
-    //         props.setCurrentChatThatGotMessage(0);
-    //     }
-    // }, [props.currentChatThatGotMessage]);
+    }, [props.currentChatThatGotMessage]);
 
     function handleChange(event) {
         const filtered = listOfContacts.filter(
@@ -110,18 +99,6 @@ function ContactsSide(props) {
             setTextInSearch(false);
         }
     }
-
-
-    // const moveContactToTop = (id) => {
-    //     setListOfContacts((prevContacts) => {
-    //         console.log(prevContacts);
-    //         const contactToMove = prevContacts.find((contact) => contact.id === id);
-    //         console.log("contact to move: ", contactToMove)
-    //         const updatedContacts = prevContacts.filter((contact) => contact.id !== id);
-    //         return [contactToMove, ...updatedContacts];
-    //     });
-    //     console.log("updated contacts list", listOfContacts);
-    // };
 
     return (
         <>
