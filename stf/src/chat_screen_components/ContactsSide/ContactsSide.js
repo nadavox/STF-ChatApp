@@ -41,6 +41,7 @@ function ContactsSide(props) {
     // init the contacts list
     useEffect(() => {
         getcontacts()
+        // eslint-disable-next-line
     }, [])
 
     function generateTime(dateString) {
@@ -74,6 +75,7 @@ function ContactsSide(props) {
             getcontacts() // to update to contacts in the list.
             props.setaddContact(false)
         }
+        // eslint-disable-next-line
     }, [props.addContact])
 
     useEffect(() => {
@@ -87,6 +89,7 @@ function ContactsSide(props) {
 
         fetchData(); // Immediately invoke the async function
 
+        // eslint-disable-next-line
     }, [props.currentChatThatGotMessage]);
 
     function handleChange(event) {
@@ -116,7 +119,8 @@ function ContactsSide(props) {
                                 photoUrl={contact.user.profilePic}
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
-                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-meesage"}
+                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
+                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
@@ -128,7 +132,8 @@ function ContactsSide(props) {
                                 photoUrl={contact.user.profilePic}
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
-                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-meesage"}
+                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
+                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}

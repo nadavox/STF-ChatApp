@@ -44,7 +44,7 @@ const DisplayContactRow = ({ picture, name, chatId }) => {
   };
 
   const handleDeleteChat = async (e) => {
-    const date = await deleteChat(currentUser, chatId);
+    await deleteChat(currentUser, chatId);
   };
 
   // now design the screen as you want.

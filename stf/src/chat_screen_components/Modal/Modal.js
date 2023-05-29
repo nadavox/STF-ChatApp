@@ -27,7 +27,6 @@ function Modal(props) {
             const okay = await addContact(currentUser, inputValue);
             if (okay !== false) {
                 props.setaddContact(true);
-                props.setFinalInputValue(inputValue);
                 exitBtnRef.current.click();
             } else {
                 // no user

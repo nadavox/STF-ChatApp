@@ -13,13 +13,12 @@ function ChatsMainScreen() {
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
     const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" />);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
-    const [finalInputValueInModal, setFinalInputValueInModal] = useState("");
     const [addContact, setaddContact] = useState(false)
     const [clickContact, setClickContact] = useState("")
 
     useEffect(() => {
         async function fetchTheScreen() {
-            if (clickContact != "") {
+            if (clickContact !== "") {
                 const updateMessageScreen = (
                     <MessagesScreen
                         id={clickContact}
@@ -66,8 +65,7 @@ function ChatsMainScreen() {
                 </div>
             </div>
 
-            <Modal setFinalInputValue={setFinalInputValueInModal}
-                setDisplayContactRow={setDisplayContactRow}
+            <Modal setDisplayContactRow={setDisplayContactRow}
                 pressedOnAddContact={setPressedOnAddContact} setaddContact={setaddContact} />
         </>
     );
