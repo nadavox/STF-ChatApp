@@ -13,13 +13,9 @@ const checkWhichUserToReturn = (chat, username) => {
 
 const returnLastMessage = async (id) => {
     const messages = await returnAllTheMessages(id);
-    // console.log("the messages: ", messages);
-    // console.log("----------------------------------------");
     if (messages.length === 0) {
-        console.log("no messages for: ", id);
       return null;
     } else {
-        console.log("there are messages for: ", id);
       return messages[messages.length - 1];
     }
   };
@@ -38,7 +34,6 @@ const returnAllChats = async (username) => {
 
     const filteredChats = await Promise.all(chatPromises);
     
-    console.log(filteredChats)
     return filteredChats;
 }
 
