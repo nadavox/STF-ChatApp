@@ -98,12 +98,13 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     // useeffect to recive new messages in live
     useEffect(() => {
         sock.on("receive_message", (data) => {
-            if (data.id == id) {
+            if (data.id === id) {
                 console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
                 const updatedList = [...ListOfMessages, data.currentMessage]; // Create a new array with the updated element
                 setListOfMessages(updatedList); // Update the state with the new array
             }
         })
+        // eslint-disable-next-line
     }, [ListOfMessages])
 
     async function updateListOfMessages() {

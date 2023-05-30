@@ -55,7 +55,7 @@ function RegisterCreateAccountBlock() {
             }
 
             if (res.ok) {
-                if (ConfirmPassword == Password) {
+                if (ConfirmPassword === Password) {
                     // navigate to the login page
                     navigate('/');
                 }

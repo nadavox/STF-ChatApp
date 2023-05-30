@@ -3,7 +3,7 @@ import LogIn from './login_screen_components/LogInScreen/LogInScreen.js';
 import RegisterScreen from './login_screen_components/RegisterScreen/RegisterScreen.js';
 import ChatScreen from './chat_screen_components/ChatScreen/ChatScreen.js';
 import { CurrentUserProvider } from './components/CurrentUser/CurrentUser.js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 
 function App() {

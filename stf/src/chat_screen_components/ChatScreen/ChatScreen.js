@@ -2,7 +2,7 @@ import './ChatScreen.css';
 import BackgroundCircles from '../../login_screen_components/BackgroundCircles/BackgroundCircles';
 import ChatsMainScreen from '../ChatsMainScreen/ChatsMainScreen';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ChatScreen() {

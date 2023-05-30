@@ -1,9 +1,8 @@
 import './LoginSignInBlock.css'
 import LoginInputDiv from "../InputDiv/LoginInputDiv"
 import SignInTitle from '../LeftTitle/LeftTitle';
-import { registerUsers } from '../../components/RegisteredUsers/RegisteredUsers';
 import React, { useRef, useEffect, useContext, useState } from 'react';
-import { Await, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import LoginAuth from '../../auth/LoginAuth';
 
@@ -42,7 +41,7 @@ function LoginSignInBlock({ mousePosition }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const currLoginUser = await LoginAuth(Username, Password)
-        if (currLoginUser != false) {
+        if (currLoginUser !== false) {
             console.log("before update: ", currLoginUser.token)
             updateUser(currLoginUser);
             // navigate to the chats page 

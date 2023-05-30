@@ -1,6 +1,5 @@
 import './Message.css';
 import './DateMessage.css';
-import { useEffect, useState } from 'react';
 
 const Message = ({ sender, content, time, date, currentUser, lastMessgeDate }) => {
 
