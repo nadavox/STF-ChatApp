@@ -4,14 +4,17 @@ import UserRow from '../UserRow/UserRow';
 import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
-import MessagesScreen from '../MessagesScreen/MessagesScreen';
 import getchats from '../../auth/GetChats';
+import updateChats from '../../auth/UpdateContactsList';
 
 
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
     //inisde of the list of contacts is all the contacts of the user.
-    const [ListOfContacts, setListOfContacts] = useState([])
+    const [listOfContacts, setListOfContacts] = useState([]);
+    const [finalSearchValue, setFinalSearchValue] = useState("");
+    const [filteredContacts, setFilteredContacts] = useState([]);
+    const [textInSearch, setTextInSearch] = useState(false);
 
     const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
 
@@ -29,7 +32,7 @@ const ContactsSide = (props) => {
 
     // in contact id i have the key of the chat
     const handleClickingOnContact = async (contactId) => {
-        const currSelectedContact = ListOfContacts.find((contact) => contact.id === contactId);
+        const currSelectedContact = listOfContacts.find((contact) => contact.id === contactId);
         props.setDisplayContactRow({
             picture: currSelectedContact.user.profilePic,
             displayName: currSelectedContact.user.displayName,
@@ -37,16 +40,16 @@ const ContactsSide = (props) => {
         });
         // update the current contact that we click
         props.setClickContact(contactId)
-
-        // if(textInSearch) {
-        //     setTextInSearch(false);
-        //     setFinalSearchValue("");
-        // }
+        if (textInSearch) {
+            setTextInSearch(false);
+            setFinalSearchValue("");
+        }
     };
 
     // init the contacts list
     useEffect(() => {
         getcontacts()
+        // eslint-disable-next-line
     }, [])
 
     function generateTime(dateString) {
@@ -80,18 +83,24 @@ const ContactsSide = (props) => {
             getcontacts() // to update to contacts in the list.
             props.setaddContact(false)
         }
+        // eslint-disable-next-line
     }, [props.addContact])
 
     useEffect(() => {
-        if (props.currentChatThatGotMessage) {
-            getcontacts()
-            props.setCurrentChatThatGotMessage(0)
-        }
-    }, [props.currentChatThatGotMessage])
+        const fetchData = async () => {
+            if (props.currentChatThatGotMessage !== 0) {
+                const l = await updateChats(currentUser, props.currentChatThatGotMessage);
+                setListOfContacts(l);
+                props.setCurrentChatThatGotMessage(0);
+            }
+        };
 
+        fetchData(); // Immediately invoke the async function
 
+        // eslint-disable-next-line
+    }, [props.currentChatThatGotMessage]);
 
-    // useeffect to create notifcation and update the last message.
+    // use effect to create notifcation and update the last message.
     useEffect(() => {
         props.sock.on("receive_message", (data) => {
             console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
@@ -115,56 +124,54 @@ const ContactsSide = (props) => {
         console.log(ListOfContacts)
     }, [ListOfContacts])
 
+    function handleChange(event) {
+        const filtered = listOfContacts.filter(
+            (contact) => { return contact.user.displayName.includes(event); });
+        setFilteredContacts(filtered);
+        if (event !== "") {
+            setTextInSearch(true);
+        } else {
+            setTextInSearch(false);
+        }
+    }
 
     return (
         <>
             <div className="col-1 p-0 d-flex flex-column flex-grow-1 position-relative leftSide">
-                {/* need to add onclick function to the userRow */}
                 <UserRow picture={currentUser.photoUrl} firstName={currentUser.displayName}
                     setPressed={props.setPressedOnAddContact} setaddContact={props.setaddContact} />
 
-                {/* <SearchContact onKeyDown={handleKeyDown} onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} /> */}
+                <SearchContact onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} />
 
                 <ul id="contactsList">
-                    {ListOfContacts.map((contact) => (
-                        <Contact
-                            key={contact.id}
-                            photoUrl={contact.user.profilePic}
-                            contactDispalyName={contact.user.displayName}
-                            lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
-                            lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-meesage"}
-                            notification=""
-                            className={props.currentContactClicked === contact.id ? 'selected' : ''}
-                            onClick={() => handleClickingOnContact(contact.id)}
-                        />
-                    ))}
-
-                    {/* {filteredContacts.length >= 0 && textInSearch ?
+                    {filteredContacts.length >= 0 && textInSearch ?
                         filteredContacts.map(contact => (
                             <Contact
-                                key={contact.username}
-                                photoUrl={contact.photoUrl}
-                                contactDispalyName={contact.contactDispalyName}
-                                lastMessageTime={contact.lastMessageTime}
-                                lastMessage={contact.lastMessage}
-                                notification={contact.notification}
-                                className={props.currentContactClicked === contact.username ? 'selected' : ''}
-                                onClick={() => handleClickingOnContact(contact.username)}
-                            />
-                        )) :
-                        ListOfContacts.map(contact => (
-                            <Contact
-                                key={contact.user.username}
+                                key={contact.id}
                                 photoUrl={contact.user.profilePic}
                                 contactDispalyName={contact.user.displayName}
-                                lastMessageTime={contact.lastMessageTime}
-                                lastMessage={contact.lastMessage}
-                                notification={contact.notification}
-                                className={props.currentContactClicked === contact.username ? 'selected' : ''}
-                                onClick={() => handleClickingOnContact(contact.username)}
+                                lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
+                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
+                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                notification=""
+                                className={props.currentContactClicked === contact.id ? 'selected' : ''}
+                                onClick={() => handleClickingOnContact(contact.id)}
+                            />
+                        )) :
+                        listOfContacts.map(contact => (
+                            <Contact
+                                key={contact.id}
+                                photoUrl={contact.user.profilePic}
+                                contactDispalyName={contact.user.displayName}
+                                lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
+                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
+                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                notification=""
+                                className={props.currentContactClicked === contact.id ? 'selected' : ''}
+                                onClick={() => handleClickingOnContact(contact.id)}
                             />
                         ))
-                    } */}
+                    }
                 </ul>
 
             </div>

@@ -15,7 +15,6 @@ const SearchContact = (props) => {
                 placeholder="search contact here..."
                 value={props.value}
                 onChange={onChange}
-                onKeyDown={props.onKeyDown}
                 className={props.value ? "searchContactInput nonEmpty" : "searchContactInput"}
             />
         </div>

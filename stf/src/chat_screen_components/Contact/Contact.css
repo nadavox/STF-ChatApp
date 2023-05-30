@@ -99,3 +99,7 @@
     float: right;
     margin-right: 5px !important;
 }
+
+.noMessage {
+    opacity: 0%;
+}

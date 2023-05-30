@@ -6,7 +6,6 @@ import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
 
-
 // This component takes in the current user's username and a list of messages to display.
 const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessage, sock }) => {
     // the current user that log in
@@ -82,7 +81,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     setInputValue("");
                     // clear the input field.
                     inputRef.current.value = "";
-                    //updateListOfMessages()
                     ListOfMessages.push(currentMessage)
                     setCurrentChatThatGotMessage(currentContactClicked)
                     const data = { currentMessage: currentMessage, id: id }
@@ -148,7 +146,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
         return `${day}.${month}.${year}`;
     }
-
 
     if (typeof id === 'undefined') {
         // no contact chosen
