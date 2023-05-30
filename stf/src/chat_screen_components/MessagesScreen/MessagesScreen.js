@@ -84,7 +84,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     inputRef.current.value = "";
                     //updateListOfMessages()
                     ListOfMessages.push(currentMessage)
-                    setCurrentChatThatGotMessage(id)
+                    setCurrentChatThatGotMessage(currentContactClicked)
                     const data = { currentMessage: currentMessage, id: id }
                     await sock.emit("sendMessage", data)
                 } else {
