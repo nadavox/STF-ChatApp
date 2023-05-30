@@ -94,23 +94,22 @@ const ContactsSide = (props) => {
     // useeffect to create notifcation and update the last message.
     useEffect(() => {
         props.sock.on("receive_message", (data) => {
+            console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
+            // get the chat that get the new message
+            const chatindex = ListOfContacts.findIndex((contact) => contact.id === data.id)
+
+            if (chatindex !== -1) {
+                // Create a new array with the updated element
+                console.log("the chat: ", ListOfContacts[chatindex])
+                const updatedListOfContacts = [...ListOfContacts];
+                updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
+                console.log("updaete: ", updatedListOfContacts )
+                setListOfContacts(updatedListOfContacts)
+            } else {
+                console.log("No chat found or lastMessage is undefined");
+            }
             if (data.id !== props.currentContactClicked) {
-                console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
-                // get the chat that get the new message
-                const chatindex = ListOfContacts.findIndex((contact) => contact.id === data.id)
-
-                if (chatindex !== -1) {
-                    // Create a new array with the updated element
-                    console.log("the chat: ", ListOfContacts[chatindex])
-                    const updatedListOfContacts = [...ListOfContacts];
-                    updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
-                    console.log("updaete: ", updatedListOfContacts )
-                    setListOfContacts(updatedListOfContacts)
-                } else {
-                    console.log("No chat found or lastMessage is undefined");
-                }
-
-
+             // here to add notifcation to the clients.
             }
         })
         console.log(ListOfContacts)

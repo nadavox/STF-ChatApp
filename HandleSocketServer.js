@@ -2,12 +2,6 @@ const { io } = require("./server");
 
 function socketHandler() {
     io.on('connection', socket => {
-        // console.log("new userrr is connected: ")
-        // console.log(socket.id)
-        
-        socket.on("test", (data) => {
-            console.log("the data: ", data)
-        })
 
         socket.on("sendMessage", (data) => {
             console.log("the id of the chat that send message: ", data.id)
@@ -24,9 +18,7 @@ function socketHandler() {
         })
 
         socket.on('disconnect', () => {
-            // console.log('User disconnected:');
-            // console.log(socket.id);
-            // Perform any necessary cleanup or logic here
+
           });
     })
 }
