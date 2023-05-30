@@ -8,7 +8,7 @@ import showMessages from '../../auth/ShowMessages';
 
 
 // This component takes in the current user's username and a list of messages to display.
-const MessagesScreen = ({ id, currentContactClicked, setTestCounterOfMessages, sock }) => {
+const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessage, sock }) => {
     // the current user that log in
     const { currentUser } = useContext(CurrentUserContext);
     //ref for the first scrren.
@@ -84,7 +84,7 @@ const MessagesScreen = ({ id, currentContactClicked, setTestCounterOfMessages, s
                     inputRef.current.value = "";
                     //updateListOfMessages()
                     ListOfMessages.push(currentMessage)
-                    setTestCounterOfMessages(true)
+                    setCurrentChatThatGotMessage(id)
                     const data = { currentMessage: currentMessage, id: id }
                     await sock.emit("sendMessage", data)
                 } else {

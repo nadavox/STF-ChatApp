@@ -83,11 +83,11 @@ const ContactsSide = (props) => {
     }, [props.addContact])
 
     useEffect(() => {
-        if (props.testCounterOfMessages) {
+        if (props.currentChatThatGotMessage) {
             getcontacts()
-            props.setTestCounterOfMessages(false)
+            props.setCurrentChatThatGotMessage(0)
         }
-    }, [props.testCounterOfMessages])
+    }, [props.currentChatThatGotMessage])
 
 
 

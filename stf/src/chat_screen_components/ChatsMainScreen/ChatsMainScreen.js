@@ -9,8 +9,7 @@ import io from 'socket.io-client';
 const sock = io.connect('http://localhost:5000'); // Create the socket connection 
 
 function ChatsMainScreen() {
-    const [testCounterOfMessages, setTestCounterOfMessages] = useState(false);
-
+    const [currentChatThatGotMessage, setCurrentChatThatGotMessage] = useState(0);
     // Define state variables
     //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
@@ -27,7 +26,7 @@ function ChatsMainScreen() {
                     <MessagesScreen
                         id={clickContact}
                         currentContactClicked={clickContact}
-                        setTestCounterOfMessages={setTestCounterOfMessages}
+                        setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                         sock = {sock}
                     />
                 )
@@ -50,8 +49,8 @@ function ChatsMainScreen() {
                         pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
                         setaddContact={setaddContact} setClickContact={setClickContact}
                         currentContactClicked={clickContact}
-                        testCounterOfMessages={testCounterOfMessages}
-                        setTestCounterOfMessages={setTestCounterOfMessages}
+                        currentChatThatGotMessage={currentChatThatGotMessage}
+                        setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                         sock={sock}
                     />
 
