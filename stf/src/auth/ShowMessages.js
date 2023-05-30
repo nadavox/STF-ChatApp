@@ -12,7 +12,7 @@ async function showMessages(currentUser, key) {
         });
         if (res.ok) {
             const currentChat = await res.json()
-            console.log("all the messages: ", currentChat)
+            // console.log("all the messages: ", currentChat)
             return currentChat
         } else {
             console.log('error with the server from show messgae ');

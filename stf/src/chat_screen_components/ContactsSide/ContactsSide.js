@@ -7,16 +7,24 @@ import SearchContact from '../SearchContact/SearchContact';
 import MessagesScreen from '../MessagesScreen/MessagesScreen';
 import getchats from '../../auth/GetChats';
 
-function ContactsSide(props) {
 
+const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
     //inisde of the list of contacts is all the contacts of the user.
     const [ListOfContacts, setListOfContacts] = useState([])
 
+    const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
+
     async function getcontacts() {
         const l = await getchats(currentUser)
-        setListOfContacts(l)
-        console.log("list of contacts: ", l)
+        if (firstTimeGetContacts) {
+            for (let i = 0; i < l.length; i++) {
+                await props.sock.emit("join_chat", l[i].id)
+            }
+            setFirstTimeGetContacts(false)
+        }
+        const updatedListOfContacts = [...l]; // Create a copy of the array
+        setListOfContacts(updatedListOfContacts)
     }
 
     // in contact id i have the key of the chat
@@ -29,6 +37,7 @@ function ContactsSide(props) {
         });
         // update the current contact that we click
         props.setClickContact(contactId)
+        
         // if(textInSearch) {
         //     setTextInSearch(false);
         //     setFinalSearchValue("");
