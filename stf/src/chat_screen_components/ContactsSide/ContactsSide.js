@@ -37,7 +37,7 @@ const ContactsSide = (props) => {
         });
         // update the current contact that we click
         props.setClickContact(contactId)
-        
+
         // if(textInSearch) {
         //     setTextInSearch(false);
         //     setFinalSearchValue("");
@@ -60,7 +60,7 @@ const ContactsSide = (props) => {
             date.getDate() === currentDate.getDate()
         );
 
-        if(isCurrentDate) {
+        if (isCurrentDate) {
             const hours = date.getHours();
             const minutes = date.getMinutes();
             return `${hours}:${minutes}`;
@@ -69,7 +69,7 @@ const ContactsSide = (props) => {
             const day = date.getDate();
             const month = date.getMonth() + 1; // Add 1 because getMonth() returns zero-based month
             const year = date.getFullYear();
-            
+
             return `${day}.${month}.${year}`;
         }
     }
@@ -88,6 +88,34 @@ const ContactsSide = (props) => {
             props.setTestCounterOfMessages(false)
         }
     }, [props.testCounterOfMessages])
+
+
+
+    // useeffect to create notifcation and update the last message.
+    useEffect(() => {
+        props.sock.on("receive_message", (data) => {
+            if (data.id !== props.currentContactClicked) {
+                console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
+                // get the chat that get the new message
+                const chatindex = ListOfContacts.findIndex((contact) => contact.id === data.id)
+
+                if (chatindex !== -1) {
+                    // Create a new array with the updated element
+                    console.log("the chat: ", ListOfContacts[chatindex])
+                    const updatedListOfContacts = [...ListOfContacts];
+                    updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
+                    console.log("updaete: ", updatedListOfContacts )
+                    setListOfContacts(updatedListOfContacts)
+                } else {
+                    console.log("No chat found or lastMessage is undefined");
+                }
+
+
+            }
+        })
+        console.log(ListOfContacts)
+    }, [ListOfContacts])
+
 
     return (
         <>
