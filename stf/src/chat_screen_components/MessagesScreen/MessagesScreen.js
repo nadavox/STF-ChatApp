@@ -85,6 +85,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     setCurrentChatThatGotMessage(currentContactClicked)
                     const data = { currentMessage: currentMessage, id: id }
                     await sock.emit("sendMessage", data)
+                    await sock.emit("updateChats", id)
                 } else {
                     console.log('error with the server from sending message');
                 }

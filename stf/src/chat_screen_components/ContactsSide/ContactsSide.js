@@ -87,7 +87,7 @@ const ContactsSide = (props) => {
     }, [props.addContact])
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchUserData = async () => {
             if (props.currentChatThatGotMessage !== 0) {
                 const l = await updateChats(currentUser, props.currentChatThatGotMessage);
                 setListOfContacts(l);
@@ -95,7 +95,7 @@ const ContactsSide = (props) => {
             }
         };
 
-        fetchData(); // Immediately invoke the async function
+        fetchUserData(); // Immediately invoke the async function
 
         // eslint-disable-next-line
     }, [props.currentChatThatGotMessage]);
@@ -111,16 +111,16 @@ const ContactsSide = (props) => {
                 // Create a new array with the updated element
                 console.log("the chat: ", listOfContacts[chatindex])
                 const updatedListOfContacts = [...listOfContacts];
-                updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
-                console.log("updaete: ", updatedListOfContacts )
+                updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
+                console.log("updaete: ", updatedListOfContacts)
                 setListOfContacts(updatedListOfContacts)
                 if (data.id !== props.currentContactClicked) {
                     // here to add notifcation to the clients.
-                   }
+                }
             } else {
                 console.log("No chat found");
                 getcontacts()
-                
+
             }
         })
 
@@ -132,6 +132,11 @@ const ContactsSide = (props) => {
                 await props.sock.emit("join_chat", data.id)
             }
         })
+
+        props.sock.on("receiveUpdateChats", async (data) => {
+            const l = await updateChats(currentUser, data);
+            setListOfContacts(l);
+        });
 
         // eslint-disable-next-line
     }, [listOfContacts])
@@ -164,7 +169,7 @@ const ContactsSide = (props) => {
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
-                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
@@ -177,7 +182,7 @@ const ContactsSide = (props) => {
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
-                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}

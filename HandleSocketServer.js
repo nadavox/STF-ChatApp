@@ -25,9 +25,11 @@ function socketHandler() {
             socket.broadcast.emit("receive_newConatct", data);
         })
 
-        socket.on('disconnect', () => {
+        socket.on("updateChats", async (data) => {
+            socket.broadcast.emit("receiveUpdateChats", data);
+        })
 
-          });
+        socket.on('disconnect', () => {});
     })
 }
 
