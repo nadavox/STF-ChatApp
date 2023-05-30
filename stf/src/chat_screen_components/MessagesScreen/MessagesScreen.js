@@ -84,6 +84,13 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     ListOfMessages.push(currentMessage)
                     setCurrentChatThatGotMessage(currentContactClicked)
                     const data = { currentMessage: currentMessage, id: id }
+                    //scroll down to the last message
+                    setTimeout(() => {
+                        messagesEndRef.current.scrollTo({
+                            top: messagesEndRef.current.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }, 10)
                     await sock.emit("sendMessage", data)
                     await sock.emit("updateChats", id)
                 } else {
