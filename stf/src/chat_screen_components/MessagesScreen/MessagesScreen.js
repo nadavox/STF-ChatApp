@@ -136,7 +136,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     function generateTime(dateString) {
         const date = new Date(dateString);
         const hours = date.getHours();
-        const minutes = date.getMinutes();
+        const minutes = date.getMinutes().toString().padStart(2, '0'); // Add leading zero if minutes < 10
         return `${hours}:${minutes}`;
     }
 
