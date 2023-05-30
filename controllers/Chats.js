@@ -22,15 +22,6 @@ function getUserNameFromToken(tokenFromCookie) {
     }
 }
 
-const checkWhichUserToReturn = (chat, username) => {
-    if (chat.users[0].username === username) {
-        return chat.users[1];
-    }
-    else {
-        return chat.users[0];
-    }
-}
-
 const returnAllChats = async (req, res) => {
     if (req.headers.authorization) {
         const username = getUserNameFromToken(req.headers.authorization)
@@ -107,4 +98,19 @@ const returnAllTheMessages = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages };  
+const updateChats = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    const id = req.params.id;
+    if (username !== "Invalid Token") {
+        const updatedChats = await chatsService.updateChats(username ,id);
+        if (updatedChats != -1) {
+            res.status(200).json(updatedChats);
+        } else {
+            res.status(400).send('failed. problem with the DB');
+        }
+    } else {
+        return res.status(403).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats };  

@@ -22,7 +22,7 @@ function Contact(props) {
                     </div>
                     <div className="row">
                         <div className="col">
-                            <span className="lastMessage">{props.lastMessage}</span>
+                            <span className={props.lastMessageDivClassName}>{props.lastMessage}</span>
                             {props.notification > 0 && <div className="notification">{props.notification}</div>}
                         </div>
                     </div>

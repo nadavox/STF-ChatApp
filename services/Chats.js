@@ -153,4 +153,45 @@ const returnAllTheMessages = async (id)  => {
     return messages.messages;
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages }
+const updateChats = async (username, id) => {
+    const userChats = await returnAllChats(username);
+    const user = await User.findOne({ username }).populate('chats');
+    var contactInfo;
+    const currentChat = user.chats.find(chat => chat.id === parseInt(id));
+
+    if(currentChat.users[0].username === username) {
+        contactInfo = currentChat.users[1];
+    } else {
+        contactInfo = currentChat.users[0];
+    }
+    
+    const contactUsername = contactInfo.username;
+    const contact = await User.findOne({ username: contactUsername });
+    const contactChats = await returnAllChats(contactUsername);
+
+    // Find the index of the chat with the given id
+    const userChatsIndex = userChats.findIndex(chat => chat.id === parseInt(id));
+    const contactChatsIndex = contactChats.findIndex(chat => chat.id === parseInt(id));
+
+    if (userChatsIndex !== -1) {
+        // Remove the chat from its current position and insert it at the beginning
+        const chatToMove = userChats.splice(userChatsIndex, 1)[0];
+        userChats.unshift(chatToMove);
+
+        const chatToMoveUserDatabase = user.chats.splice(userChatsIndex, 1)[0];
+        user.chats.unshift(chatToMoveUserDatabase);
+
+        // Save the updated user object to persist the changes in the database
+        await user.save();
+
+        const chatToMoveContactDatabase = contact.chats.splice(contactChatsIndex, 1)[0];
+        contact.chats.unshift(chatToMoveContactDatabase);
+
+        // Save the updated user object to persist the changes in the database
+        await contact.save();
+    }
+    
+    return userChats;
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats }
