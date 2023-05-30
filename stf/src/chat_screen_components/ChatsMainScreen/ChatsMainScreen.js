@@ -70,7 +70,8 @@ function ChatsMainScreen() {
             </div>
 
             <Modal setDisplayContactRow={setDisplayContactRow}
-                pressedOnAddContact={setPressedOnAddContact} setaddContact={setaddContact} />
+                pressedOnAddContact={setPressedOnAddContact} setaddContact={setaddContact} 
+                sock = {sock} />
         </>
     );
 }

@@ -27,6 +27,8 @@ function Modal(props) {
             const okay = await addContact(currentUser, inputValue);
             if (okay !== false) {
                 props.setaddContact(true);
+                console.log("the new chat is: ", okay)
+                await props.sock.emit("add_contact", okay)
                 exitBtnRef.current.click();
             } else {
                 // no user

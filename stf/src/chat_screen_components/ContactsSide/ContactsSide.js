@@ -77,7 +77,7 @@ const ContactsSide = (props) => {
         }
     }
 
-    // use it when i add new contact to render thr component.
+    // use it when i add new contact to render the component.
     useEffect(() => {
         if (props.addContact) {
             getcontacts() // to update to contacts in the list.
@@ -114,14 +114,25 @@ const ContactsSide = (props) => {
                 updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
                 console.log("updaete: ", updatedListOfContacts )
                 setListOfContacts(updatedListOfContacts)
+                if (data.id !== props.currentContactClicked) {
+                    // here to add notifcation to the clients.
+                   }
             } else {
-                console.log("No chat found or lastMessage is undefined");
-            }
-            if (data.id !== props.currentContactClicked) {
-             // here to add notifcation to the clients.
+                console.log("No chat found");
+                getcontacts()
+                
             }
         })
-        console.log(listOfContacts)
+
+        props.sock.on("receive_newConatct", async (data) => {
+            console.log("someone new send messgae to ", data.username)
+            // if it equale it is the guy.
+            if (data.username === currentUser.username) {
+                console.log("that me")
+                await props.sock.emit("join_chat", data.id)
+            }
+        })
+
         // eslint-disable-next-line
     }, [listOfContacts])
 

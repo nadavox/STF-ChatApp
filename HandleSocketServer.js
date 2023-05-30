@@ -1,3 +1,4 @@
+const Chats = require("./models/Chats");
 const { io } = require("./server");
 
 function socketHandler() {
@@ -11,10 +12,17 @@ function socketHandler() {
         })
 
         socket.on("join_chat", (id) => {
-            console.log("the id of the socket that join a chat", socket.id, "and the room ID:", id);
+            // console.log("the id of the socket that join a chat", socket.id, "and the room ID:", id);
             // send to the clinet the id of the chat with the new message
             //maybe send the new message or the chat.
             socket.join(id)
+        })
+
+        socket.on("add_contact", async (data) => {
+            console.log("the new caht is:", data);
+            // serching for the new chet
+            // const newChat = await Chats.findOne({data})
+            socket.broadcast.emit("receive_newConatct", data);
         })
 
         socket.on('disconnect', () => {
