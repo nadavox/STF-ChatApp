@@ -6,9 +6,8 @@ import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
 
-
 // This component takes in the current user's username and a list of messages to display.
-const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessage }) => {
+const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessage, sock }) => {
     // the current user that log in
     const { currentUser } = useContext(CurrentUserContext);
     //ref for the first scrren.
@@ -45,29 +44,18 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     // useeffect for clean the input when changing the contact
     // getmessages for the new contact
     useEffect(() => {
-        getmessages()
-        if (inputRef && inputRef.current) {
-            //clean the input value.
-            setInputValue("");
-            // clear the input field.
-            inputRef.current.value = "";
+        if (currentContactClicked !== "") {
+            getmessages()
+            if (inputRef && inputRef.current) {
+                //clean the input value.
+                setInputValue("");
+                // clear the input field.
+                inputRef.current.value = "";
+            }
         }
         // eslint-disable-next-line
     }, [currentContactClicked]);
 
-
-
-    // useEffect(() => {
-    //     console.log("the list of messages: ", ListOfMessages)
-    //     if (ListOfMessages.length > 1) {
-    //         const dateNewMessage = new Date(ListOfMessages[ListOfMessages.length - 1].created);
-    //         console.log("the date 1: ",dateNewMessage)
-    //         const dateLastMessage = new Date(ListOfMessages[ListOfMessages.length - 2].created);
-    //         console.log("the date 2: ",dateLastMessage)
-    //         dateNewMessage.setHours(0,0,0,0);
-    //         dateLastMessage.setHours(0,0,0,0);
-    //     }
-    // }, [ListOfMessages]);
 
     async function sendMessage(e) {
         if ((inputValue !== "" && e.key === "Enter") || (e.type === "click" && inputValue !== "")) {
@@ -86,15 +74,17 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                 });
                 if (res.ok) {
                     const currentMessage = await res.json()
-                    console.log("the current message: ", currentMessage)
+                    //console.log("the current message: ", currentMessage)
                     setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
                     // need to update the list of message.
                     //clean the input value.
                     setInputValue("");
                     // clear the input field.
                     inputRef.current.value = "";
-                    updateListOfMessages()
+                    ListOfMessages.push(currentMessage)
                     setCurrentChatThatGotMessage(currentContactClicked)
+                    const data = { currentMessage: currentMessage, id: id }
+                    await sock.emit("sendMessage", data)
                 } else {
                     console.log('error with the server from sending message');
                 }
@@ -104,6 +94,17 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
             }
         }
     }
+
+    // useeffect to recive new messages in live
+    useEffect(() => {
+        sock.on("receive_message", (data) => {
+            if (data.id == id) {
+                console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
+                const updatedList = [...ListOfMessages, data.currentMessage]; // Create a new array with the updated element
+                setListOfMessages(updatedList); // Update the state with the new array
+            }
+        })
+    }, [ListOfMessages])
 
     async function updateListOfMessages() {
         try {
@@ -119,7 +120,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
             });
             if (res.ok) {
                 const list = await res.json()
-                console.log("the details list of messages: ", list)
+                // console.log("the details list of messages: ", list)
                 setListOfMessages(list)
             } else {
                 console.log('error with the server from sending message');

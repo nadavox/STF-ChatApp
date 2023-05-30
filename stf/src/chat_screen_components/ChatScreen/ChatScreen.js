@@ -2,7 +2,7 @@ import './ChatScreen.css';
 import BackgroundCircles from '../../login_screen_components/BackgroundCircles/BackgroundCircles';
 import ChatsMainScreen from '../ChatsMainScreen/ChatsMainScreen';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
-import { useEffect, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ChatScreen() {
@@ -10,24 +10,23 @@ function ChatScreen() {
   const navigate = useNavigate();
   // useContext hook to get the currentUser object
   const { currentUser } = useContext(CurrentUserContext);
-  
+
+
   // conditionally render the page based on whether the currentUser has a username or not
-  const page = currentUser.username === "" ? null : (
+  if (currentUser.username === "") {
+    // Navigate to the home page if currentUser doesn't have a username
+    navigate("/");
+    return null;
+  }
+
+  // Render the chat screen if currentUser has a username
+  return (
     <>
       <BackgroundCircles circleId="topCircle" />
       <ChatsMainScreen />
       <BackgroundCircles circleId="bottomCircle" />
     </>
   );
-
-  // useEffect hook to check if page is null and navigate to home page if it is
-  useEffect(() => {
-    if (page === null) {
-      navigate("/");
-    }
-  }, [])
-
-  return page;
 }
 
 export default ChatScreen;

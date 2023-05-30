@@ -7,8 +7,8 @@ import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
 import updateChats from '../../auth/UpdateContactsList';
 
-function ContactsSide(props) {
 
+const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
     //inisde of the list of contacts is all the contacts of the user.
     const [listOfContacts, setListOfContacts] = useState([]);
@@ -16,10 +16,18 @@ function ContactsSide(props) {
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [textInSearch, setTextInSearch] = useState(false);
 
+    const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
+
     async function getcontacts() {
         const l = await getchats(currentUser)
-        setListOfContacts(l)
-        console.log("list of contacts: ", l)
+        if (firstTimeGetContacts) {
+            for (let i = 0; i < l.length; i++) {
+                await props.sock.emit("join_chat", l[i].id)
+            }
+            setFirstTimeGetContacts(false)
+        }
+        const updatedListOfContacts = [...l]; // Create a copy of the array
+        setListOfContacts(updatedListOfContacts)
     }
 
     // in contact id i have the key of the chat
@@ -91,6 +99,30 @@ function ContactsSide(props) {
 
         // eslint-disable-next-line
     }, [props.currentChatThatGotMessage]);
+
+    // use effect to create notifcation and update the last message.
+    useEffect(() => {
+        props.sock.on("receive_message", (data) => {
+            console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
+            // get the chat that get the new message
+            const chatindex = ListOfContacts.findIndex((contact) => contact.id === data.id)
+
+            if (chatindex !== -1) {
+                // Create a new array with the updated element
+                console.log("the chat: ", ListOfContacts[chatindex])
+                const updatedListOfContacts = [...ListOfContacts];
+                updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
+                console.log("updaete: ", updatedListOfContacts )
+                setListOfContacts(updatedListOfContacts)
+            } else {
+                console.log("No chat found or lastMessage is undefined");
+            }
+            if (data.id !== props.currentContactClicked) {
+             // here to add notifcation to the clients.
+            }
+        })
+        console.log(ListOfContacts)
+    }, [ListOfContacts])
 
     function handleChange(event) {
         const filtered = listOfContacts.filter(
