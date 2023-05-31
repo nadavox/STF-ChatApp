@@ -5,6 +5,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
+import getAllNotifications from '../../auth/GetNotifications';
 
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
@@ -13,6 +14,7 @@ const ContactsSide = (props) => {
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [textInSearch, setTextInSearch] = useState(false);
     const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
+    const [listOfNotifications, setListOfNotifications] = useState([]);
 
     async function getcontacts() {
         const l = await getchats(currentUser)
@@ -21,6 +23,8 @@ const ContactsSide = (props) => {
                 await props.sock.emit("join_chat", l[i].id)
             }
             setFirstTimeGetContacts(false)
+            const n = await getAllNotifications(currentUser);
+            setListOfNotifications(n);
         }
         setListOfContacts(l)
     }
@@ -125,7 +129,7 @@ const ContactsSide = (props) => {
                 updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
                 setListOfContacts(updatedListOfContacts)
                 if (data.id !== props.currentContactClicked) {
-                    // here to add notifcation to the clients.
+                    // notifications here
                 }
             } else {
                 await getcontacts();
@@ -189,7 +193,7 @@ const ContactsSide = (props) => {
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
                                 lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                notification=""
+                                notification={listOfNotifications.find(chat => chat.id === contact.id).notifications}
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
                             />
@@ -203,7 +207,7 @@ const ContactsSide = (props) => {
                                     lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                     lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
                                     lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                    notification=""
+                                    notification={listOfNotifications.find(chat => chat.id === contact.id).notifications}
                                     className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                     onClick={() => handleClickingOnContact(contact.id)}
                                 />

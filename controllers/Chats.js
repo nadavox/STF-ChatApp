@@ -133,4 +133,18 @@ const deleteChat = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat };  
+const getNotifications = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    if (username !== "Invalid Token") {
+        const notifications = await chatsService.getNotifications(username);
+        if (notifications != -1) {
+            res.send(notifications);
+        } else {
+            res.status(404).send('Not Found');
+        }
+    } else {
+        return res.status(401).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications };  

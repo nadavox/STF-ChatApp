@@ -216,4 +216,9 @@ const deleteChat = async (username, id) => {
     return 1;
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat }
+const getNotifications = async (username) => {
+    const user = await User.findOne({ username }).populate('chats');
+    return user;
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications }
