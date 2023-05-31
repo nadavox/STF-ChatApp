@@ -1,6 +1,6 @@
 import './BackgroundCircles.css'
 
-function BackgroundCircles({circleId}) {
+function BackgroundCircles({ circleId }) {
     return (
         <div className="container-fluid text-center">
             <div className="row">

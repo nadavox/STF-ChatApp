@@ -20,7 +20,6 @@ const returnLastMessage = async (id) => {
     }
 };
 
-
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
     const chatPromises = user.chats.map(async chat => {
@@ -190,6 +189,7 @@ const deleteChat = async (username, id) => {
     const conversation = await Chats.findOne({ id: parseInt(id) }).populate('messages');
 
     await deleteMessages(conversation.messages);
+    
     let contactUsername;
     if (conversation.users[1].username === username) {
         contactUsername = conversation.users[0].username;

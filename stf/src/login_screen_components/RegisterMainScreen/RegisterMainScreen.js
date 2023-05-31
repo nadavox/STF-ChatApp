@@ -1,4 +1,3 @@
-import './RegisterMainScreen.css'
 import RegisterLoginBlock from '../RegisterLoginBlock/RegisterLoginBlock';
 import RegisterCreateAccountBlock from '../RegisterCreateAccountBlock/RegisterCreateAccountBlock';
 

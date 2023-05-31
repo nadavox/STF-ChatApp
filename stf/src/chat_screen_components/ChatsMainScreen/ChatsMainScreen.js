@@ -6,10 +6,9 @@ import { useState, useEffect } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Modal from '../Modal/Modal';
-// connect to the socket.io
-import io from 'socket.io-client';
+import io from 'socket.io-client'; // connect to the socket.io
+
 const sock = io.connect('http://localhost:5000'); // Create the socket connection 
 
 function ChatsMainScreen() {
@@ -19,7 +18,6 @@ function ChatsMainScreen() {
     const { currentUser } = useContext(CurrentUserContext);
     const [currentChatThatGotMessage, setCurrentChatThatGotMessage] = useState(0);
     // Define state variables
-    //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
     const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" sock={sock} />);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
@@ -49,7 +47,6 @@ function ChatsMainScreen() {
         fetchTheScreen()
     }, [clickContact]);
 
-
     if (currentUser.username === "") {
         // Navigate to the home page if currentUser doesn't have a username
         navigate("/");
@@ -61,9 +58,6 @@ function ChatsMainScreen() {
             <div id="screen" className="container-fluid p-0">
                 <div id="mainScreen" className="row">
 
-                    {/* added the setter for the row in thr right side of the screen
-                    so every time the user click on a contact we need to use the setter
-                    and than it gonna replace. the setter is: setDisplayContactRow */}
                     <ContactsSide setDisplayContactRow={setDisplayContactRow} setPressedOnAddContact={setPressedOnAddContact}
                         pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
                         setaddContact={setaddContact} setClickContact={setClickContact}

@@ -11,7 +11,6 @@ function ChatScreen() {
   // useContext hook to get the currentUser object
   const { currentUser } = useContext(CurrentUserContext);
 
-
   // conditionally render the page based on whether the currentUser has a username or not
   if (currentUser.username === "") {
     // Navigate to the home page if currentUser doesn't have a username

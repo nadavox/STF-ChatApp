@@ -6,19 +6,15 @@ import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
 
-
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
-    //inisde of the list of contacts is all the contacts of the user.
-    const [listOfContacts, setListOfContacts] = useState([]);
+    const [listOfContacts, setListOfContacts] = useState([]); //inside of the list of contacts is all the contacts of the user.
     const [finalSearchValue, setFinalSearchValue] = useState("");
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [textInSearch, setTextInSearch] = useState(false);
-
     const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
 
     async function getcontacts() {
-        console.log("before update: ", listOfContacts)
         const l = await getchats(currentUser)
         if (firstTimeGetContacts) {
             for (let i = 0; i < l.length; i++) {
@@ -26,7 +22,6 @@ const ContactsSide = (props) => {
             }
             setFirstTimeGetContacts(false)
         }
-        console.log("after update: ", l)
         setListOfContacts(l)
     }
 
@@ -86,8 +81,8 @@ const ContactsSide = (props) => {
         // eslint-disable-next-line
     }, [props.addContact])
 
-     // use it when i delete contact to render the component.
-     useEffect(() => {
+    // use it when i delete contact to render the component.
+    useEffect(() => {
         if (props.deleteContact) {
             getcontacts() // to update to contacts in the list.
             props.setDeleteContact(false)
@@ -117,59 +112,49 @@ const ContactsSide = (props) => {
 
         // eslint-disable-next-line
     }, [props.deleteContact])
-  
+
     // use effect to create notifcation and update the last message.
     useEffect(() => {
-
         const receiveMessageHandler = async (data) => {
-            console.log("i am the client. the chat id: ", data.id, "and the last message is: ", data.currentMessage)
             // get the chat that get the new message
             const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
 
             if (chatindex !== -1) {
                 // Create a new array with the updated element
-                console.log("the chat: ", listOfContacts[chatindex])
                 const updatedListOfContacts = [...listOfContacts];
                 updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
-                console.log("updaete: ", updatedListOfContacts)
                 setListOfContacts(updatedListOfContacts)
                 if (data.id !== props.currentContactClicked) {
                     // here to add notifcation to the clients.
                 }
             } else {
-                console.log("No chat found");
-                await getcontacts()
-
+                await getcontacts();
             }
         }
 
         const receiveUpdateChatsHandler = async (data) => {
-            console.log("update the chats now")
             await getcontacts();
         };
 
         props.sock.on("receive_message", receiveMessageHandler);
         props.sock.on("receiveUpdateChats", receiveUpdateChatsHandler);
-        console.log("the list after update: ", listOfContacts)
+
         return () => {
             props.sock.off("receive_message", receiveMessageHandler);
             props.sock.off("receiveUpdateChats", receiveUpdateChatsHandler);
         };
-
         // eslint-disable-next-line
     }, [listOfContacts])
 
     useEffect(() => {
         const receiveNewContactHandler = async (data) => {
-            console.log("someone new create contact the sender ", data.sender)
-            console.log("someone new create contact ", data.data.username)
             // if it equale it is the guy.
             if (data.data.username === currentUser.username || data.sender === currentUser.username) {
-                console.log("that me")
                 await props.sock.emit("join_chat", data.data.id)
             }
         };
         props.sock.on("receive_newContact", receiveNewContactHandler);
+
         return () => {
             props.sock.off("receive_newContact", receiveNewContactHandler);
         };
@@ -226,9 +211,6 @@ const ContactsSide = (props) => {
                             : null
                     }
                 </ul>
-
-
-
             </div>
         </>
     );
