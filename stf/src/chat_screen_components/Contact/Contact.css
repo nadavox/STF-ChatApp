@@ -104,4 +104,5 @@
 
 .noMessage {
     opacity: 0%;
+    display: block;
 }
