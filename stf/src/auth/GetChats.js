@@ -13,11 +13,11 @@ async function getchats(currentUser) {
             // console.log("all chats: ", listOfChats)
             return listOfChats
         } else {
-            console.log('error with the server from login auth');
+            console.log('error with the respond from getChats auth');
             return false;
         }
     } catch (error) {
-        console.log('error with the server from login auth');
+        console.log('error with the server from getChats auth');
         return false;
     }
 }

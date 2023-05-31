@@ -18,7 +18,7 @@ function ChatScreen() {
     navigate("/");
     return null;
   }
-
+  
   // Render the chat screen if currentUser has a username
   return (
     <>

@@ -84,7 +84,15 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     ListOfMessages.push(currentMessage)
                     setCurrentChatThatGotMessage(currentContactClicked)
                     const data = { currentMessage: currentMessage, id: id }
+                    //scroll down to the last message
+                    setTimeout(() => {
+                        messagesEndRef.current.scrollTo({
+                            top: messagesEndRef.current.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }, 10)
                     await sock.emit("sendMessage", data)
+                    await sock.emit("updateChats", id)
                 } else {
                     console.log('error with the server from sending message');
                 }
@@ -97,15 +105,28 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
     // useeffect to recive new messages in live
     useEffect(() => {
-        sock.on("receive_message", (data) => {
-            if (data.id === id) {
+        const scrollDown = async (data) => {
+            console.log("data.id", data.id);
+            console.log("currentContactClicked", currentContactClicked);
+            if (data.id === currentContactClicked) {
                 console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
+                setTimeout(() => {
+                    messagesEndRef.current.scrollTo({
+                        top: messagesEndRef.current.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 10)
                 const updatedList = [...ListOfMessages, data.currentMessage]; // Create a new array with the updated element
                 setListOfMessages(updatedList); // Update the state with the new array
             }
-        })
+        }
+
+        sock.on("receive_message", scrollDown);
+        return () => {
+            sock.off("receive_message", scrollDown);
+        };
         // eslint-disable-next-line
-    }, [ListOfMessages])
+    }, [ListOfMessages, currentContactClicked])
 
     async function updateListOfMessages() {
         try {
@@ -135,7 +156,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     function generateTime(dateString) {
         const date = new Date(dateString);
         const hours = date.getHours();
-        const minutes = date.getMinutes();
+        const minutes = date.getMinutes().toString().padStart(2, '0'); // Add leading zero if minutes < 10
         return `${hours}:${minutes}`;
     }
 
@@ -147,6 +168,8 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
         return `${day}.${month}.${year}`;
     }
+
+
 
     if (typeof id === 'undefined') {
         // no contact chosen

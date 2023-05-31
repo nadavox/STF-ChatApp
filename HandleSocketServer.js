@@ -1,3 +1,4 @@
+const Chats = require("./models/Chats");
 const { io } = require("./server");
 
 function socketHandler() {
@@ -17,9 +18,23 @@ function socketHandler() {
             socket.join(id)
         })
 
-        socket.on('disconnect', () => {
+        socket.on("add_contact", async (data) => {
+            console.log("the new caht id is:", data.data.id);
+            // serching for the new chet
+            // const newChat = await Chats.findOne({data})
+            io.emit("receive_newContact", data);
+        })
 
-          });
+        socket.on("updateChats", async (data) => {
+            socket.broadcast.emit("receiveUpdateChats", data);
+        })
+
+        socket.on("afterDelete", async (id) => {
+            console.log("in after delete", id);
+            socket.to(id).emit("notifyDelete");
+        })
+
+        socket.on('disconnect', () => {});
     })
 }
 

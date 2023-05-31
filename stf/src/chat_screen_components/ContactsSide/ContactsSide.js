@@ -65,7 +65,7 @@ const ContactsSide = (props) => {
 
         if (isCurrentDate) {
             const hours = date.getHours();
-            const minutes = date.getMinutes();
+            const minutes = date.getMinutes().toString().padStart(2, '0'); // Add leading zero if minutes < 10
             return `${hours}:${minutes}`;
         }
         else {
@@ -77,7 +77,7 @@ const ContactsSide = (props) => {
         }
     }
 
-    // use it when i add new contact to render thr component.
+    // use it when i add new contact to render the component.
     useEffect(() => {
         if (props.addContact) {
             getcontacts() // to update to contacts in the list.
@@ -86,8 +86,40 @@ const ContactsSide = (props) => {
         // eslint-disable-next-line
     }, [props.addContact])
 
+     // use it when i delete contact to render the component.
+     useEffect(() => {
+        if (props.deleteContact) {
+            getcontacts() // to update to contacts in the list.
+            props.setDeleteContact(false)
+            props.setClickContact("")
+            props.setDisplayContactRow({
+                picture: "",
+                displayName: "",
+                username: ""
+            });
+        }
+
+        const notifyDeleteHandler = async () => {
+            getcontacts() // to update to contacts in the list.
+            props.setDeleteContact(false)
+            props.setClickContact("")
+            props.setDisplayContactRow({
+                picture: "",
+                displayName: "",
+                username: ""
+            });
+        };
+        props.sock.on("notifyDelete", notifyDeleteHandler);
+
+        return () => {
+            props.sock.off("notifyDelete", notifyDeleteHandler);
+        };
+
+        // eslint-disable-next-line
+    }, [props.deleteContact])
+
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchUserData = async () => {
             if (props.currentChatThatGotMessage !== 0) {
                 const l = await updateChats(currentUser, props.currentChatThatGotMessage);
                 setListOfContacts(l);
@@ -95,15 +127,16 @@ const ContactsSide = (props) => {
             }
         };
 
-        fetchData(); // Immediately invoke the async function
+        fetchUserData(); // Immediately invoke the async function
 
         // eslint-disable-next-line
     }, [props.currentChatThatGotMessage]);
 
     // use effect to create notifcation and update the last message.
     useEffect(() => {
-        props.sock.on("receive_message", (data) => {
-            console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
+        
+        const receiveMessageHandler = (data) => {
+            console.log("i am the client. the chat id: ",data.id, "and the last message is: ", data.currentMessage)
             // get the chat that get the new message
             const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
 
@@ -111,19 +144,50 @@ const ContactsSide = (props) => {
                 // Create a new array with the updated element
                 console.log("the chat: ", listOfContacts[chatindex])
                 const updatedListOfContacts = [...listOfContacts];
-                updatedListOfContacts[chatindex] ={ ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
-                console.log("updaete: ", updatedListOfContacts )
+                updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
+                console.log("updaete: ", updatedListOfContacts)
                 setListOfContacts(updatedListOfContacts)
+                if (data.id !== props.currentContactClicked) {
+                    // here to add notifcation to the clients.
+                }
             } else {
-                console.log("No chat found or lastMessage is undefined");
+                console.log("No chat found");
+                getcontacts()
+
             }
-            if (data.id !== props.currentContactClicked) {
-             // here to add notifcation to the clients.
-            }
-        })
-        console.log(listOfContacts)
+        }
+
+        const receiveUpdateChatsHandler = async (data) => {
+            console.log("need to update the chats because:  ", data)
+            const l = await updateChats(currentUser, data);
+            setListOfContacts(l);
+        };
+
+        props.sock.on("receive_message", receiveMessageHandler);
+        props.sock.on("receiveUpdateChats", receiveUpdateChatsHandler);
+
+        return () => {
+            props.sock.off("receive_message", receiveMessageHandler);
+            props.sock.off("receiveUpdateChats", receiveUpdateChatsHandler);
+        };
         // eslint-disable-next-line
     }, [listOfContacts])
+
+    useEffect (() => {
+        const receiveNewContactHandler = async (data) => {
+            console.log("someone new create contact the sender ", data.sender)
+            console.log("someone new create contact ", data.data.username)
+            // if it equale it is the guy.
+            if (data.data.username === currentUser.username || data.sender === currentUser.username) {
+                console.log("that me")
+                await props.sock.emit("join_chat", data.data.id)
+            }
+        };
+        props.sock.on("receive_newContact", receiveNewContactHandler);
+        return () => {
+            props.sock.off("receive_newContact", receiveNewContactHandler);
+        };
+    }, [props.sock])
 
     function handleChange(event) {
         const filtered = listOfContacts.filter(
@@ -153,7 +217,7 @@ const ContactsSide = (props) => {
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
-                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
@@ -166,7 +230,7 @@ const ContactsSide = (props) => {
                                 contactDispalyName={contact.user.displayName}
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
-                                lastMessageDivClassName = {contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
                                 notification=""
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}

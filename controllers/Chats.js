@@ -102,7 +102,7 @@ const updateChats = async (req, res) => {
     const username = getUserNameFromToken(req.headers.authorization);
     const id = req.params.id;
     if (username !== "Invalid Token") {
-        const updatedChats = await chatsService.updateChats(username ,id);
+        const updatedChats = await chatsService.updateChats(username, id);
         if (updatedChats != -1) {
             res.status(200).json(updatedChats);
         } else {
@@ -113,4 +113,19 @@ const updateChats = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats };  
+const deleteChat = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    const id = req.params.id;
+    if (username !== "Invalid Token") {
+        const isDeleted = await chatsService.deleteChat(username, id);
+        if (isDeleted != -1) {
+            res.status(200).json(isDeleted)
+        } else {
+            res.status(404).send('Not Found');
+        }
+    } else {
+        return res.status(401).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat };  
