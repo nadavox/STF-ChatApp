@@ -41,20 +41,33 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     };
 
 
-    // useeffect for clean the input when changing the contact
-    // getmessages for the new contact
+    // useEffect for cleaning the input when changing the contact
+    // get messages for the new contact
     useEffect(() => {
         if (currentContactClicked !== "") {
-            getmessages()
+            getmessages();
             if (inputRef && inputRef.current) {
-                //clean the input value.
+                // Clean the input value.
                 setInputValue("");
-                // clear the input field.
+                // Clear the input field.
                 inputRef.current.value = "";
             }
         }
+        
         // eslint-disable-next-line
     }, [currentContactClicked]);
+
+
+    useEffect(()=> {
+        if (typeof id !== 'undefined') {
+            console.log("hello")
+            const scrollHeight = messagesEndRef.current.scrollHeight;
+            messagesEndRef.current.scrollTo({
+                top: scrollHeight,
+                behavior: 'auto'
+              });
+            }
+    },[ListOfMessages])
 
 
     async function sendMessage(e) {
