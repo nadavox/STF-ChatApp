@@ -14,12 +14,12 @@ body {
     body {
         overflow: scroll !important;
     }
-  
+
     #signInBlock {
         position: static !important;
     }
-  
+
     #signUpBlock {
         position: static !important;
     }
-  }
+}

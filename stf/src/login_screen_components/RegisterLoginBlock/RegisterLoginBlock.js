@@ -11,7 +11,7 @@ function RegisterLoginBlock() {
                 <Details DivId="details" DivText="To continue chatting with friends please login with your personal info" />
             </div>
             <div className="row">
-                <LoginButton divId="login" buttonId="rightButton" buttonText="SIGN IN" linkTo="/"/>
+                <LoginButton divId="login" buttonId="rightButton" buttonText="SIGN IN" linkTo="/" />
             </div>
         </div>);
 }

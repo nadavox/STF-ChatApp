@@ -1,4 +1,3 @@
-import './LoginMainScreen.css'
 import LoginSignInBlock from '../LoginSignInBlock/LoginSignInBlock';
 import LoginSignUpBlock from '../LoginSignUpBlock/LoginSignUpBlock';
 import { useState } from 'react';
@@ -17,6 +16,5 @@ function LoginMainScreen() {
         </div>
     );
 }
-
 
 export default LoginMainScreen;

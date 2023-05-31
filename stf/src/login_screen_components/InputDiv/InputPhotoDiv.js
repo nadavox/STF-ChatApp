@@ -33,9 +33,7 @@ function InputDiv(props) {
         setInputValue(event.target.value);
         return;
       }
-      // Create a URL object from the file object and set it as the photo URL in state
-      // const url = URL.createObjectURL(file);
-      // props.setPhotoUrl(url);
+
       //create reader
       const reader = new FileReader();
       reader.onload = () => {
@@ -105,7 +103,6 @@ function InputDiv(props) {
       )}
     </>
   );
-
 }
 
 export default InputDiv;

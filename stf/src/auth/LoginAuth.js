@@ -35,10 +35,8 @@ async function LoginAuth(username, password) {
             return false;
         }
     } catch (error) {
-        console.log('error with the server from login auth');
         return false;
     }
 }
-
 
 export default LoginAuth;

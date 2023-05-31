@@ -34,14 +34,13 @@ const LoginInputDiv = React.forwardRef((props, ref) => {
         const popoverList = Array.from(popoverTriggerList).map(popoverTriggerEl => new Popover(popoverTriggerEl));
 
         if (popoverList !== 0) {
-
             return () => {
                 popoverList.forEach(popover => {
                     popover.dispose();
                 });
             };
-            }
-        }, [props.isInvalid]);
+        }
+    }, [props.isInvalid]);
 
     return (
         <>
@@ -54,7 +53,7 @@ const LoginInputDiv = React.forwardRef((props, ref) => {
 
                             id={props.inputId}
                             type={inputType}
-                            
+
                             className="btn inv"
                             role="button"
                             data-bs-toggle="popover"

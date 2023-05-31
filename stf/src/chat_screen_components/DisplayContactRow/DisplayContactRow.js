@@ -59,7 +59,6 @@ const DisplayContactRow = ({ picture, name, chatId, setDeleteContact, sock, user
 
     // Hide the tooltip
     if (tooltipElement) {
-      console.log("innnnnnnnn")
       const tooltip = Tooltip.getInstance(tooltipElement);
       if (tooltip) {
         tooltip.hide();

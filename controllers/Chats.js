@@ -24,13 +24,10 @@ function getUserNameFromToken(tokenFromCookie) {
 }
 
 const returnAllChats = async (req, res) => {
-    console.log("inside return all chats.")
     if (req.headers.authorization) {
         const username = getUserNameFromToken(req.headers.authorization)
-        console.log("the username: ", username)
         if (username !== "Invalid Token") {
             const allChats = await chatsService.returnAllChats(username);
-            // console.log("all chats: ", allChats)
             res.send(allChats);
             return
         } else {

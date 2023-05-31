@@ -33,7 +33,3 @@
 .registerPhotoInputDiv.invalid input {
     border: 1px solid red !important;
 }
-
-/* #userNameInput:focus{
-    border: 1px solid red !important;
-} */

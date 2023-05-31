@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import './ProfilePhoto.css'
 
-function ProfilePhoto({photoUrl}) {
+function ProfilePhoto({ photoUrl }) {
   const [selected, setSelected] = useState(false);
 
   const handleClick = () => {
@@ -9,12 +9,12 @@ function ProfilePhoto({photoUrl}) {
   };
 
   return (
-      <img
-        src={photoUrl}
-        alt=""
-        className={selected ? "selectedPhoto--active" : "selectedPhoto"}
-        onClick={handleClick}
-      />
+    <img
+      src={photoUrl}
+      alt=""
+      className={selected ? "selectedPhoto--active" : "selectedPhoto"}
+      onClick={handleClick}
+    />
   );
 }
 

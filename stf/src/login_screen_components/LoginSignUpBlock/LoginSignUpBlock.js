@@ -20,7 +20,7 @@ function LoginSignUpBlock(props) {
                 <Details DivId="details" DivText="Enter your personal details and start chatting with friends" />
             </div>
             <div className="row">
-                <SignInButton divId="signUp" buttonId="rightButton" buttonText="SIGN UP" linkTo="/register"/>
+                <SignInButton divId="signUp" buttonId="rightButton" buttonText="SIGN UP" linkTo="/register" />
             </div>
         </div>);
 }

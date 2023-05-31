@@ -9,9 +9,7 @@
 
 .selectedPhoto:hover {
     transform: translateY(-10px);
-
 }
-
 
 /* when click o nthe photo */
 .selectedPhoto--active {

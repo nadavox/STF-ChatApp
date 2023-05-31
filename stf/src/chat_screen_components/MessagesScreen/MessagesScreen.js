@@ -1,7 +1,6 @@
 import Message from '../Message/Message';
 import './MessagesScreen.css';
-import { useState, useEffect, useRef, useContext, useCallback } from 'react';
-import '../SendMessageBox/SendMessageBox.css'
+import { useState, useEffect, useRef, useContext } from 'react';
 import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
@@ -88,16 +87,13 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                 });
                 if (res.ok) {
                     const currentMessage = await res.json()
-                    //console.log("the current message: ", currentMessage)
                     setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
-                    // need to update the list of message.
                     //clean the input value.
                     setInputValue("");
                     // clear the input field.
                     inputRef.current.value = "";
                     ListOfMessages.push(currentMessage)
                     const data = { currentMessage: currentMessage, id: id }
-                    console.log("data when sending message: ", data)
                     //scroll down to the last message
                     setTimeout(() => {
                         messagesEndRef.current.scrollTo({
@@ -108,14 +104,10 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     await sock.emit("sendMessage", data)
                     //update the order of the two list of the two contacts
                     await updateChats(currentUser, id);
-                    console.log("updated chats")
                     await sock.emit("updateChats", id)
-                } else {
-                    console.log('error with the server from sending message');
                 }
             } catch (error) {
-                console.log(error)
-                console.log('error from try and cacth');
+                // error
             }
         }
     }
@@ -124,7 +116,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     useEffect(() => {
         const scrollDown = async (data) => {
             if (data.id === currentContactClicked) {
-                console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
                 setTimeout(() => {
                     messagesEndRef.current.scrollTo({
                         top: messagesEndRef.current.scrollHeight,
@@ -137,6 +128,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
         }
 
         sock.on("receive_message", scrollDown);
+
         return () => {
             sock.off("receive_message", scrollDown);
         };
@@ -145,7 +137,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
     async function updateListOfMessages() {
         try {
-            console.log("id :", id)
             //send new message to a chat
             const url = 'http://localhost:5000/api/Chats/' + id + '/Messages'
             const res = await fetch(url, {
@@ -157,14 +148,9 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
             });
             if (res.ok) {
                 const list = await res.json()
-                console.log("the details list of messages: ", list)
-                //setListOfMessages(list)
-            } else {
-                console.log('error with the server from sending message');
             }
         } catch (error) {
-            console.log(error)
-            console.log('error from try and cacth');
+            // error
         }
     }
 
@@ -183,7 +169,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
         return `${day}.${month}.${year}`;
     }
-
 
     if (typeof id === 'undefined') {
         // no contact chosen
@@ -217,7 +202,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     <input id="sendMessageInput" type="text" placeholder="New message here..." className="h-100"
                         onChange={onChange} ref={inputRef} onKeyDown={sendMessage}></input>
                 </div>
-                <button id="recordMessageButton" type="button" className="h-100" onClick={sendMessage}>
+                <button id="sendMessageButton" type="button" className="h-100" onClick={sendMessage}>
                     <img src={send_Icon} alt=""></img>
                 </button>
             </div>

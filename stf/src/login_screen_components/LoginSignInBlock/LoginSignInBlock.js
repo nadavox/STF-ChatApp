@@ -16,7 +16,6 @@ function LoginSignInBlock({ mousePosition }) {
     const { updateUser } = useContext(CurrentUserContext);
     const [messagetopopover, setMessagetopopover] = useState("username and password does not match");
 
-
     useEffect(() => {
         if (mousePosition) {
             LoginInputDivref.current.blur();
@@ -42,14 +41,12 @@ function LoginSignInBlock({ mousePosition }) {
         e.preventDefault();
         const currLoginUser = await LoginAuth(Username, Password)
         if (currLoginUser !== false) {
-            console.log("before update: ", currLoginUser.token)
             updateUser(currLoginUser);
             // navigate to the chats page 
             navigate('/chats');
         } else {
             //not valid user
             // we need to show the right message when it happens 
-            console.log("not a valid user")
             setMessagetopopover("username and password does not match");
             setIsInvalid(true);
             invalidFields.push('Username');
@@ -61,7 +58,6 @@ function LoginSignInBlock({ mousePosition }) {
             }, 100);
         }
     }
-
 
     return (
         <div id="signInBlock" className="col-lg-8 position-relative" handlemousemove="handlemousemove">

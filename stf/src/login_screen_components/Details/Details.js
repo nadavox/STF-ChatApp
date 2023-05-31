@@ -1,6 +1,6 @@
 import './Details.css'
 
-function Details({DivId, DivText}) {
+function Details({ DivId, DivText }) {
     return (<div id={DivId} className="col">{DivText}</div>);
 }
 

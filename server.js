@@ -41,9 +41,6 @@ module.exports = { io };
 // Import and handle the sockets
 const socketHandler = require('./HandleSocketServer');
 
-// Print the environment variables of our program
-console.log(process.env);
-
 //routes:
 app.use(express.static('public/build'));
 
@@ -60,8 +57,5 @@ app.use('/api/Chats', chats);
 const registerRouter = require('./routes/Register');
 app.use('/', registerRouter);
 
-
 // Start the server
-server.listen(process.env.PORT, () => {
-  console.log('SERVER RUNNING ON PORT ', process.env.PORT);
-});
+server.listen(process.env.PORT);

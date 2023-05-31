@@ -1,8 +1,6 @@
 import './SearchContact.css'
 
 const SearchContact = (props) => {
-    // init the input value to empty
-
     const onChange = (e) => {
         props.setInputValue(e.target.value);
         props.onChangeInput(e.target.value);

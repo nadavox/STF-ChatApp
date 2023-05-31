@@ -2,32 +2,32 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: rgb(230, 229, 229) !important;
     overflow: hidden;
-  }
-  
-  @media (max-height: 500px) {
+}
+
+@media (max-height: 500px) {
     body {
         overflow: scroll !important;
     }
-  
+
     #createAccount {
         position: static !important;
     }
-  
+
     #registerBlock {
         position: static !important;
     }
 }
-  
-  @media (max-width: 992px) {
+
+@media (max-width: 992px) {
     body {
         overflow: scroll !important;
     }
-  
+
     #createAccount {
         position: static !important;
     }
-  
+
     #registerBlock {
         position: static !important;
     }
-  }
+}
