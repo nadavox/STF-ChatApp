@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+//the path of the server
+const path = require('path');
 
 // The library that allows using environment variables from config files
 const CustomEnv = require('custom-env');
@@ -38,11 +40,11 @@ module.exports = { io };
 
 // Import and handle the sockets
 const socketHandler = require('./HandleSocketServer');
-// socketHandler();
 
 // Print the environment variables of our program
 console.log(process.env);
 
+//routes:
 app.use(express.static('public/build'));
 
 const users = require('./routes/Users');
@@ -53,6 +55,11 @@ app.use('/api/Tokens', tokens);
 
 const chats = require('./routes/Chats');
 app.use('/api/Chats', chats);
+
+// handle request to the routes of the react
+const registerRouter = require('./routes/Register');
+app.use('/', registerRouter);
+
 
 // Start the server
 server.listen(process.env.PORT, () => {

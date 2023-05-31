@@ -102,7 +102,8 @@ const ContactsSide = (props) => {
 
     // use effect to create notifcation and update the last message.
     useEffect(() => {
-        props.sock.on("receive_message", (data) => {
+        
+        const receiveMessageHandler = (data) => {
             console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
             // get the chat that get the new message
             const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
@@ -122,22 +123,70 @@ const ContactsSide = (props) => {
                 getcontacts()
 
             }
-        })
+        }
 
-        props.sock.on("receive_newConatct", async (data) => {
+
+        // props.sock.on("receive_message", (data) => {
+        //     console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
+        //     // get the chat that get the new message
+        //     const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
+
+        //     if (chatindex !== -1) {
+        //         // Create a new array with the updated element
+        //         console.log("the chat: ", listOfContacts[chatindex])
+        //         const updatedListOfContacts = [...listOfContacts];
+        //         updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
+        //         console.log("updaete: ", updatedListOfContacts)
+        //         setListOfContacts(updatedListOfContacts)
+        //         if (data.id !== props.currentContactClicked) {
+        //             // here to add notifcation to the clients.
+        //         }
+        //     } else {
+        //         console.log("No chat found");
+        //         getcontacts()
+
+        //     }
+        // })
+
+
+        const receiveNewContactHandler = async (data) => {
             console.log("someone new send messgae to ", data.username)
             // if it equale it is the guy.
             if (data.username === currentUser.username) {
                 console.log("that me")
                 await props.sock.emit("join_chat", data.id)
             }
-        })
+        };
 
-        props.sock.on("receiveUpdateChats", async (data) => {
+
+        // props.sock.on("receive_newConatct", async (data) => {
+        //     console.log("someone new send messgae to ", data.username)
+        //     // if it equale it is the guy.
+        //     if (data.username === currentUser.username) {
+        //         console.log("that me")
+        //         await props.sock.emit("join_chat", data.id)
+        //     }
+        // })
+
+
+        const receiveUpdateChatsHandler = async (data) => {
+            console.log("need to update the chats because:  ", data)
             const l = await updateChats(currentUser, data);
             setListOfContacts(l);
-        });
+        };
 
+        // props.sock.on("receiveUpdateChats", async (data) => {
+        //     const l = await updateChats(currentUser, data);
+        //     setListOfContacts(l);
+        // });
+
+        props.sock.on("receive_message", receiveMessageHandler);
+
+        return () => {
+            props.sock.off("receive_message", receiveMessageHandler);
+            props.sock.on("receive_newContact", receiveNewContactHandler);
+            props.sock.off("receiveUpdateChats", receiveUpdateChatsHandler);
+        };
         // eslint-disable-next-line
     }, [listOfContacts])
 

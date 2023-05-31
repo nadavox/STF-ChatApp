@@ -3,12 +3,20 @@ import ContactsSide from '../ContactsSide/ContactsSide';
 import DisplayContactRow from '../DisplayContactRow/DisplayContactRow';
 import MessagesScreen from '../MessagesScreen/MessagesScreen';
 import { useState, useEffect } from 'react';
+import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Modal from '../Modal/Modal';
 // connect to the socket.io
 import io from 'socket.io-client';
 const sock = io.connect('http://localhost:5000'); // Create the socket connection 
 
 function ChatsMainScreen() {
+    // useNavigate hook for programmatic navigation
+    const navigate = useNavigate();
+    // the current user
+    const { currentUser } = useContext(CurrentUserContext);
     const [currentChatThatGotMessage, setCurrentChatThatGotMessage] = useState(0);
     // Define state variables
     //displatCONTACTROW is when we click
@@ -26,15 +34,21 @@ function ChatsMainScreen() {
                         id={clickContact}
                         currentContactClicked={clickContact}
                         setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
-                        sock = {sock}
+                        sock={sock}
                     />
                 )
-
                 setRightMessageScreen(updateMessageScreen)
             }
         }
         fetchTheScreen()
     }, [clickContact]);
+
+
+    if (currentUser.username === "") {
+        // Navigate to the home page if currentUser doesn't have a username
+        navigate("/");
+        return null;
+    }
 
     return (
         <>
@@ -70,8 +84,8 @@ function ChatsMainScreen() {
             </div>
 
             <Modal setDisplayContactRow={setDisplayContactRow}
-                pressedOnAddContact={setPressedOnAddContact} setaddContact={setaddContact} 
-                sock = {sock} />
+                pressedOnAddContact={setPressedOnAddContact} setaddContact={setaddContact}
+                sock={sock} />
         </>
     );
 }
