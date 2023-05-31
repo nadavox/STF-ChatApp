@@ -8,7 +8,7 @@ import { Tooltip } from 'bootstrap';
 import deleteChat from '../../auth/DeleteChat';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 
-const DisplayContactRow = ({ picture, name, chatId }) => {
+const DisplayContactRow = ({ picture, name, chatId, setDeleteContact, sock, username}) => {
   const navigate = useNavigate();
   let row;
   const buttonRef = useRef(null);
@@ -45,6 +45,8 @@ const DisplayContactRow = ({ picture, name, chatId }) => {
 
   const handleDeleteChat = async (e) => {
     await deleteChat(currentUser, chatId);
+    await sock.emit("afterDelete", chatId);
+    setDeleteContact(true);
   };
 
   // now design the screen as you want.

@@ -105,8 +105,10 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
     // useeffect to recive new messages in live
     useEffect(() => {
-        sock.on("receive_message", (data) => {
-            if (data.id === id) {
+        const scrollDown = async (data) => {
+            console.log("data.id", data.id);
+            console.log("currentContactClicked", currentContactClicked);
+            if (data.id === currentContactClicked) {
                 console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
                 setTimeout(() => {
                     messagesEndRef.current.scrollTo({
@@ -117,9 +119,14 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                 const updatedList = [...ListOfMessages, data.currentMessage]; // Create a new array with the updated element
                 setListOfMessages(updatedList); // Update the state with the new array
             }
-        })
+        }
+
+        sock.on("receive_message", scrollDown);
+        return () => {
+            sock.off("receive_message", scrollDown);
+        };
         // eslint-disable-next-line
-    }, [ListOfMessages])
+    }, [ListOfMessages, currentContactClicked])
 
     async function updateListOfMessages() {
         try {

@@ -113,4 +113,19 @@ const updateChats = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats };  
+const deleteChat = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    const id = req.params.id;
+    if (username !== "Invalid Token") {
+        const isDeleted = await chatsService.deleteChat(username ,id);
+        if (isDeleted != -1) {
+            res.status(200).json(isDeleted);
+        } else {
+            res.status(400).send('failed. problem with the DB');
+        }
+    } else {
+        return res.status(403).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat };  
