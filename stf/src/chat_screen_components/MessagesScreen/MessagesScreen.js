@@ -1,6 +1,6 @@
 import Message from '../Message/Message';
 import './MessagesScreen.css';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import '../SendMessageBox/SendMessageBox.css'
 import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
@@ -42,20 +42,33 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     };
 
 
-    // useeffect for clean the input when changing the contact
-    // getmessages for the new contact
+    // useEffect for cleaning the input when changing the contact
+    // get messages for the new contact
     useEffect(() => {
         if (currentContactClicked !== "") {
-            getmessages()
+            getmessages();
             if (inputRef && inputRef.current) {
-                //clean the input value.
+                // Clean the input value.
                 setInputValue("");
-                // clear the input field.
+                // Clear the input field.
                 inputRef.current.value = "";
             }
         }
+        
         // eslint-disable-next-line
     }, [currentContactClicked]);
+
+
+    useEffect(()=> {
+        if (typeof id !== 'undefined') {
+            console.log("hello")
+            const scrollHeight = messagesEndRef.current.scrollHeight;
+            messagesEndRef.current.scrollTo({
+                top: scrollHeight,
+                behavior: 'auto'
+              });
+            }
+    },[ListOfMessages])
 
 
     async function sendMessage(e) {
@@ -170,7 +183,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
         return `${day}.${month}.${year}`;
     }
-
 
 
     if (typeof id === 'undefined') {
