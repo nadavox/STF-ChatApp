@@ -5,6 +5,7 @@ import '../SendMessageBox/SendMessageBox.css'
 import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
+import updateChats from '../../auth/UpdateContactsList';
 
 // This component takes in the current user's username and a list of messages to display.
 const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessage, sock }) => {
@@ -82,8 +83,8 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     // clear the input field.
                     inputRef.current.value = "";
                     ListOfMessages.push(currentMessage)
-                    setCurrentChatThatGotMessage(currentContactClicked)
                     const data = { currentMessage: currentMessage, id: id }
+                    console.log("data when sending message: ", data)
                     //scroll down to the last message
                     setTimeout(() => {
                         messagesEndRef.current.scrollTo({
@@ -92,6 +93,9 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                         });
                     }, 10)
                     await sock.emit("sendMessage", data)
+                    //update the order of the two list of the two contacts
+                    await updateChats(currentUser, id);
+                    console.log("updated chats")
                     await sock.emit("updateChats", id)
                 } else {
                     console.log('error with the server from sending message');
@@ -106,8 +110,6 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     // useeffect to recive new messages in live
     useEffect(() => {
         const scrollDown = async (data) => {
-            console.log("data.id", data.id);
-            console.log("currentContactClicked", currentContactClicked);
             if (data.id === currentContactClicked) {
                 console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
                 setTimeout(() => {
@@ -142,8 +144,8 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
             });
             if (res.ok) {
                 const list = await res.json()
-                // console.log("the details list of messages: ", list)
-                setListOfMessages(list)
+                console.log("the details list of messages: ", list)
+                //setListOfMessages(list)
             } else {
                 console.log('error with the server from sending message');
             }

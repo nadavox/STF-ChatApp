@@ -10,7 +10,7 @@ async function getchats(currentUser) {
         });
         if (res.ok) {
             const listOfChats = await res.json()
-            // console.log("all chats: ", listOfChats)
+            console.log("success in return the listofchats from server")
             return listOfChats
         } else {
             console.log('error with the respond from getChats auth');

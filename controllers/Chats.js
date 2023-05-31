@@ -1,6 +1,7 @@
 const chatsService = require('../services/Chats');
 const STF = process.env.SECRET_TOKEN_KEY; // Accessing the environment variable
 const jwt = require("jsonwebtoken")
+const Chats = require('../models/Chats');
 
 function extractTokenFromBearerString(bearerString) {
     const start = bearerString.indexOf('{');
@@ -23,10 +24,13 @@ function getUserNameFromToken(tokenFromCookie) {
 }
 
 const returnAllChats = async (req, res) => {
+    console.log("inside return all chats.")
     if (req.headers.authorization) {
         const username = getUserNameFromToken(req.headers.authorization)
+        console.log("the username: ", username)
         if (username !== "Invalid Token") {
             const allChats = await chatsService.returnAllChats(username);
+            // console.log("all chats: ", allChats)
             res.send(allChats);
             return
         } else {
@@ -102,9 +106,13 @@ const updateChats = async (req, res) => {
     const username = getUserNameFromToken(req.headers.authorization);
     const id = req.params.id;
     if (username !== "Invalid Token") {
-        const updatedChats = await chatsService.updateChats(username, id);
-        if (updatedChats != -1) {
-            res.status(200).json(updatedChats);
+        const chat = await Chats.findOne({ id });
+        const userOne = chat.users[0].username
+        const userTwo = chat.users[1].username
+        const updatedChatsOne = await chatsService.updateChats(userOne ,id);
+        const updatedChatsTwo = await chatsService.updateChats(userTwo ,id);
+        if (updatedChatsOne != -1 && updatedChatsTwo != -1) {
+            res.status(200).send("success");
         } else {
             res.status(400).send('failed. problem with the DB');
         }

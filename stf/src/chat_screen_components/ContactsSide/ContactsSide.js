@@ -5,7 +5,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
-import updateChats from '../../auth/UpdateContactsList';
 
 
 const ContactsSide = (props) => {
@@ -19,6 +18,7 @@ const ContactsSide = (props) => {
     const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
 
     async function getcontacts() {
+        console.log("before update: ", listOfContacts)
         const l = await getchats(currentUser)
         if (firstTimeGetContacts) {
             for (let i = 0; i < l.length; i++) {
@@ -26,8 +26,8 @@ const ContactsSide = (props) => {
             }
             setFirstTimeGetContacts(false)
         }
-        const updatedListOfContacts = [...l]; // Create a copy of the array
-        setListOfContacts(updatedListOfContacts)
+        console.log("after update: ", l)
+        setListOfContacts(l)
     }
 
     // in contact id i have the key of the chat
@@ -117,26 +117,12 @@ const ContactsSide = (props) => {
 
         // eslint-disable-next-line
     }, [props.deleteContact])
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (props.currentChatThatGotMessage !== 0) {
-                const l = await updateChats(currentUser, props.currentChatThatGotMessage);
-                setListOfContacts(l);
-                props.setCurrentChatThatGotMessage(0);
-            }
-        };
-
-        fetchUserData(); // Immediately invoke the async function
-
-        // eslint-disable-next-line
-    }, [props.currentChatThatGotMessage]);
-
+  
     // use effect to create notifcation and update the last message.
     useEffect(() => {
-        
-        const receiveMessageHandler = (data) => {
-            console.log("i am the client. the chat id: ",data.id, "and the last message is: ", data.currentMessage)
+
+        const receiveMessageHandler = async (data) => {
+            console.log("i am the client. the chat id: ", data.id, "and the last message is: ", data.currentMessage)
             // get the chat that get the new message
             const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
 
@@ -152,28 +138,28 @@ const ContactsSide = (props) => {
                 }
             } else {
                 console.log("No chat found");
-                getcontacts()
+                await getcontacts()
 
             }
         }
 
         const receiveUpdateChatsHandler = async (data) => {
-            console.log("need to update the chats because:  ", data)
-            const l = await updateChats(currentUser, data);
-            setListOfContacts(l);
+            console.log("update the chats now")
+            await getcontacts();
         };
 
         props.sock.on("receive_message", receiveMessageHandler);
         props.sock.on("receiveUpdateChats", receiveUpdateChatsHandler);
-
+        console.log("the list after update: ", listOfContacts)
         return () => {
             props.sock.off("receive_message", receiveMessageHandler);
             props.sock.off("receiveUpdateChats", receiveUpdateChatsHandler);
         };
+
         // eslint-disable-next-line
     }, [listOfContacts])
 
-    useEffect (() => {
+    useEffect(() => {
         const receiveNewContactHandler = async (data) => {
             console.log("someone new create contact the sender ", data.sender)
             console.log("someone new create contact ", data.data.username)
@@ -209,21 +195,8 @@ const ContactsSide = (props) => {
                 <SearchContact onChangeInput={handleChange} setInputValue={setFinalSearchValue} value={finalSearchValue} />
 
                 <ul id="contactsList">
-                    {filteredContacts.length >= 0 && textInSearch ?
-                        filteredContacts.map(contact => (
-                            <Contact
-                                key={contact.id}
-                                photoUrl={contact.user.profilePic}
-                                contactDispalyName={contact.user.displayName}
-                                lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
-                                lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
-                                lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                notification=""
-                                className={props.currentContactClicked === contact.id ? 'selected' : ''}
-                                onClick={() => handleClickingOnContact(contact.id)}
-                            />
-                        )) :
-                        listOfContacts.map(contact => (
+                    {(filteredContacts && filteredContacts.length > 0 && textInSearch)
+                        ? filteredContacts.map(contact => (
                             <Contact
                                 key={contact.id}
                                 photoUrl={contact.user.profilePic}
@@ -236,8 +209,25 @@ const ContactsSide = (props) => {
                                 onClick={() => handleClickingOnContact(contact.id)}
                             />
                         ))
+                        : (listOfContacts && listOfContacts.length > 0)
+                            ? listOfContacts.map(contact => (
+                                <Contact
+                                    key={contact.id}
+                                    photoUrl={contact.user.profilePic}
+                                    contactDispalyName={contact.user.displayName}
+                                    lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
+                                    lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
+                                    lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
+                                    notification=""
+                                    className={props.currentContactClicked === contact.id ? 'selected' : ''}
+                                    onClick={() => handleClickingOnContact(contact.id)}
+                                />
+                            ))
+                            : null
                     }
                 </ul>
+
+
 
             </div>
         </>
