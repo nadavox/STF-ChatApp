@@ -135,8 +135,8 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
             });
             if (res.ok) {
                 const list = await res.json()
-                // console.log("the details list of messages: ", list)
-                setListOfMessages(list)
+                console.log("the details list of messages: ", list)
+                //setListOfMessages(list)
             } else {
                 console.log('error with the server from sending message');
             }
