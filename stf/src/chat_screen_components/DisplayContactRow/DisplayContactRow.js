@@ -8,7 +8,7 @@ import { Tooltip } from 'bootstrap';
 import deleteChat from '../../auth/DeleteChat';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 
-const DisplayContactRow = ({ picture, name, chatId, setDeleteContact, sock, username}) => {
+const DisplayContactRow = ({ picture, name, chatId, setDeleteContact, sock, username }) => {
   const navigate = useNavigate();
   let row;
   const buttonRef = useRef(null);
@@ -39,11 +39,33 @@ const DisplayContactRow = ({ picture, name, chatId, setDeleteContact, sock, user
   }, [name]);
 
   const handleExit = (e) => {
+    // Get the tooltip element
+    const tooltipElement = document.querySelector('.exitButton');
+
+    // Hide the tooltip
+    if (tooltipElement) {
+      const tooltip = Tooltip.getInstance(tooltipElement);
+      if (tooltip) {
+        tooltip.hide();
+      }
+    }
     // navigate to the login page
     navigate('/');
   };
 
   const handleDeleteChat = async (e) => {
+    // Get the tooltip element
+    const tooltipElement = document.querySelector('.deleteChatButton');
+
+    // Hide the tooltip
+    if (tooltipElement) {
+      console.log("innnnnnnnn")
+      const tooltip = Tooltip.getInstance(tooltipElement);
+      if (tooltip) {
+        tooltip.hide();
+      }
+    }
+
     await deleteChat(currentUser, chatId);
     await sock.emit("afterDelete", chatId);
     setDeleteContact(true);
