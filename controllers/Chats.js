@@ -102,7 +102,7 @@ const updateChats = async (req, res) => {
     const username = getUserNameFromToken(req.headers.authorization);
     const id = req.params.id;
     if (username !== "Invalid Token") {
-        const updatedChats = await chatsService.updateChats(username ,id);
+        const updatedChats = await chatsService.updateChats(username, id);
         if (updatedChats != -1) {
             res.status(200).json(updatedChats);
         } else {
@@ -117,14 +117,18 @@ const deleteChat = async (req, res) => {
     const username = getUserNameFromToken(req.headers.authorization);
     const id = req.params.id;
     if (username !== "Invalid Token") {
-        const isDeleted = await chatsService.deleteChat(username ,id);
+        const isDeleted = await chatsService.deleteChat(username, id);
         if (isDeleted != -1) {
-            res.status(200).json(isDeleted);
+            const currentDate = new Date().toUTCString();
+            res.status(200)
+                .set('access-control-allow-origin', '*')
+                .set('date', currentDate)
+                .set('server', 'stf')
         } else {
-            res.status(400).send('failed. problem with the DB');
+            res.status(404).send('Not Found');
         }
     } else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
