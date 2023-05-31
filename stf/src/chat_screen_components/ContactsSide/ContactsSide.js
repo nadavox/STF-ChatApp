@@ -6,16 +6,16 @@ import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
 import updateChats from '../../auth/UpdateContactsList';
-
+import receiveNotifications from '../../auth/GetNotifications';
 
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
     //inisde of the list of contacts is all the contacts of the user.
     const [listOfContacts, setListOfContacts] = useState([]);
+    const [listOfNotification, setListOfNotification] = useState(Array(1).fill(0));
     const [finalSearchValue, setFinalSearchValue] = useState("");
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [textInSearch, setTextInSearch] = useState(false);
-
     const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
 
     async function getcontacts() {
@@ -25,6 +25,8 @@ const ContactsSide = (props) => {
                 await props.sock.emit("join_chat", l[i].id)
             }
             setFirstTimeGetContacts(false)
+            const n = await receiveNotifications(currentUser);
+            console.log("with notification: ", n);
         }
         const updatedListOfContacts = [...l]; // Create a copy of the array
         setListOfContacts(updatedListOfContacts)
@@ -44,6 +46,10 @@ const ContactsSide = (props) => {
             setTextInSearch(false);
             setFinalSearchValue("");
         }
+
+        const updatedListOfNotification = listOfNotification;
+        updatedListOfNotification[contactId] = 0;
+        setListOfNotification(updatedListOfNotification);
     };
 
     // init the contacts list
@@ -102,7 +108,7 @@ const ContactsSide = (props) => {
 
     // use effect to create notifcation and update the last message.
     useEffect(() => {
-        props.sock.on("receive_message", (data) => {
+        const receiveMessageHandler = (data) => {
             console.log("i am the client. the chat id that get  new message is", data.id, "and the last message is: ", data.currentMessage)
             // get the chat that get the new message
             const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
@@ -114,7 +120,23 @@ const ContactsSide = (props) => {
                 updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
                 console.log("updaete: ", updatedListOfContacts)
                 setListOfContacts(updatedListOfContacts)
+                console.log("data.id: ", data.id)
+                console.log("id of the current contact that is clicked", props.currentContactClicked)
                 if (data.id !== props.currentContactClicked) {
+                    console.log("before update notification", listOfNotification)
+                    if (listOfNotification.length < data.id) {
+                        console.log("number of cells added: ", (data.id - listOfNotification.length) + 1);
+                        const updatedListOfNotification = listOfNotification.concat(
+                            Array((data.id - listOfNotification.length) + 1).fill(0));
+                        updatedListOfNotification[data.id] += 1;
+                        console.log(updatedListOfNotification)
+                        setListOfNotification(updatedListOfNotification);
+                    } else {
+                        const updatedListOfNotification = listOfNotification;
+                        updatedListOfNotification[data.id] += 1;
+                        setListOfNotification(updatedListOfNotification);
+                    }
+                    console.log("after update notification", listOfNotification)
                     // here to add notifcation to the clients.
                 }
             } else {
@@ -122,21 +144,32 @@ const ContactsSide = (props) => {
                 getcontacts()
 
             }
-        })
+        };
 
-        props.sock.on("receive_newConatct", async (data) => {
+        const receiveNewContactHandler = async (data) => {
             console.log("someone new send messgae to ", data.username)
             // if it equale it is the guy.
             if (data.username === currentUser.username) {
                 console.log("that me")
                 await props.sock.emit("join_chat", data.id)
             }
-        })
+        };
 
-        props.sock.on("receiveUpdateChats", async (data) => {
+        const receiveUpdateChatsHandler = async (data) => {
+            console.log("need to update the chats because:  ", data)
             const l = await updateChats(currentUser, data);
             setListOfContacts(l);
-        });
+        };
+
+        props.sock.on("receive_message", receiveMessageHandler);
+        props.sock.on("receive_newContact", receiveNewContactHandler);
+        props.sock.on("receiveUpdateChats", receiveUpdateChatsHandler);
+
+        return () => {
+            props.sock.off("receive_message", receiveMessageHandler);
+            props.sock.off("receive_newContact", receiveNewContactHandler);
+            props.sock.off("receiveUpdateChats", receiveUpdateChatsHandler);
+        };
 
         // eslint-disable-next-line
     }, [listOfContacts])
@@ -170,7 +203,7 @@ const ContactsSide = (props) => {
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
                                 lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                notification=""
+                                notification={listOfNotification[contact.id]}
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
                             />
@@ -183,7 +216,7 @@ const ContactsSide = (props) => {
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
                                 lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                notification=""
+                                notification={listOfNotification[contact.id]}
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
                             />

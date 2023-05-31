@@ -98,6 +98,8 @@
     text-decoration: none;
     float: right;
     margin-right: 5px !important;
+    display: flex;
+    justify-content: center;
 }
 
 .noMessage {

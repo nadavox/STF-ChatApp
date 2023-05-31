@@ -15,5 +15,6 @@ router.route('/:id/Messages').get(chatsController.returnAllTheMessages);
 
 router.route('/Update/:id').get(chatsController.updateChats);
 
+router.route('/Notifications').get(chatsController.getNotifications);
 
 module.exports = router;

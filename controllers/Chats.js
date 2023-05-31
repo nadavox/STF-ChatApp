@@ -113,4 +113,23 @@ const updateChats = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats };  
+// const getNotifications = async (req, res) => {
+//     // const username = getUserNameFromToken(req.headers.authorization);
+//     const username = "Invalid Token";
+//     if (username !== "Invalid Token") {
+//         const notifications = await chatsService.getNotifications(username);
+//         if (notifications != -1) {
+//             res.status(200).json(notifications);
+//         } else {
+//             res.status(400).send('failed. problem with the DB');
+//         }
+//     } else {
+//         return res.status(403).send('Token required');
+//     }
+// }
+
+const getNotifications = async (req, res) => {
+    res.status(200).send('hello world');
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, getNotifications };  

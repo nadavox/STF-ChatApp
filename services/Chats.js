@@ -61,7 +61,8 @@ async function createChatSchema(user, contact) {
     const newChat = new Chats({
         id: nextId, // Generate a unique ID for the chat
         users: [usernameForChat, contactForChat],
-        messages: []
+        messages: [],
+        notification: 0
     });
     return newChat;
 }
@@ -175,5 +176,12 @@ const updateChats = async (username, id) => {
     return userChats;
 }
 
+const getNotifications = async (username) => {
+    const user = await User.findOne({ username }).populate('chats');
+    console.log("---------------------------------------")
+    console.log(user);
+    console.log("---------------------------------------")
+    return user;
+}
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats }
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, getNotifications }

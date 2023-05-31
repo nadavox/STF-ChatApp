@@ -22,7 +22,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     const [lastMessageTime, setLastMessageTime] = useState({ lastMessae: "", newMessage: "" });
 
     async function getmessages() {
-        if (currentContactClicked !== '') {
+        if (currentContactClicked !== 0) {
             const messages = await showMessages(currentUser, currentContactClicked)
             if (messages != null) {
                 setListOfMessages(messages.messages)
@@ -44,7 +44,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
     // useeffect for clean the input when changing the contact
     // getmessages for the new contact
     useEffect(() => {
-        if (currentContactClicked !== "") {
+        if (currentContactClicked !== 0) {
             getmessages()
             if (inputRef && inputRef.current) {
                 //clean the input value.

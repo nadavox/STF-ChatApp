@@ -24,7 +24,11 @@ const conversationSchema = new Schema({
   messages: [{
     type: Schema.Types.ObjectId,
     ref: "Message"
-  }]
+  }],
+  notification: {
+    type: Number,
+    default: 0
+  }
 });
 
 module.exports = mongoose.model('Chats', conversationSchema);

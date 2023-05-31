@@ -22,7 +22,7 @@ function socketHandler() {
             console.log("the new caht is:", data);
             // serching for the new chet
             // const newChat = await Chats.findOne({data})
-            socket.broadcast.emit("receive_newConatct", data);
+            socket.broadcast.emit("receive_newContact", data);
         })
 
         socket.on("updateChats", async (data) => {

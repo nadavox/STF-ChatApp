@@ -13,14 +13,14 @@ function ChatsMainScreen() {
     // Define state variables
     //displatCONTACTROW is when we click
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
-    const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" sock={sock} />);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
     const [addContact, setaddContact] = useState(false)
-    const [clickContact, setClickContact] = useState("")
+    const [clickContact, setClickContact] = useState(0)
+    const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked={0} sock={sock} />);
 
     useEffect(() => {
         async function fetchTheScreen() {
-            if (clickContact !== "") {
+            if (clickContact !== 0) {
                 const updateMessageScreen = (
                     <MessagesScreen
                         id={clickContact}
