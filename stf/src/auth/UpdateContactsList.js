@@ -9,9 +9,8 @@ async function updateChats(currentUser, id) {
             },
         });
         if (res.ok) {
-            const listOfUpdatedChats = await res.json();
-            // console.log("updated chats: ", listOfUpdatedChats);
-            return listOfUpdatedChats;
+            console.log("ok")
+            return 1;
         } else {
             console.log('error with the server from update chats');
             return false;

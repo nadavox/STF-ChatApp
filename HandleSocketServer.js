@@ -26,7 +26,9 @@ function socketHandler() {
         })
 
         socket.on("updateChats", async (data) => {
-            socket.broadcast.emit("receiveUpdateChats", data);
+            console.log("updateChats the data is: ", data )
+            socket.to(data).emit("receiveUpdateChats", data);
+            socket.emit("receiveUpdateChats", data);
         })
 
         socket.on('disconnect', () => {});
