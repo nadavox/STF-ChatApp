@@ -31,6 +31,11 @@ function socketHandler() {
             socket.emit("receiveUpdateChats", data);
         })
 
+        socket.on("afterDelete", async (id) => {
+            console.log("in after delete", id);
+            socket.to(id).emit("notifyDelete");
+        })
+
         socket.on('disconnect', () => {});
     })
 }

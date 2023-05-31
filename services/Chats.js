@@ -14,12 +14,12 @@ const checkWhichUserToReturn = (chat, username) => {
 const returnLastMessage = async (id) => {
     const messages = await returnAllTheMessages(id);
     if (messages.length === 0) {
-      return null;
+        return null;
     } else {
-      return messages[messages.length - 1];
+        return messages[messages.length - 1];
     }
-  };
-  
+};
+
 
 const returnAllChats = async (username) => {
     const user = await User.findOne({ username }).populate('chats');
@@ -33,7 +33,7 @@ const returnAllChats = async (username) => {
     });
 
     const filteredChats = await Promise.all(chatPromises);
-    
+
     return filteredChats;
 }
 
@@ -147,7 +147,7 @@ const addNewMessage = async (username, messageContent, id) => {
     return newMessage;
 }
 
-const returnAllTheMessages = async (id)  => {
+const returnAllTheMessages = async (id) => {
     newId = id;
     const messages = await Chats.findOne({ id: parseInt(newId) }).populate('messages');
     return messages.messages;
@@ -171,9 +171,49 @@ const updateChats = async (username, id) => {
         // Save the updated user object to persist the changes in the database
         await user.save();
     }
-    
+
     return userChats;
 }
 
+const deleteMessage = async (messageId) => {
+    await Message.deleteOne({ id: parseInt(messageId) });
+}
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats }
+const deleteMessages = async (chat) => {
+    for (const message of chat) {
+        await deleteMessage(message.id);
+    }
+}
+
+const deleteChat = async (username, id) => {
+    const user = await User.findOne({ username }).populate('chats');
+    const conversation = await Chats.findOne({ id: parseInt(id) }).populate('messages');
+
+    await deleteMessages(conversation.messages);
+    let contactUsername;
+    if (conversation.users[1].username === username) {
+        contactUsername = conversation.users[0].username;
+    } else {
+        contactUsername = conversation.users[1].username;
+    }
+    const contact = await User.findOne({ username: contactUsername }).populate('chats');
+
+    await Chats.deleteOne({ id: parseInt(id) });
+
+    // Find the index of the chat with the given ID in the user's chats array
+    const userChatIndex = user.chats.findIndex(chat => chat.id.toString() === id);
+    const contactChatIndex = contact.chats.findIndex(chat => chat.id.toString() === id);
+
+    // If the chat is found, remove it from the array and save the updated user document
+    if (userChatIndex !== -1) {
+        user.chats.splice(userChatIndex, 1);
+        await user.save();
+
+        contact.chats.splice(contactChatIndex, 1);
+        await contact.save();
+    }
+
+    return 1;
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat }

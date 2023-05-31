@@ -108,13 +108,10 @@ const updateChats = async (req, res) => {
     if (username !== "Invalid Token") {
         const chat = await Chats.findOne({ id });
         const userOne = chat.users[0].username
-        console.log("user one: ", userOne)
         const userTwo = chat.users[1].username
-        console.log("user two: ", userTwo)
         const updatedChatsOne = await chatsService.updateChats(userOne ,id);
         const updatedChatsTwo = await chatsService.updateChats(userTwo ,id);
         if (updatedChatsOne != -1 && updatedChatsTwo != -1) {
-            console.log("success")
             res.status(200).send("success");
         } else {
             res.status(400).send('failed. problem with the DB');
@@ -124,4 +121,19 @@ const updateChats = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats };  
+const deleteChat = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    const id = req.params.id;
+    if (username !== "Invalid Token") {
+        const isDeleted = await chatsService.deleteChat(username, id);
+        if (isDeleted != -1) {
+            res.status(200).json(isDeleted)
+        } else {
+            res.status(404).send('Not Found');
+        }
+    } else {
+        return res.status(401).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat };  

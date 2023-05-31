@@ -86,6 +86,38 @@ const ContactsSide = (props) => {
         // eslint-disable-next-line
     }, [props.addContact])
 
+     // use it when i delete contact to render the component.
+     useEffect(() => {
+        if (props.deleteContact) {
+            getcontacts() // to update to contacts in the list.
+            props.setDeleteContact(false)
+            props.setClickContact("")
+            props.setDisplayContactRow({
+                picture: "",
+                displayName: "",
+                username: ""
+            });
+        }
+
+        const notifyDeleteHandler = async () => {
+            getcontacts() // to update to contacts in the list.
+            props.setDeleteContact(false)
+            props.setClickContact("")
+            props.setDisplayContactRow({
+                picture: "",
+                displayName: "",
+                username: ""
+            });
+        };
+        props.sock.on("notifyDelete", notifyDeleteHandler);
+
+        return () => {
+            props.sock.off("notifyDelete", notifyDeleteHandler);
+        };
+
+        // eslint-disable-next-line
+    }, [props.deleteContact])
+  
     // use effect to create notifcation and update the last message.
     useEffect(() => {
 

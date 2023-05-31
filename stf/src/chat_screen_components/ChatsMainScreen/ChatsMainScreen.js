@@ -23,8 +23,9 @@ function ChatsMainScreen() {
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
     const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" sock={sock} />);
     const [pressedOnAddContact, setPressedOnAddContact] = useState(false);
-    const [addContact, setaddContact] = useState(false)
-    const [clickContact, setClickContact] = useState("")
+    const [addContact, setaddContact] = useState(false);
+    const [deleteContact, setDeleteContact] = useState(false);
+    const [clickContact, setClickContact] = useState("");
 
     useEffect(() => {
         async function fetchTheScreen() {
@@ -36,6 +37,11 @@ function ChatsMainScreen() {
                         setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                         sock={sock}
                     />
+                )
+                setRightMessageScreen(updateMessageScreen)
+            } else {
+                const updateMessageScreen = (
+                    <MessagesScreen currentContactClicked="" sock={sock} />
                 )
                 setRightMessageScreen(updateMessageScreen)
             }
@@ -64,7 +70,7 @@ function ChatsMainScreen() {
                         currentContactClicked={clickContact}
                         currentChatThatGotMessage={currentChatThatGotMessage}
                         setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
-                        sock={sock}
+                        sock={sock} deleteContact={deleteContact} setDeleteContact={setDeleteContact}
                     />
 
                     {/* from here is right side of the screen */}
@@ -73,7 +79,7 @@ function ChatsMainScreen() {
                         {/* dispaly the first row of the right sideof the screen */}
                         <DisplayContactRow picture={displayContactRow.picture}
                             name={displayContactRow.displayName}
-                            chatId={clickContact}
+                            chatId={clickContact} setDeleteContact={setDeleteContact} sock={sock} username={displayContactRow.username}
                         />
 
                         {/* the messages screen and the text box*/}

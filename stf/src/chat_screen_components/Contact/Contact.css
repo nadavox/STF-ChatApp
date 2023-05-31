@@ -78,12 +78,13 @@
     padding-right: 2px;
 }
 
+.lastMessageDiv{
+    margin-left: 35px;
+}
+
 .lastMessage {
     color: rgb(152, 148, 148) ;
-    float: left;
-    margin-left: 45px;
     font-size: 11pt;
-    margin-top: 2px;
     display: contents;
 }
 
