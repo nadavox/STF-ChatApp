@@ -108,6 +108,12 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
         sock.on("receive_message", (data) => {
             if (data.id === id) {
                 console.log("i am the client. the id", data.id, "of the last message is: ", data.currentMessage)
+                setTimeout(() => {
+                    messagesEndRef.current.scrollTo({
+                        top: messagesEndRef.current.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 10)
                 const updatedList = [...ListOfMessages, data.currentMessage]; // Create a new array with the updated element
                 setListOfMessages(updatedList); // Update the state with the new array
             }
@@ -155,6 +161,8 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
 
         return `${day}.${month}.${year}`;
     }
+
+
 
     if (typeof id === 'undefined') {
         // no contact chosen

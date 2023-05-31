@@ -24,11 +24,11 @@ function Modal(props) {
 
     const handleAddContact = async (e) => {
         if (inputValue !== currentUser.username) {
-            const okay = await addContact(currentUser, inputValue);
-            if (okay !== false) {
+            const data = {data: await addContact(currentUser, inputValue), sender: currentUser.username};
+            if (data !== false) {
                 props.setaddContact(true);
-                console.log("the new chat is: ", okay)
-                await props.sock.emit("add_contact", okay)
+                console.log("the new chat is: ", data)
+                await props.sock.emit("add_contact", data)
                 exitBtnRef.current.click();
             } else {
                 // no user
