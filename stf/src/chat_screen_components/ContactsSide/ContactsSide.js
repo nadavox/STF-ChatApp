@@ -190,6 +190,7 @@ const ContactsSide = (props) => {
             // if it equale it is the guy.
             if (data.data.username === currentUser.username || data.sender === currentUser.username) {
                 await props.sock.emit("join_chat", data.data.id)
+                props.setaddContact(true);
             }
             const n = await getAllNotifications(currentUser);
             setListOfNotifications(n);
