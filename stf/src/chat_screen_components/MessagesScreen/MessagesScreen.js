@@ -80,7 +80,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                     // clear the input field.
                     inputRef.current.value = "";
                     ListOfMessages.push(currentMessage)
-                    const data = { currentMessage: currentMessage, id: id }
+                    const data = { currentMessage: currentMessage, id: id, sender: currentUser.username }
                     //scroll down to the last message
                     setTimeout(() => {
                         messagesEndRef.current.scrollTo({

@@ -20,7 +20,7 @@ function Contact(props) {
                         <div className="col text-truncate lastMessageDiv">
                             <span className={props.lastMessageDivClassName}>{props.lastMessage}</span>
                         </div>
-                        <div>
+                        <div className="col">
                         {props.notification > 0 && <div className="notification">{props.notification}</div>}
                         </div>
                     </div>

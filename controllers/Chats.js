@@ -59,7 +59,7 @@ const returnTheConversation = async (req, res) => {
     // get the login username
     const username = getUserNameFromToken(req.headers.authorization)
     if (username !== "Invalid Token") {
-        const allMessages = await chatsService.returnTheConversation(req.params.id)
+        const allMessages = await chatsService.returnTheConversation(req.params.id, username)
         if (allMessages != -1) {
             res.status(200).json(allMessages);
         } else {

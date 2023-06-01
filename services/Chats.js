@@ -4,10 +4,18 @@ const Message = require('../models/Message');
 
 const checkWhichUserToReturn = (chat, username) => {
     if (chat.users[0].username === username) {
-        return chat.users[1];
+        return {
+            username: chat.users[1].username,
+            displayName: chat.users[1].displayName,
+            profilePic: chat.users[1].profilePic,
+        };
     }
     else {
-        return chat.users[0];
+        return {
+            username: chat.users[0].username,
+            displayName: chat.users[0].displayName,
+            profilePic: chat.users[0].profilePic,
+        };
     }
 }
 
@@ -85,7 +93,11 @@ const createChat = async (usernameContact, username) => {
 
         const answer = {
             id: newChat.id,
-            user: newChat.users[1],
+            user: {
+                username: newChat.users[1].username,
+                displayName: newChat.users[1].displayName,
+                profilePic: newChat.users[1].profilePic,
+            },
             lastMessage: null
         };
 
@@ -97,13 +109,30 @@ const createChat = async (usernameContact, username) => {
     }
 }
 
-const returnTheConversation = async (id) => {
+const returnTheConversation = async (id, username) => {
     newId = id;
     const conversation = await Chats.findOne({ id: parseInt(newId) });
+
+    if(conversation.users[0].username === username) {
+        conversation.users[0].notifications = 0;
+    } else {
+        conversation.users[1].notifications = 0;
+    }
+
+    conversation.save();
+
     const messages = await returnAllTheMessages(id);
     const updatedConversation = {
         id: conversation.id,
-        users: conversation.users,
+        users: [{
+            username: conversation.users[0].username,
+            displayName: conversation.users[0].displayName,
+            profilePic: conversation.users[0].profilePic,
+        },{
+            username: conversation.users[1].username,
+            displayName: conversation.users[1].displayName,
+            profilePic: conversation.users[1].profilePic,
+        }],
         messages: messages
     }
     return updatedConversation;
@@ -136,6 +165,12 @@ const addNewMessage = async (username, messageContent, id) => {
     const newMessage = await createMessageSchema(user, messageContent)
 
     const messageList = await Chats.findOne({ id: parseInt(id) });
+
+    if(messageList.users[0].username === username) {
+        messageList.users[1].notifications += 1;
+    } else {
+        messageList.users[0].notifications += 1;
+    }
 
     // push the new chat to the user array chats
     messageList.messages.push(newMessage);
