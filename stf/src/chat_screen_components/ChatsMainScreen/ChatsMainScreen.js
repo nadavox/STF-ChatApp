@@ -50,7 +50,6 @@ function ChatsMainScreen() {
     if (currentUser.username === "") {
         // Navigate to the home page if currentUser doesn't have a username
         navigate("/");
-        return null;
     }
 
     return (
