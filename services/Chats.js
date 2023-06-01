@@ -113,13 +113,23 @@ const returnTheConversation = async (id, username) => {
     newId = id;
     const conversation = await Chats.findOne({ id: parseInt(newId) });
 
+    
+
     if(conversation.users[0].username === username) {
-        conversation.users[0].notifications = 0;
-    } else {
+        console.log("before reset:", conversation.users[1].notifications);
+        console.log("------------------------")
         conversation.users[1].notifications = 0;
+        console.log("after reset:", conversation.users[1].notifications);
+        console.log("------------------------")
+    } else {
+        console.log("before reset:", conversation.users[0].notifications);
+        console.log("------------------------")
+        conversation.users[0].notifications = 0;
+        console.log("after reset:", conversation.users[0].notifications);
+        console.log("------------------------")
     }
 
-    conversation.save();
+    await conversation.save();
 
     const messages = await returnAllTheMessages(id);
     const updatedConversation = {
@@ -165,12 +175,6 @@ const addNewMessage = async (username, messageContent, id) => {
     const newMessage = await createMessageSchema(user, messageContent)
 
     const messageList = await Chats.findOne({ id: parseInt(id) });
-
-    if(messageList.users[0].username === username) {
-        messageList.users[1].notifications += 1;
-    } else {
-        messageList.users[0].notifications += 1;
-    }
 
     // push the new chat to the user array chats
     messageList.messages.push(newMessage);
@@ -256,4 +260,32 @@ const getNotifications = async (username) => {
     return user;
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications }
+const addNotification = async (username, id, currentContactClicked) => {
+    const messageList = await Chats.findOne({ id: parseInt(id) });
+    console.log("current username: ", username);
+    console.log("chat id: ", id);
+    console.log("currentContactClicked: ", currentContactClicked);
+    console.log("messageList.users[0].username: ", messageList.users[0].username);
+    console.log("messageList.users[1].username: ", messageList.users[1].username);
+    console.log("messageList.users[0].notifications: ", messageList.users[0].notifications);
+    console.log("messageList.users[1].notifications: ", messageList.users[1].notifications);
+
+    if(id != currentContactClicked) {
+        console.log("in");
+        if(messageList.users[0].username === username) {
+            console.log("in1");
+            messageList.users[1].notifications += 1;
+        } else {
+            console.log("in2");
+            messageList.users[0].notifications += 1;
+        }
+    }
+
+    console.log("messageList.users[0].notifications: ", messageList.users[0].notifications);
+    console.log("messageList.users[1].notifications: ", messageList.users[1].notifications);
+
+    await messageList.save();
+    return 1;
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications, addNotification }

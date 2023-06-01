@@ -19,4 +19,6 @@ router.route('/:id').delete(chatsController.deleteChat);
 
 router.route('/Notifications').post(chatsController.getNotifications);
 
+router.route('/Notifications/:id').post(chatsController.addNotification);
+
 module.exports = router;

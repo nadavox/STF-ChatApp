@@ -6,6 +6,7 @@ import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
 import getAllNotifications from '../../auth/GetNotifications';
+import addNotification from '../../auth/AddNotification';
 
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
@@ -137,6 +138,10 @@ const ContactsSide = (props) => {
     // use effect to create notifcation and update the last message.
     useEffect(() => {
         const receiveMessageHandler = async (data) => {
+            console.log("current user: ", currentUser);
+            console.log("data.id: ", data.id);
+            console.log("props.currentContactClicked: ", props.currentContactClicked);
+            await addNotification(currentUser, data.id, props.currentContactClicked);
             console.log("in");
             console.log(listOfContacts);
             // get the chat that get the new message
