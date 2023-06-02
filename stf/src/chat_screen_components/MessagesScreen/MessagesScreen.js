@@ -140,25 +140,6 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
         // eslint-disable-next-line
     }, [ListOfMessages, currentContactClicked])
 
-    async function updateListOfMessages() {
-        try {
-            //send new message to a chat
-            const url = 'http://localhost:5000/api/Chats/' + id + '/Messages'
-            const res = await fetch(url, {
-                method: 'get',
-                headers: {
-                    'accept': 'text/plain',
-                    Authorization: currentUser.token
-                },
-            });
-            if (res.ok) {
-                const list = await res.json()
-            }
-        } catch (error) {
-            // error
-        }
-    }
-
     function generateTime(dateString) {
         const date = new Date(dateString);
         const hours = date.getHours();
