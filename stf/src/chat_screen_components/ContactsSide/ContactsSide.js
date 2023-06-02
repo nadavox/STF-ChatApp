@@ -26,7 +26,6 @@ const ContactsSide = (props) => {
             setFirstTimeGetContacts(false)
             const n = await getAllNotifications(currentUser);
             setListOfNotifications(n);
-            console.log("list with notification: ", n)
         }
         setListOfContacts(l)
     }
@@ -48,15 +47,11 @@ const ContactsSide = (props) => {
 
         const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === contactId);
         if (chatToUpdate) {
-            console.log(chatToUpdate.users[0].username)
-            console.log(currSelectedContact.user.username)
-            console.log(chatToUpdate.users[1].username)
             if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
                 chatToUpdate.users[0].notifications = 0;
             } else {
                 chatToUpdate.users[1].notifications = 0;
             }
-            console.log("after reset", listOfNotifications)
         }
         await resetNotification(currentUser, contactId);
     };
@@ -125,7 +120,6 @@ const ContactsSide = (props) => {
             });
             const n = await getAllNotifications(currentUser);
             setListOfNotifications(n);
-            console.log("after deleting contact: ", n)
         };
         props.sock.on("notifyDelete", notifyDeleteHandler);
 
@@ -139,12 +133,6 @@ const ContactsSide = (props) => {
     // use effect to create notifcation and update the last message.
     useEffect(() => {
         const receiveMessageHandler = async (data) => {
-            console.log("current user: ", currentUser);
-            console.log("data.id: ", data.id);
-            console.log("props.currentContactClicked: ", props.currentContactClicked);
-            // await addNotification(currentUser, data.id, props.currentContactClicked);
-            console.log("in");
-            console.log(listOfContacts);
             // get the chat that get the new message
             const chatindex = listOfContacts.findIndex((contact) => contact.id === data.id)
 
@@ -153,26 +141,17 @@ const ContactsSide = (props) => {
                 const updatedListOfContacts = [...listOfContacts];
                 updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
                 setListOfContacts(updatedListOfContacts)
-                console.log(data.id)
-                console.log(props.currentContactClicked)
                 if (data.id !== props.currentContactClicked) {
-                    console.log("in 1");
                     // notifications here
                     const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
                     if (chatToUpdate) {
-                        console.log(chatToUpdate.users[0].username);
-                        console.log(data.sender);
-                        console.log(chatToUpdate.users[1].username);
                         if (chatToUpdate.users[0].username === data.sender) {
                             chatToUpdate.users[0].notifications += 1;
                         } else {
                             chatToUpdate.users[1].notifications += 1;
                         }
                     }
-
-                    console.log("after update notification: ", listOfNotifications)
                 } else {
-                    console.log("innnnnnnnnnnnnnnnnnnnnn");
                     const currSelectedContact = listOfContacts.find((contact) => contact.id === data.id);
                     props.setDisplayContactRow({
                         picture: currSelectedContact.user.profilePic,
@@ -181,15 +160,11 @@ const ContactsSide = (props) => {
                     });
                     const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
                     if (chatToUpdate) {
-                        console.log(chatToUpdate.users[0].username)
-                        console.log(currSelectedContact.user.username)
-                        console.log(chatToUpdate.users[1].username)
                         if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
                             chatToUpdate.users[0].notifications = 0;
                         } else {
                             chatToUpdate.users[1].notifications = 0;
                         }
-                        console.log("after reset", listOfNotifications)
                     }
                     await resetNotification(currentUser, data.id);
                 }
@@ -221,7 +196,6 @@ const ContactsSide = (props) => {
             }
             const n = await getAllNotifications(currentUser);
             setListOfNotifications(n);
-            console.log("after adding new contact: ", n)
         };
         props.sock.on("receive_newContact", receiveNewContactHandler);
 
@@ -245,10 +219,6 @@ const ContactsSide = (props) => {
         if (listOfNotifications.chats.length !== 0) {
             const chat = listOfNotifications.chats.find(chat => chat.id === chatId);
             if (chat) {
-                console.log(chat.users[0].username)
-                console.log(username)
-                console.log(chat.users[1].username)
-
                 if (chat.users[0].username === username) {
                     return chat.users[0].notifications;
                 } else {

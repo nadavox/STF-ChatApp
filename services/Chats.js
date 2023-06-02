@@ -244,23 +244,12 @@ const getNotifications = async (username) => {
 
 const addNotification = async (username, id) => {
     const messageList = await Chats.findOne({ id: parseInt(id) });
-    console.log("current username: ", username);
-    console.log("chat id: ", id);
-    console.log("messageList.users[0].username: ", messageList.users[0].username);
-    console.log("messageList.users[1].username: ", messageList.users[1].username);
-    console.log("messageList.users[0].notifications: ", messageList.users[0].notifications);
-    console.log("messageList.users[1].notifications: ", messageList.users[1].notifications);
 
     if(messageList.users[0].username === username) {
-        console.log("in1");
         messageList.users[0].notifications += 1;
     } else {
-        console.log("in2");
         messageList.users[1].notifications += 1;
     }
-
-    console.log("messageList.users[0].notifications: ", messageList.users[0].notifications);
-    console.log("messageList.users[1].notifications: ", messageList.users[1].notifications);
 
     await messageList.save();
     return 1;
@@ -270,17 +259,9 @@ const resetNotifications = async (username, id) => {
     const conversation = await Chats.findOne({ id: parseInt(id) });
 
     if(conversation.users[0].username === username) {
-        console.log("before reset:", conversation.users[1].notifications);
-        console.log("------------------------")
         conversation.users[1].notifications = 0;
-        console.log("after reset:", conversation.users[1].notifications);
-        console.log("------------------------")
     } else {
-        console.log("before reset:", conversation.users[0].notifications);
-        console.log("------------------------")
         conversation.users[0].notifications = 0;
-        console.log("after reset:", conversation.users[0].notifications);
-        console.log("------------------------")
     }
 
     await conversation.save();
