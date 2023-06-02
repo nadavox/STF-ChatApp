@@ -63,6 +63,7 @@ const ContactsSide = (props) => {
         // eslint-disable-next-line
     }, [])
 
+
     function generateTime(dateString) {
         const date = new Date(dateString);
         const currentDate = new Date();
@@ -191,6 +192,17 @@ const ContactsSide = (props) => {
         };
         // eslint-disable-next-line
     }, [listOfContacts])
+
+    useEffect(() => {
+        const receiveUpdateChatsHandler = async () => {
+            if (props.alertSendingMessage) {
+                await getcontacts();
+                props.setAlertSendingMessage(false)
+            }
+        };
+
+        receiveUpdateChatsHandler()
+    }, [props.alertSendingMessage])
 
     useEffect(() => {
         const receiveNewContactHandler = async (data) => {

@@ -16,7 +16,6 @@ function ChatsMainScreen() {
     const navigate = useNavigate();
     // the current user
     const { currentUser } = useContext(CurrentUserContext);
-    const [currentChatThatGotMessage, setCurrentChatThatGotMessage] = useState(0);
     // Define state variables
     const [displayContactRow, setDisplayContactRow] = useState({ picture: "...", displayName: "", username: "" })
     const [rightMessageScreen, setRightMessageScreen] = useState(<MessagesScreen currentContactClicked="" sock={sock} />);
@@ -24,7 +23,7 @@ function ChatsMainScreen() {
     const [addContact, setaddContact] = useState(false);
     const [deleteContact, setDeleteContact] = useState(false);
     const [clickContact, setClickContact] = useState("");
-
+    const [alertSendingMessage, setAlertSendingMessage] = useState(false);
     useEffect(() => {
         async function fetchTheScreen() {
             if (clickContact !== "") {
@@ -32,8 +31,8 @@ function ChatsMainScreen() {
                     <MessagesScreen
                         id={clickContact}
                         currentContactClicked={clickContact}
-                        setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                         sock={sock}
+                        setAlertSendingMessage={setAlertSendingMessage}
                     />
                 )
                 setRightMessageScreen(updateMessageScreen)
@@ -61,9 +60,8 @@ function ChatsMainScreen() {
                         pressedOnAddContactValue={pressedOnAddContact} addContact={addContact}
                         setaddContact={setaddContact} setClickContact={setClickContact}
                         currentContactClicked={clickContact}
-                        currentChatThatGotMessage={currentChatThatGotMessage}
-                        setCurrentChatThatGotMessage={setCurrentChatThatGotMessage}
                         sock={sock} deleteContact={deleteContact} setDeleteContact={setDeleteContact}
+                        setAlertSendingMessage={setAlertSendingMessage} alertSendingMessage={alertSendingMessage}
                     />
 
                     {/* from here is right side of the screen */}
