@@ -191,7 +191,7 @@ const ContactsSide = (props) => {
             props.sock.off("receiveUpdateChats", receiveUpdateChatsHandler);
         };
         // eslint-disable-next-line
-    }, [listOfContacts])
+    }, [listOfContacts, props.currentContactClicked])
 
     useEffect(() => {
         const receiveUpdateChatsHandler = async () => {

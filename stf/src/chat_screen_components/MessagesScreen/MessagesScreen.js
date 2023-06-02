@@ -61,7 +61,6 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
 
     useEffect(()=> {
         if (typeof id !== 'undefined') {
-            console.log("hello")
             const scrollHeight = messagesEndRef.current.scrollHeight;
             messagesEndRef.current.scrollTo({
                 top: scrollHeight,
