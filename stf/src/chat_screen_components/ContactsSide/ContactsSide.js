@@ -201,7 +201,8 @@ const ContactsSide = (props) => {
             }
         };
 
-        receiveUpdateChatsHandler()
+        receiveUpdateChatsHandler();
+        // eslint-disable-next-line
     }, [props.alertSendingMessage])
 
     useEffect(() => {
@@ -219,6 +220,7 @@ const ContactsSide = (props) => {
         return () => {
             props.sock.off("receive_newContact", receiveNewContactHandler);
         };
+        // eslint-disable-next-line
     }, [props.sock])
 
     function handleChange(event) {
