@@ -24,6 +24,7 @@ function ChatsMainScreen() {
     const [deleteContact, setDeleteContact] = useState(false);
     const [clickContact, setClickContact] = useState("");
     const [alertSendingMessage, setAlertSendingMessage] = useState(false);
+    
     useEffect(() => {
         async function fetchTheScreen() {
             if (clickContact !== "") {
