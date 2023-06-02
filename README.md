@@ -1,12 +1,14 @@
 # Messenger App - STF
-This is a web-based messenger app built using JavaScript, HTML, CSS and Bootstrap. The app has three screens: the login screen, the register screen, and the chat screen.
+This is a web-based messenger app built using react for the front, Express for the beckend, mongoDB for the data base and socket.io for real time rendering.
+The app has three screens: the login screen, the register screen, and the chat screen.
 
 ## Getting Started
 Clone the project to your local computer.
 Open your terminal or command prompt and navigate to the project directory (chatapp is the directory of the project).
 Run the following command to install the dependencies: npm install
-Once the installation is complete, start the Express server by running the following command: npm start.
-This will start the app in development mode. Open http://localhost:5000 in your browser to see the app.
+Once the installation is complete, start the Express server by running the following command:
+npm start (for windows users) or npm test(for mac and linux users).
+This will start the app. Open http://localhost:5000 in your browser to see the app.
 Make sure you have MongoDB installed and running on your local machine to handle the database operations for the messenger app.
 
 # Screens
