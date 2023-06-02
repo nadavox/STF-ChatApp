@@ -19,12 +19,16 @@ const conversationSchema = new Schema({
     profilePic: {
       type: String,
       default: ""
+    },
+    notifications: {
+      type: Number,
+      default: 0
     }
   }],
   messages: [{
     type: Schema.Types.ObjectId,
     ref: "Message"
-  }]
+  }],
 });
 
 module.exports = mongoose.model('Chats', conversationSchema);

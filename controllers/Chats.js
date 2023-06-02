@@ -28,7 +28,7 @@ const returnAllChats = async (req, res) => {
         const username = getUserNameFromToken(req.headers.authorization)
         if (username !== "Invalid Token") {
             const allChats = await chatsService.returnAllChats(username);
-            res.send(allChats);
+            res.status(200).send(allChats);
             return
         } else {
             return res.status(401).send("Invalid Token");
@@ -59,7 +59,7 @@ const returnTheConversation = async (req, res) => {
     // get the login username
     const username = getUserNameFromToken(req.headers.authorization)
     if (username !== "Invalid Token") {
-        const allMessages = await chatsService.returnTheConversation(req.params.id)
+        const allMessages = await chatsService.returnTheConversation(req.params.id, username)
         if (allMessages != -1) {
             res.status(200).json(allMessages);
         } else {
@@ -133,4 +133,48 @@ const deleteChat = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat };  
+const getNotifications = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    if (username !== "Invalid Token") {
+        const notifications = await chatsService.getNotifications(username);
+        if (notifications != -1) {
+            res.status(200).send(notifications);
+        } else {
+            res.status(404).send('Not Found');
+        }
+    } else {
+        return res.status(401).send('Token required');
+    }
+}
+
+const addNotification = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    const id = req.params.id;
+    if (username !== "Invalid Token") {
+        const okay = await chatsService.addNotification(username, id);
+        if (okay != -1) {
+            res.status(200).json(okay);
+        } else {
+            res.status(404).send('Not Found');
+        }
+    } else {
+        return res.status(401).send('Token required');
+    }
+}
+
+const resetNotifications = async (req, res) => {
+    const username = getUserNameFromToken(req.headers.authorization);
+    const id = req.params.id;
+    if (username !== "Invalid Token") {
+        const okay = await chatsService.resetNotifications(username, id);
+        if (okay != -1) {
+            res.status(200).json(okay);
+        } else {
+            res.status(404).send('Not Found');
+        }
+    } else {
+        return res.status(401).send('Token required');
+    }
+}
+
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications, addNotification, resetNotifications };  

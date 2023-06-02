@@ -5,6 +5,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
+import getAllNotifications from '../../auth/GetNotifications';
+import resetNotification from '../../auth/ResetNotifications';
 
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
@@ -13,6 +15,7 @@ const ContactsSide = (props) => {
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [textInSearch, setTextInSearch] = useState(false);
     const [firstTimeGetContacts, setFirstTimeGetContacts] = useState(true)
+    const [listOfNotifications, setListOfNotifications] = useState([]);
 
     async function getcontacts() {
         const l = await getchats(currentUser)
@@ -21,6 +24,8 @@ const ContactsSide = (props) => {
                 await props.sock.emit("join_chat", l[i].id)
             }
             setFirstTimeGetContacts(false)
+            const n = await getAllNotifications(currentUser);
+            setListOfNotifications(n);
         }
         setListOfContacts(l)
     }
@@ -39,6 +44,16 @@ const ContactsSide = (props) => {
             setTextInSearch(false);
             setFinalSearchValue("");
         }
+
+        const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === contactId);
+        if (chatToUpdate) {
+            if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
+                chatToUpdate.users[0].notifications = 0;
+            } else {
+                chatToUpdate.users[1].notifications = 0;
+            }
+        }
+        await resetNotification(currentUser, contactId);
     };
 
     // init the contacts list
@@ -103,6 +118,8 @@ const ContactsSide = (props) => {
                 displayName: "",
                 username: ""
             });
+            const n = await getAllNotifications(currentUser);
+            setListOfNotifications(n);
         };
         props.sock.on("notifyDelete", notifyDeleteHandler);
 
@@ -125,7 +142,31 @@ const ContactsSide = (props) => {
                 updatedListOfContacts[chatindex] = { ...updatedListOfContacts[chatindex], lastMessage: data.currentMessage };
                 setListOfContacts(updatedListOfContacts)
                 if (data.id !== props.currentContactClicked) {
-                    // here to add notifcation to the clients.
+                    // notifications here
+                    const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
+                    if (chatToUpdate) {
+                        if (chatToUpdate.users[0].username === data.sender) {
+                            chatToUpdate.users[0].notifications += 1;
+                        } else {
+                            chatToUpdate.users[1].notifications += 1;
+                        }
+                    }
+                } else {
+                    const currSelectedContact = listOfContacts.find((contact) => contact.id === data.id);
+                    props.setDisplayContactRow({
+                        picture: currSelectedContact.user.profilePic,
+                        displayName: currSelectedContact.user.displayName,
+                        username: currSelectedContact.user.username
+                    });
+                    const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
+                    if (chatToUpdate) {
+                        if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
+                            chatToUpdate.users[0].notifications = 0;
+                        } else {
+                            chatToUpdate.users[1].notifications = 0;
+                        }
+                    }
+                    await resetNotification(currentUser, data.id);
                 }
             } else {
                 await getcontacts();
@@ -151,7 +192,10 @@ const ContactsSide = (props) => {
             // if it equale it is the guy.
             if (data.data.username === currentUser.username || data.sender === currentUser.username) {
                 await props.sock.emit("join_chat", data.data.id)
+                props.setaddContact(true);
             }
+            const n = await getAllNotifications(currentUser);
+            setListOfNotifications(n);
         };
         props.sock.on("receive_newContact", receiveNewContactHandler);
 
@@ -168,6 +212,23 @@ const ContactsSide = (props) => {
             setTextInSearch(true);
         } else {
             setTextInSearch(false);
+        }
+    }
+
+    function getNotificationsOfChat(chatId, username) {
+        if (listOfNotifications.chats.length !== 0) {
+            const chat = listOfNotifications.chats.find(chat => chat.id === chatId);
+            if (chat) {
+                if (chat.users[0].username === username) {
+                    return chat.users[0].notifications;
+                } else {
+                    return chat.users[1].notifications;
+                }
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
         }
     }
 
@@ -189,7 +250,7 @@ const ContactsSide = (props) => {
                                 lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                 lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
                                 lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                notification=""
+                                notification={getNotificationsOfChat(contact.id, contact.user.username)}
                                 className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                 onClick={() => handleClickingOnContact(contact.id)}
                             />
@@ -203,7 +264,7 @@ const ContactsSide = (props) => {
                                     lastMessageTime={contact.lastMessage && contact.lastMessage.content ? generateTime(contact.lastMessage.created) : ""}
                                     lastMessage={contact.lastMessage && contact.lastMessage.content ? contact.lastMessage.content : "no-message"}
                                     lastMessageDivClassName={contact.lastMessage && contact.lastMessage.content ? 'lastMessage' : 'lastMessage noMessage'}
-                                    notification=""
+                                    notification={getNotificationsOfChat(contact.id, contact.user.username)}
                                     className={props.currentContactClicked === contact.id ? 'selected' : ''}
                                     onClick={() => handleClickingOnContact(contact.id)}
                                 />
