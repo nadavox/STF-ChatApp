@@ -102,13 +102,13 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
                             behavior: 'smooth'
                         });
                     }, 10)
-                    // alerting that we send message 
-                    setAlertSendingMessage(true);
                     await sock.emit("sendMessage", data)
                     await addNotification(currentUser, data.id);
                     //update the order of the two list of the two contacts
                     await updateChats(currentUser, id);
                     await sock.emit("updateChats", id)
+                    // alerting that we send message 
+                    setAlertSendingMessage(true);
                 }
             } catch (error) {
                 // error
