@@ -44,16 +44,17 @@ const ContactsSide = (props) => {
             setTextInSearch(false);
             setFinalSearchValue("");
         }
-
-        const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === contactId);
-        if (chatToUpdate) {
-            if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
-                chatToUpdate.users[0].notifications = 0;
-            } else {
-                chatToUpdate.users[1].notifications = 0;
+        if (listOfNotifications.length !== 0 && listOfNotifications.chats.length !== 0) {
+            const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === contactId);
+            if (chatToUpdate) {
+                if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
+                    chatToUpdate.users[0].notifications = 0;
+                } else {
+                    chatToUpdate.users[1].notifications = 0;
+                }
             }
+            await resetNotification(currentUser, contactId);
         }
-        await resetNotification(currentUser, contactId);
     };
 
     // init the contacts list
@@ -143,12 +144,14 @@ const ContactsSide = (props) => {
                 setListOfContacts(updatedListOfContacts)
                 if (data.id !== props.currentContactClicked) {
                     // notifications here
-                    const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
-                    if (chatToUpdate) {
-                        if (chatToUpdate.users[0].username === data.sender) {
-                            chatToUpdate.users[0].notifications += 1;
-                        } else {
-                            chatToUpdate.users[1].notifications += 1;
+                    if (listOfNotifications.length !== 0 && listOfNotifications.chats.length !== 0) {
+                        const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
+                        if (chatToUpdate) {
+                            if (chatToUpdate.users[0].username === data.sender) {
+                                chatToUpdate.users[0].notifications += 1;
+                            } else {
+                                chatToUpdate.users[1].notifications += 1;
+                            }
                         }
                     }
                 } else {
@@ -158,15 +161,17 @@ const ContactsSide = (props) => {
                         displayName: currSelectedContact.user.displayName,
                         username: currSelectedContact.user.username
                     });
-                    const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
-                    if (chatToUpdate) {
-                        if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
-                            chatToUpdate.users[0].notifications = 0;
-                        } else {
-                            chatToUpdate.users[1].notifications = 0;
+                    if (listOfNotifications.length !== 0 && listOfNotifications.chats.length !== 0) {
+                        const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
+                        if (chatToUpdate) {
+                            if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
+                                chatToUpdate.users[0].notifications = 0;
+                            } else {
+                                chatToUpdate.users[1].notifications = 0;
+                            }
                         }
+                        await resetNotification(currentUser, data.id);
                     }
-                    await resetNotification(currentUser, data.id);
                 }
             } else {
                 await getcontacts();
@@ -216,7 +221,7 @@ const ContactsSide = (props) => {
     }
 
     function getNotificationsOfChat(chatId, username) {
-        if (listOfNotifications.chats.length !== 0) {
+        if (listOfNotifications.length !== 0 && listOfNotifications.chats.length !== 0) {
             const chat = listOfNotifications.chats.find(chat => chat.id === chatId);
             if (chat) {
                 if (chat.users[0].username === username) {
