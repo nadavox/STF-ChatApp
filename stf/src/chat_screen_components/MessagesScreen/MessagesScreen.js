@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
+import getAllMessges from '../../auth/GetAllMessges';
 import updateChats from '../../auth/UpdateContactsList';
 import addNotification from '../../auth/AddNotification';
 
@@ -24,9 +25,9 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
 
     async function getmessages() {
         if (currentContactClicked !== '') {
-            const messages = await showMessages(currentUser, currentContactClicked)
-            if (messages != null) {
-                setListOfMessages(messages.messages)
+            const messages = await getAllMessges(currentUser, id)
+            if (messages !== false) {
+                setListOfMessages(messages)
             }
         }
     }
