@@ -19,7 +19,7 @@ function socketHandler() {
 
         socket.on("updateChats", async (data) => {
             socket.to(data).emit("receiveUpdateChats", data);
-            socket.emit("receiveUpdateChats", data);
+            // socket.emit("receiveUpdateChats", data);
         })
 
         socket.on("afterDelete", async (id) => {
