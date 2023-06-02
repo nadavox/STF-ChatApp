@@ -1,8 +1,8 @@
-async function addNotification(currentUser, id) {
+async function resetNotification(currentUser, id) {
     try {
         // create new contcs = create new chat
         const res = await fetch('http://localhost:5000/api/Chats/Notifications/' + id, {
-            method: 'post',
+            method: 'get',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': currentUser.token
@@ -21,4 +21,4 @@ async function addNotification(currentUser, id) {
     }
 }
 
-export default addNotification;
+export default resetNotification;

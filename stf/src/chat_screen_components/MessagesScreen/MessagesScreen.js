@@ -5,6 +5,7 @@ import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import showMessages from '../../auth/ShowMessages';
 import updateChats from '../../auth/UpdateContactsList';
+import addNotification from '../../auth/AddNotification';
 
 // This component takes in the current user's username and a list of messages to display.
 const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessage, sock }) => {
@@ -89,6 +90,7 @@ const MessagesScreen = ({ id, currentContactClicked, setCurrentChatThatGotMessag
                         });
                     }, 10)
                     await sock.emit("sendMessage", data)
+                    await addNotification(currentUser, data.id);
                     //update the order of the two list of the two contacts
                     await updateChats(currentUser, id);
                     await sock.emit("updateChats", id)

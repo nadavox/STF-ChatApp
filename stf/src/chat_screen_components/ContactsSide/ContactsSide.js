@@ -6,7 +6,7 @@ import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
 import SearchContact from '../SearchContact/SearchContact';
 import getchats from '../../auth/GetChats';
 import getAllNotifications from '../../auth/GetNotifications';
-import addNotification from '../../auth/AddNotification';
+import resetNotification from '../../auth/ResetNotifications';
 
 const ContactsSide = (props) => {
     const { currentUser } = useContext(CurrentUserContext);
@@ -58,6 +58,7 @@ const ContactsSide = (props) => {
             }
             console.log("after reset", listOfNotifications)
         }
+        await resetNotification(currentUser, contactId);
     };
 
     // init the contacts list
@@ -141,7 +142,7 @@ const ContactsSide = (props) => {
             console.log("current user: ", currentUser);
             console.log("data.id: ", data.id);
             console.log("props.currentContactClicked: ", props.currentContactClicked);
-            await addNotification(currentUser, data.id, props.currentContactClicked);
+            // await addNotification(currentUser, data.id, props.currentContactClicked);
             console.log("in");
             console.log(listOfContacts);
             // get the chat that get the new message
@@ -170,6 +171,27 @@ const ContactsSide = (props) => {
                     }
 
                     console.log("after update notification: ", listOfNotifications)
+                } else {
+                    console.log("innnnnnnnnnnnnnnnnnnnnn");
+                    const currSelectedContact = listOfContacts.find((contact) => contact.id === data.id);
+                    props.setDisplayContactRow({
+                        picture: currSelectedContact.user.profilePic,
+                        displayName: currSelectedContact.user.displayName,
+                        username: currSelectedContact.user.username
+                    });
+                    const chatToUpdate = listOfNotifications.chats.find(chat => chat.id === data.id);
+                    if (chatToUpdate) {
+                        console.log(chatToUpdate.users[0].username)
+                        console.log(currSelectedContact.user.username)
+                        console.log(chatToUpdate.users[1].username)
+                        if (chatToUpdate.users[0].username === currSelectedContact.user.username) {
+                            chatToUpdate.users[0].notifications = 0;
+                        } else {
+                            chatToUpdate.users[1].notifications = 0;
+                        }
+                        console.log("after reset", listOfNotifications)
+                    }
+                    await resetNotification(currentUser, data.id);
                 }
             } else {
                 await getcontacts();

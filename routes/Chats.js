@@ -21,4 +21,6 @@ router.route('/Notifications').post(chatsController.getNotifications);
 
 router.route('/Notifications/:id').post(chatsController.addNotification);
 
+router.route('/Notifications/:id').get(chatsController.resetNotifications);
+
 module.exports = router;

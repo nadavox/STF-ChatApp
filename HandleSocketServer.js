@@ -26,10 +26,6 @@ function socketHandler() {
             socket.to(id).emit("notifyDelete");
         })
 
-        // socket.on("clickingOnContact", async (id) => {
-        //     socket.to(id).emit("notifyDelete");
-        // })
-
         socket.on('disconnect', () => {});
     })
 }
