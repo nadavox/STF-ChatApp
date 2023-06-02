@@ -12,9 +12,9 @@ function extractTokenFromBearerString(bearerString) {
 }
 
 function getUserNameFromToken(tokenFromCookie) {
-    const updateToken = extractTokenFromBearerString(tokenFromCookie)
     // Extract the token from that header
     try {
+        const updateToken = extractTokenFromBearerString(tokenFromCookie)
         // Verify the token is valid
         const data = jwt.verify(updateToken, STF);
         return data.username
