@@ -257,19 +257,11 @@ const addNotification = async (username, id) => {
 
 const resetNotifications = async (username, id) => {
     const conversation = await Chats.findOne({ id: parseInt(id) });
-    // console.log(conversation)
-    console.log("conversation.users[0].username: ", conversation.users[0].username )
-    console.log("current username", username)
-    console.log("conversation.users[1].username: ", conversation.users[1].username )
 
     if(conversation.users[0].username === username) {
-        console.log("before reset", conversation.users[1].notifications)
         conversation.users[1].notifications = 0;
-        console.log("after reset", conversation.users[1].notifications)
     } else {
-        console.log("before reset", conversation.users[0].notifications)
         conversation.users[0].notifications = 0;
-        console.log("after reset", conversation.users[0].notifications)
     }
 
     await conversation.save();
