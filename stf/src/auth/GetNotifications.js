@@ -11,10 +11,10 @@ async function getAllNotifications(currentUser) {
             const notifications = await res.json()
             return notifications
         } else {
-            return false;
+            return [];
         }
     } catch (error) {
-        return false;
+        return [];
     }
 }
 
