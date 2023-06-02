@@ -3,10 +3,10 @@ import './MessagesScreen.css';
 import { useState, useEffect, useRef, useContext } from 'react';
 import send_Icon from '../../icons/send_Icon.png';
 import { CurrentUserContext } from '../../components/CurrentUser/CurrentUser';
-import showMessages from '../../auth/ShowMessages';
 import getAllMessges from '../../auth/GetAllMessges';
 import updateChats from '../../auth/UpdateContactsList';
 import addNotification from '../../auth/AddNotification';
+import sendMessageAPI from '../../auth/SendMessage';
 
 // This component takes in the current user's username and a list of messages to display.
 const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessage }) => {
@@ -55,64 +55,51 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
                 inputRef.current.value = "";
             }
         }
-        
+
         // eslint-disable-next-line
     }, [currentContactClicked]);
 
 
-    useEffect(()=> {
+    useEffect(() => {
         if (typeof id !== 'undefined') {
             console.log("hello")
             const scrollHeight = messagesEndRef.current.scrollHeight;
             messagesEndRef.current.scrollTo({
                 top: scrollHeight,
                 behavior: 'auto'
-              });
-            }
-    },[ListOfMessages])
+            });
+        }
+        // eslint-disable-next-line
+    }, [ListOfMessages])
 
 
     async function sendMessage(e) {
         if ((inputValue !== "" && e.key === "Enter") || (e.type === "click" && inputValue !== "")) {
-            const newMessage = { msg: inputValue };
-            try {
-                //send new message to a chat
-                const url = 'http://localhost:5000/api/Chats/' + currentContactClicked + '/Messages'
-                const res = await fetch(url, {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'accept': 'text/plain',
-                        Authorization: currentUser.token
-                    },
-                    body: JSON.stringify(newMessage)
-                });
-                if (res.ok) {
-                    const currentMessage = await res.json()
-                    setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
-                    //clean the input value.
-                    setInputValue("");
-                    // clear the input field.
-                    inputRef.current.value = "";
-                    ListOfMessages.push(currentMessage)
-                    const data = { currentMessage: currentMessage, id: id, sender: currentUser.username }
-                    //scroll down to the last message
-                    setTimeout(() => {
-                        messagesEndRef.current.scrollTo({
-                            top: messagesEndRef.current.scrollHeight,
-                            behavior: 'smooth'
-                        });
-                    }, 10)
-                    await sock.emit("sendMessage", data)
-                    await addNotification(currentUser, data.id);
-                    //update the order of the two list of the two contacts
-                    await updateChats(currentUser, id);
-                    await sock.emit("updateChats", id)
-                    // alerting that we send message 
-                    setAlertSendingMessage(true);
-                }
-            } catch (error) {
-                // error
+            const currentMessage = await sendMessageAPI(currentUser, currentContactClicked, inputValue)
+            if (currentMessage !== false) {
+                setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
+                //clean the input value.
+                setInputValue("");
+                // clear the input field.
+                inputRef.current.value = "";
+                ListOfMessages.push(currentMessage)
+                const data = { currentMessage: currentMessage, id: id, sender: currentUser.username }
+                //scroll down to the last message
+                setTimeout(() => {
+                    messagesEndRef.current.scrollTo({
+                        top: messagesEndRef.current.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 10)
+                await sock.emit("sendMessage", data)
+                await addNotification(currentUser, data.id);
+                //update the order of the two list of the two contacts
+                await updateChats(currentUser, id);
+                await sock.emit("updateChats", id)
+                // alerting that we send message 
+                setAlertSendingMessage(true);
+            } else {
+                //error
             }
         }
     }
