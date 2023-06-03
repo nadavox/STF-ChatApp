@@ -1,4 +1,5 @@
 const userService = require('../services/Users');
+const { getUserNameFromToken } = require('./Chats');
 
 const createNewUser = async (req, res) => {
     const username = req.body.username;
@@ -55,8 +56,20 @@ const createNewUser = async (req, res) => {
 };
 
 const returnInformationUser = async (req,res) => {
-    const username = req.params.username;    
-    res.json(await userService.returnInformationUser(username));
+    if (req.headers.authorization) {
+        const username = getUserNameFromToken(req.headers.authorization)
+        if (username !== "Invalid Token") {
+            const username = req.params.username;    
+            res.json(await userService.returnInformationUser(username));
+            return
+        } else {
+            return res.status(403).send("Invalid Token");
+        }
+    }
+    else {
+        return res.status(401).send('Token required');
+    }
+
 };
 
 module.exports = { createNewUser, returnInformationUser };

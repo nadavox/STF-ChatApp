@@ -177,4 +177,4 @@ const resetNotifications = async (req, res) => {
     }
 }
 
-module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications, addNotification, resetNotifications };  
+module.exports = { returnAllChats, createChat, returnTheConversation, addNewMessage, returnAllTheMessages, updateChats, deleteChat, getNotifications, addNotification, resetNotifications, getUserNameFromToken };  
