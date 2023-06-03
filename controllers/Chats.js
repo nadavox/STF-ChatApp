@@ -35,7 +35,7 @@ const returnAllChats = async (req, res) => {
         }
     }
     else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
@@ -51,7 +51,7 @@ const createChat = async (req, res) => {
             res.status(400).send('failed. problem with the DB');
         }
     } else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
@@ -66,7 +66,7 @@ const returnTheConversation = async (req, res) => {
             res.status(400).send('failed. problem with the DB');
         }
     } else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
@@ -81,7 +81,7 @@ const addNewMessage = async (req, res) => {
             res.status(400).send('failed. problem with the DB');
         }
     } else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
@@ -95,7 +95,7 @@ const returnAllTheMessages = async (req, res) => {
             res.status(400).send('failed. problem with the DB');
         }
     } else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
@@ -114,7 +114,7 @@ const updateChats = async (req, res) => {
             res.status(400).send('failed. problem with the DB');
         }
     } else {
-        return res.status(403).send('Token required');
+        return res.status(401).send('Token required');
     }
 }
 
