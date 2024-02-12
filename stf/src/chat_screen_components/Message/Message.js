@@ -2,8 +2,15 @@ import './Message.css';
 import './DateMessage.css';
 
 const Message = ({ sender, content, time, date, currentUser, lastMessgeDate }) => {
+    function getDateFromMessage(dateString) {
+        const [day, month, year] = dateString.split('.').map(Number);
+        const date = new Date(year, month - 1, day);
+    
+        return date;
+    }
+    
     if (sender === currentUser) {
-        if (lastMessgeDate < date || lastMessgeDate === "first message") {
+        if (lastMessgeDate === "first message" || getDateFromMessage(lastMessgeDate) < getDateFromMessage(date) ) {
             return (
                 <>
                     <li className="message">
@@ -43,7 +50,7 @@ const Message = ({ sender, content, time, date, currentUser, lastMessgeDate }) =
             );
         }
     } else {
-        if (lastMessgeDate < date || lastMessgeDate === "first message") {
+        if (lastMessgeDate === "first message" || getDateFromMessage(lastMessgeDate) < getDateFromMessage(date) ) {
             return (
                 <>
                     <li className="message">

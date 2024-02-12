@@ -73,7 +73,7 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
 
 
     async function sendMessage(e) {
-        if ((inputValue !== "" && e.key === "Enter") || (e.type === "click" && inputValue !== "")) {
+        if ((inputValue.trim() !== "" && e.key === "Enter") || (e.type === "click" && inputValue.trim() !== "")) {
             const currentMessage = await sendMessageAPI(currentUser, currentContactClicked, inputValue)
             if (currentMessage !== false) {
                 setLastMessageTime({ lastMessae: lastMessageTime.newMessage, newMessage: currentMessage.created })
@@ -152,7 +152,6 @@ const MessagesScreen = ({ id, currentContactClicked, sock, setAlertSendingMessag
             </>
         );
     }
-
     return (
         <>
             <ul id="chatScreen" className="p-2 flex-grow-1 overflow-y-scroll m-0" ref={messagesEndRef}>
